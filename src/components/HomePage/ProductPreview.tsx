@@ -52,7 +52,7 @@ export function ProductPreview() {
       <div style={{ perspective: "1200px" }}>
         <div ref={imageRef} className="relative z-10">
           <Image
-            className="w-full h-auto rounded-2xl shadow-2xl border-4 border-neutral-200 -mt-25"
+            className="w-full h-auto rounded-2xl shadow-2xl border-4 border-neutral-200 md:-mt-20 -mt-10"
             src="/Pantalla-9-Objetivos-Ahorros.png"
             alt="Objetivos y Ahorros"
             width={1200}

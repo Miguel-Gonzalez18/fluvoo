@@ -41,7 +41,7 @@ export function Header() {
       <div className="hidden md:flex mx-auto w-full max-w-3xl items-center justify-between px-2 py-3 rounded-lg bg-white shadow-sm border border-neutral-100">
         {/* logo */}
         <Link href="/">
-          <Image src="/logo.svg" alt="Fluvoo" width={100} height={100} />
+          <Image src="/logo.svg" className="w-auto h-6" alt="Fluvoo" width={100} height={100} />
         </Link>
 
         {/* navigation */}
