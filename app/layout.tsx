@@ -38,7 +38,7 @@ export default function RootLayout({
       lang="es"
       className={`${manrope.variable} ${syne.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-neutral-50">{children}</body>
+      <body className="bg-neutral-50">{children}</body>
     </html>
   );
 }

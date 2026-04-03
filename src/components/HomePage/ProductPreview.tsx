@@ -40,7 +40,7 @@ export function ProductPreview() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-full max-w-4xl mx-auto relative py-16">
+    <section ref={sectionRef} className="w-full max-w-4xl mx-auto relative py-4">
       {/* Decorative glow */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-32 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(52,168,100,0.18),transparent_60%)] blur-2xl" />
@@ -52,7 +52,7 @@ export function ProductPreview() {
       <div style={{ perspective: "1200px" }}>
         <div ref={imageRef} className="relative z-10">
           <Image
-            className="w-full h-auto rounded-2xl shadow-2xl border-4 border-neutral-200 md:-mt-20 -mt-10"
+            className="w-full h-auto rounded-2xl shadow-2xl border-4 border-neutral-200"
             src="/Pantalla-9-Objetivos-Ahorros.png"
             alt="Objetivos y Ahorros"
             width={1200}
