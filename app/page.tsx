@@ -1,56 +1,40 @@
+import { Header } from "@/src/components/HomePage/Header";
+import Image from "next/image";
+import { GetStartedButton } from "@/src/components/ui/get-started-button";
+import { Button } from "@/src/components/ui/button";
+import { ProductPreview } from "@/src/components/HomePage/ProductPreview";
+
 export default function Home() {
   return (
-    <div className="relative flex flex-1 items-center justify-center overflow-hidden bg-background px-6 py-16">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-32 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.22),transparent_60%)] blur-2xl" />
-        <div className="absolute -bottom-32 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.18),transparent_60%)] blur-2xl" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.04)_1px,transparent_1px)] bg-size-[48px_48px] opacity-40 dark:opacity-20" />
-      </div>
-
-      <main className="relative w-full max-w-2xl">
-        <div className="rounded-2xl border border-black/10 bg-white/70 p-8 shadow-[0_24px_80px_rgba(0,0,0,0.12)] backdrop-blur-sm dark:border-white/10 dark:bg-black/30">
-          <div className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/3 px-3 py-1 text-xs font-medium text-foreground dark:border-white/10 dark:bg-white/6">
-            <span className="relative flex size-2">
-              <span className="absolute inline-flex size-2 animate-ping rounded-full bg-foreground/60" />
-              <span className="relative inline-flex size-2 rounded-full bg-foreground" />
-            </span>
-            En construcción
-          </div>
-
-          <h1 className="mt-6 font-heading text-balance text-4xl font-semibold leading-tight tracking-tight text-foreground sm:text-5xl">
-            Estamos construyendo algo que vale tu tiempo.
-          </h1>
-
-          <p className="mt-4 text-pretty text-base leading-7 text-foreground/75 sm:text-lg">
-            Este sitio está en desarrollo. Muy pronto vas a poder explorar una experiencia más rápida, clara y útil.
-          </p>
-
-          <div className="mt-8 grid gap-3 rounded-xl border border-black/10 bg-white/60 p-4 dark:border-white/10 dark:bg-black/20">
-            <div className="flex items-start gap-3">
-              <span className="mt-1 inline-flex size-2 rounded-full bg-foreground/70" />
-              <div className="min-w-0">
-                <p className="font-medium text-foreground">Estamos afinando la base</p>
-                <p className="text-sm leading-6 text-foreground/70">
-                  Diseño, rendimiento y estructura.
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="mt-1 inline-flex size-2 rounded-full bg-foreground/40" />
-              <div className="min-w-0">
-                <p className="font-medium text-foreground">Luego, lo bueno</p>
-                <p className="text-sm leading-6 text-foreground/70">
-                  Funcionalidades y contenido.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <p className="mt-8 text-xs text-foreground/60">
-            Gracias por tu paciencia. Estamos preparando una primera versión.
-          </p>
+    <main className="flex flex-col min-h-dvh md:px-16 py-8 px-8">
+      <Header />
+      {/* Hero */}
+      <section className="h-dvh flex flex-col md:flex-row gap-8 items-center justify-center relative overflow-hidden">
+        {/* Background decorative pattern */}
+        <div className="pointer-events-none absolute inset-0">
+          {/* Halo superior: cambia el último valor rgba (0.20) para más/menos intensidad. */}
+          <div className="absolute -top-32 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(52,168,100,0.20),transparent_60%)] blur-2xl" />
+          {/* Halo inferior: ajusta -bottom-32 para moverlo y rgba(...) para opacidad. */}
+          <div className="absolute -bottom-32 left-2/2 h-[520px] w-[520px] -translate-x-2/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(52,168,100,0.12),transparent_60%)] blur-2xl" />
+          {/* Cuadrícula: bg-size controla separación (ej: 32x32 densa, 64x64 más amplia). opacity controla visibilidad. */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.04)_1px,transparent_1px)] bg-size-[48px_48px] opacity-80" />
         </div>
-      </main>
-    </div>
+
+        <div className="w-full md:w-3/5 flex flex-col gap-4 relative z-10">
+          <p className="text-xs mt-20 md:mt-0 mx-auto md:mx-0 text-center md:text-left text-primary-800 px-3 py-1 border border-neutral-200 rounded-lg w-fit">Claridad financiera para cada dominicano</p>
+          <h1 className="md:text-5xl text-4xl text-center md:text-left font-bold font-heading text-balance">Tu dinero <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">analizado</span>, <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">planificado</span> y bajo control.</h1>
+          <p className="text-lg text-center md:text-left text-neutral-600 mt-4">Descubre cómo Fluvoo transforma tu relación con el dinero.</p>
+          <div className="w-full flex items-center gap-2 justify-center md:justify-start">
+            <Button variant="outline" className="cursor-pointer p-4">Comenzar ahora</Button>
+            <GetStartedButton label="Iniciar prueba" />
+          </div>
+        </div>
+
+        <div className="w-full md:w-2/5 flex items-center justify-center">
+          <Image src="/finance-img.svg" alt="Hero" width={500} height={500} />
+        </div>
+      </section>
+      <ProductPreview />
+    </main>
   );
 }
