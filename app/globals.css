@@ -201,9 +201,10 @@
     font-family: var(--font-body);
 
   }
+
   body::-webkit-scrollbar {
-      width: 7px;
-      background-color: var(--background);
+    width: 7px;
+    background-color: var(--background);
   }
 
   body::-webkit-scrollbar-thumb {
@@ -222,5 +223,15 @@
   h5,
   h6 {
     font-family: var(--font-headline);
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
   }
 }

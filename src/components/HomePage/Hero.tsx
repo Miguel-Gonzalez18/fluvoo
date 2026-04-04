@@ -4,6 +4,7 @@ import { GetStartedButton } from "../ui/get-started-button";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { Star } from "lucide-react";
+import { BankCarousel } from "../ui/BankCarousel";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 
@@ -85,7 +86,7 @@ export function Hero() {
     }, [])
 
   return (
-      <section className="flex flex-col md:flex-row gap-8 items-center justify-center relative overflow-hidden md:px-16 py-20 px-4">
+      <section className="flex flex-col md:flex-row gap-8 items-center justify-center relative overflow-hidden md:px-16 px-4 md:h-[calc(100vh+5rem)]">
         {/* Background decorative pattern */}
         <div className="pointer-events-none absolute inset-0">
           {/* Halo superior: cambia el último valor rgba (0.20) para más/menos intensidad. */}
@@ -96,7 +97,7 @@ export function Hero() {
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.04)_1px,transparent_1px)] bg-size-[48px_48px] opacity-80" />
         </div>
 
-        <div className="w-full md:w-3/5 flex flex-col gap-4 relative z-10">
+        <div className="w-full md:w-3/5 flex flex-col gap-4 relative z-10 mt-15 md:mt-0">
           <p id="hero-subtitle" className="text-xs mt-20 md:mt-0 mx-auto md:mx-0 text-center md:text-left text-primary-800 px-3 py-1 border border-neutral-200 rounded-lg w-fit">Claridad financiera para cada dominicano</p>
           <h1 id="hero-title" className="md:text-5xl text-4xl text-center md:text-left font-bold font-heading text-balance">Tu dinero <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">analizado</span>, <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">planificado</span> y bajo control.</h1>
           <p id="hero-paragraph" className="text-lg text-center md:text-left text-neutral-600 mt-4">Descubre cómo Fluvoo transforma tu relación con el dinero.</p>
@@ -104,6 +105,7 @@ export function Hero() {
             <Button id="hero-button-1" variant="outline" className="cursor-pointer p-4">Comenzar ahora</Button>
             <GetStartedButton id="hero-button-2" label="Iniciar prueba" />
           </div>
+          <BankCarousel />
         </div>
 
         <div className="w-full md:w-2/5 flex flex-col items-center md:items-start justify-center gap-2">

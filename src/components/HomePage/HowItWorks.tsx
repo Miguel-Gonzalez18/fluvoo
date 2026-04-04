@@ -14,7 +14,7 @@ const cardsData = [
     },
     {
         id: 2,
-        title: "Conecta tus transacciones",
+        title: "Conecta tus notificaciones bancarias",
         description: "Autoriza el correo donde llegan las alertas de tu banco. Fluvoo lee solo esos mensajes, nada personal y empieza a detectar tus gastos automáticamente.",
         icon: Link,
     },
