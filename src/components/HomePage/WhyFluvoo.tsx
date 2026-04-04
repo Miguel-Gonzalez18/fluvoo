@@ -18,7 +18,7 @@ const cardData = [
   {
     icon: Calculator,
     title: "Cálculos que confías",
-    description: "Nómina, ISR, préstamos y más —todos alineados con la normativa actual de la DGII y la TSS.",
+    description: "Nómina, ISR, préstamos y más todos alineados con la normativa actual de la DGII y la TSS.",
   },
   {
     icon: PiggyBank,

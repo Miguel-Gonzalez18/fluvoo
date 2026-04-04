@@ -85,7 +85,7 @@ export function Hero() {
     }, [])
 
   return (
-      <section className="flex flex-col md:flex-row gap-8 items-center justify-center relative overflow-hidden py-4 md:py-16">
+      <section className="flex flex-col md:flex-row gap-8 items-center justify-center relative overflow-hidden md:px-16 py-20 px-4">
         {/* Background decorative pattern */}
         <div className="pointer-events-none absolute inset-0">
           {/* Halo superior: cambia el último valor rgba (0.20) para más/menos intensidad. */}
