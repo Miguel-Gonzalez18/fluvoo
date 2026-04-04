@@ -199,6 +199,16 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-body);
+
+  }
+  body::-webkit-scrollbar {
+      width: 7px;
+      background-color: var(--background);
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
   }
 
   html {
