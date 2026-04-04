@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
 import { Bot, CircleCheckBig, SlidersHorizontal, Telescope } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -88,11 +89,34 @@ export function Benefits() {
         })
     }, [])
 
+    useEffect(() => {
+        gsap.registerPlugin(SplitText);
+        const SplitTextHeading = new SplitText('.heading-card-title', {
+            type: 'words,chars',
+            charsClass: 'char',
+            wordsClass: 'word'
+        });
+        
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: '.heading-card-container',
+                start: 'top 50%',
+            },
+        });
+
+        tl.from(SplitTextHeading.words, {
+            opacity: 0,
+            x: 20,
+            filter: 'blur(10px)',
+            duration: 0.5,
+            stagger: 0.2,
+        })
+    }, [])
+
     // ScrollTrigger: detecta qué card ocupa el centro del viewport
     // y sincroniza el item activo del sidebar automáticamente
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
-
         // Guardamos los triggers creados aquí para limpiar solo los nuestros al desmontar
         const triggers: ScrollTrigger[] = [];
 
@@ -175,9 +199,9 @@ export function Benefits() {
                         key={i}
                         // ref callback: asigna el elemento DOM al índice correcto del array
                         ref={(el) => { cardRefs.current[i] = el; }}
-                        className="bg-neutral-100 border border-neutral-200 rounded-lg p-6 space-y-4"
+                        className="bg-neutral-100 border border-neutral-200 rounded-lg p-6 space-y-4 heading-card-container"
                     >
-                        <h3 className="text-xl font-heading text-neutral-800 font-bold">{item.cardTitle}</h3>
+                        <h3 className="heading-card-title text-xl font-heading text-neutral-800 font-bold">{item.cardTitle}</h3>
                         <Image
                             className="border-10 border-white rounded-lg"
                             src={item.cardImage}
