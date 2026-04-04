@@ -53,7 +53,7 @@ export function ProductPreview() {
         <div ref={imageRef} className="relative z-10">
           <Image
             className="w-full h-auto rounded-2xl shadow-2xl border-4 border-neutral-200"
-            src="/Pantalla-9-Objetivos-Ahorros.png"
+            src="/images/Dashboard.webp"
             alt="Objetivos y Ahorros"
             width={1200}
             height={800}

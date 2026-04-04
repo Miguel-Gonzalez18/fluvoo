@@ -107,7 +107,7 @@ export function Hero() {
         </div>
 
         <div className="w-full md:w-2/5 flex flex-col items-center md:items-start justify-center gap-2">
-          <Image id="hero-image" src="/finance-img.svg" alt="Hero" width={500} height={500} />
+          <Image id="hero-image" src="/images/finance-img.svg" alt="Hero" width={500} height={500} />
           <p className="hero-description text-sm text-center md:text-left text-balance text-neutral-500">Fluvoo es el asistente financiero personal con IA diseñado para la realidad dominicana. Entiende tus ingresos, gastos y metas y te guía hacia donde quieres llegar.</p>
           <div className="flex items-center flex-col md:flex-row gap-1">
             <span className="hero-description flex items-center gap-1">
