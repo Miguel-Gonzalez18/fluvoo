@@ -100,7 +100,7 @@ export function Benefits() {
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: '.heading-card-container',
-                start: 'top 50%',
+                start: 'top 70%',
             },
         });
 

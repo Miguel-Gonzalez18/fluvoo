@@ -103,7 +103,7 @@ export function Hero() {
           <p id="hero-paragraph" className="text-lg text-center md:text-left text-neutral-600 mt-4">Descubre cómo Fluvoo transforma tu relación con el dinero.</p>
           <div className="w-full flex items-center gap-2 justify-center md:justify-start">
             <Button id="hero-button-1" variant="outline" className="cursor-pointer p-4">Comenzar ahora</Button>
-            <GetStartedButton id="hero-button-2" label="Iniciar prueba" />
+            <GetStartedButton id="hero-button-2" label="Ver cómo funciona" />
           </div>
           <BankCarousel />
         </div>
