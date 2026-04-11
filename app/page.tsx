@@ -4,7 +4,10 @@ import { WhyFluvoo } from "@/src/components/HomePage/WhyFluvoo";
 import { ProductPreview } from "@/src/components/HomePage/ProductPreview";
 import { Benefits } from "@/src/components/HomePage/Benefits";
 import { HowItWorks } from "@/src/components/HomePage/HowItWorks";
-import Profiles from "@/src/components/HomePage/Profiles";
+import { Profiles } from "@/src/components/HomePage/Profiles";
+import { FAQ } from "@/src/components/HomePage/FAQ";
+import { CTA } from "@/src/components/HomePage/CTA";
+import {Footer} from "@/src/components/HomePage/Footer";
 
 export default function Home() {
   return (
@@ -28,6 +31,14 @@ export default function Home() {
       {/* Hecho para tí */}
       <Profiles />
 
+      {/* FAQ */}
+      <FAQ />
+
+      {/* CTA */}
+      <CTA />
+
+      {/* Footer */}
+      <Footer />
     </main>
   );
 }

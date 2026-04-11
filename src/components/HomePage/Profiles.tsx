@@ -63,7 +63,7 @@ const profilesData = [
   }
 ];
 
-export default function Profiles() {
+export function Profiles() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger, SplitText);
     
@@ -96,49 +96,41 @@ export default function Profiles() {
       duration: 0.5,
       ease: 'power3.out',
     });
+
+    gsap.fromTo('.profile-card', {
+        opacity: 0,
+        y: 60,
+    }, {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        stagger: 0.15,
+        ease: 'power3.out',
+        scrollTrigger: {
+            trigger: '.profiles-grid',
+            start: 'top 75%',
+        },
+    });
+
+    
     return () => {
       tl.kill();
       splitTitle.revert();
     };
   }, []);
 
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    
-    const cards = document.querySelectorAll('.profile-card');
-    
-    const cardsTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '.profiles-grid',
-        start: 'top 75%',
-      },
-    });
-
-    cardsTl.from(cards, {
-      opacity: 0,
-      y: 30,
-      duration: 0.6,
-      ease: 'power3.out',
-      stagger: 0.15,
-    });
-
-    return () => {
-      cardsTl.kill();
-    };
-  }, []);
-
   return (
     <section className="w-full py-20 space-y-12 relative">
         {/* Patrón decorativo de fondo */}
-        <div className="pointer-events-none absolute inset-0">
+        <div className="pointer-events-none hidden lg:block absolute inset-0">
             {/* Cuadrícula: líneas blancas sobre fondo blanco */}
             <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.04)_1px,transparent_1px)] bg-size-[48px_48px]" />
         </div>
         {/* Icono de fondo inferior derecha con opacidad */}
-        <div className="pointer-events-none absolute top-0 right-0 opacity-10">
+        <div className="pointer-events-none absolute top-0 right-0 opacity-0 md:opacity-10">
             <BadgeDollarSign className="w-96 h-96" />
         </div>
-        <div className="mx-auto max-w-full space-y-1 px-4 md:px-12 relative">
+        <div className="mx-auto max-w-full space-y-1 px-4 md:px-12 relative text-center md:text-left">
             <p className="text-md text-primary" id="profiles-subtitle">Hecho para ti</p>
             <h2 className="text-3xl font-heading text-neutral-800 font-bold" id="profiles-title">Una app que se <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">adapta</span> a tu <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">situación</span></h2>
             <p className="text-md text-neutral-600" id="profiles-paragraph">No importa cómo generes tus ingresos. Fluvoo tiene un perfil diseñado para tu realidad.</p>
