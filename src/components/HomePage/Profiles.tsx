@@ -15,7 +15,7 @@ const profilesData = [
     image: '/images/empleado-asalariado.svg',
     imageAlt: 'Empleado Asalariado',
     imageSize: { width: 100, height: 100 },
-    badge: { text: 'GRATIS', color: 'green' },
+    badge: { text: 'GRATIS', color: 'primary' },
     features: [
       'Calculadora de nómina con TSS, SFS y SIPEN',
       'Proyección de pensión SIPEN',
@@ -32,7 +32,7 @@ const profilesData = [
     image: '/images/freelance.svg',
     imageAlt: 'Freelancer',
     imageSize: { width: 100, height: 100 },
-    badge: { text: 'GRATIS', color: 'green' },
+    badge: { text: 'GRATIS', color: 'primary' },
     features: [
       'ISR estimado por trimestre (DGII)',
       'Calculadora de tarifa sostenible',
@@ -50,8 +50,8 @@ const profilesData = [
     imageAlt: 'Business',
     imageSize: { width: 70, height: 70 },
     badges: [
-      { text: 'PRO', color: 'primary-900' },
-      { text: 'Proximamente', color: 'primary-900' }
+      { text: 'PRO', color: 'black' },
+      { text: 'Proximamente', color: 'black' }
     ],
     features: [
       'Módulo empresarial separado',
@@ -150,7 +150,7 @@ export default function Profiles() {
                 {profilesData.map((profile) => {
                     const Icon = profile.icon;
                     return (
-                        <div key={profile.id} className="bg-white p-6 rounded-xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow duration-300 relative space-y-4 profile-card">
+                        <div key={profile.id} className="bg-white p-6 rounded-xl border-y-2 border-neutral-200 shadow-sm hover:shadow-md transition-all duration-300 relative space-y-4 profile-card hover:border-primary">
                             <div className="flex items-center justify-between">
                                 {profile.badges ? (
                                     <div className="space-x-2">
@@ -164,7 +164,7 @@ export default function Profiles() {
                                         ))}
                                     </div>
                                 ) : (
-                                    <span className={`bg-${profile.badge.color}-100 text-${profile.badge.color}-700 text-xs font-semibold px-2 py-1 rounded-full`}>
+                                    <span className={`bg-${profile.badge.color} text-white text-xs font-semibold px-2 py-1 rounded-full`}>
                                         {profile.badge.text}
                                     </span>
                                 )}
@@ -173,6 +173,7 @@ export default function Profiles() {
                                     alt={profile.imageAlt} 
                                     width={profile.imageSize.width} 
                                     height={profile.imageSize.height} 
+                                    unoptimized
                                 />
                             </div>
                             <div className="flex items-center gap-3 mb-4">
