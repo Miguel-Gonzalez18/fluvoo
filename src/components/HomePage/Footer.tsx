@@ -62,7 +62,7 @@ export function Footer() {
             {/* Columna 2: Producto */}
             <div className="footer-section space-y-6">
               <h3 className="text-lg font-semibold">Producto</h3>
-              <ul className="space-y-3">
+              <ul className="space-y-3 text-sm">
                 <li>
                   <a href="#" className="text-neutral-400 hover:text-white transition-colors">
                     Características
@@ -84,7 +84,7 @@ export function Footer() {
             {/* Columna 3: Compañía */}
             <div className="footer-section space-y-6">
               <h3 className="text-lg font-semibold">Compañía</h3>
-              <ul className="space-y-3">
+              <ul className="space-y-3 text-sm">
                 <li>
                   <a href="#" className="text-neutral-400 hover:text-white transition-colors">
                     Sobre nosotros
@@ -106,7 +106,7 @@ export function Footer() {
             {/* Columna 4: Recursos */}
             <div className="footer-section space-y-6">
               <h3 className="text-lg font-semibold">Recursos</h3>
-              <ul className="space-y-3">
+              <ul className="space-y-3 text-sm">
                 <li>
                   <a href="#" className="text-neutral-400 hover:text-white transition-colors">
                     Documentación

@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   title: "Fluvoo | Claridad financiera para cada Dominicano",
   description: "Fluvoo te ayuda a entender y gestionar tu dinero con claridad y control.",
   icons: {
-    icon: "/favicon.svg",
+    icon: "/favicon.ico",
   },
 };
 
