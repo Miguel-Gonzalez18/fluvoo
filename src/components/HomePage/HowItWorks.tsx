@@ -84,7 +84,7 @@ export function HowItWorks() {
     }, []);
 
     return (
-        <section className="w-full relative py-20 bg-foreground overflow-hidden">
+        <section className="relative py-20 bg-foreground overflow-hidden">
             {/* Patrón decorativo de fondo */}
             <div className="pointer-events-none absolute inset-0">
                 {/* Cuadrícula: líneas blancas sobre fondo oscuro */}
@@ -93,7 +93,7 @@ export function HowItWorks() {
                 <div className="absolute -bottom-40 left-1/2 h-[600px] w-[800px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(52,168,100,0.30),transparent_60%)] blur-3xl" />
             </div>
 
-            <div className="max-w-6xl mx-auto px-4 relative z-10">
+            <div className="mx-auto max-w-full px-4 md:px-12 relative z-10">
                 {/* Header de sección */}
                 <div id="how-it-works-header" className="mb-12 text-center relative">
                     <p id="how-it-works-subtitle" className="text-xs text-primary font-semibold mb-3 uppercase tracking-widest">¿Cómo funciona?</p>

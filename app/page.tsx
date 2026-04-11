@@ -4,6 +4,7 @@ import { WhyFluvoo } from "@/src/components/HomePage/WhyFluvoo";
 import { ProductPreview } from "@/src/components/HomePage/ProductPreview";
 import { Benefits } from "@/src/components/HomePage/Benefits";
 import { HowItWorks } from "@/src/components/HomePage/HowItWorks";
+import Profiles from "@/src/components/HomePage/Profiles";
 
 export default function Home() {
   return (
@@ -23,6 +24,10 @@ export default function Home() {
 
       {/* Como funciona */}
       <HowItWorks />
+
+      {/* Hecho para tí */}
+      <Profiles />
+
     </main>
   );
 }

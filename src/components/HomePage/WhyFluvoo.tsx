@@ -82,7 +82,7 @@ export function WhyFluvoo() {
   }, [])
 
   return (
-    <section className="w-full max-w-6xl mx-auto relative py-12">
+    <section className="mx-auto max-w-full px-4 md:px-12 relative py-12">
       <div id="why-fluvoo-header" className="mb-8 text-center">
         <p id="why-fluvoo-subtitle" className="text-md text-primary font-medium mb-2">Por qué Fluvoo</p>
         <h2 id="why-fluvoo-title" className="text-3xl font-heading font-bold text-neutral-800">Construido para la <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)] highlight">realidad</span> que vives</h2>

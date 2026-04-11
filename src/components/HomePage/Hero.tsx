@@ -108,9 +108,9 @@ export function Hero() {
           <BankCarousel />
         </div>
 
-        <div className="w-full md:w-2/5 flex flex-col items-center md:items-start justify-center gap-2">
-          <Image id="hero-image" src="/images/finance-img.svg" alt="Hero" width={500} height={500} loading="eager" />
-          <p className="hero-description text-sm text-center md:text-left text-balance text-neutral-500">Fluvoo es el asistente financiero personal con IA diseñado para la realidad dominicana. Entiende tus ingresos, gastos y metas y te guía hacia donde quieres llegar.</p>
+        <div className="w-full md:w-2/5 flex flex-col items-center justify-center gap-2">
+          <Image id="hero-image" src="/images/finance-img.svg" alt="Hero" width={600} height={600} loading="eager" />
+          <p className="hero-description text-sm text-center text-balance text-neutral-500">Fluvoo es el asistente financiero personal con IA diseñado para la realidad dominicana. Entiende tus ingresos, gastos y metas y te guía hacia donde quieres llegar.</p>
           <div className="flex items-center flex-col md:flex-row gap-1">
             <span className="hero-description flex items-center gap-1">
               {Array(5).fill(<Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />)}

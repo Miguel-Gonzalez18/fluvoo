@@ -40,7 +40,7 @@ export function ProductPreview() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-full max-w-4xl mx-auto relative p-4">
+    <section ref={sectionRef} className="w-full max-w-5xl mx-auto relative p-4">
       {/* Decorative glow */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -top-32 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(52,168,100,0.18),transparent_60%)] blur-2xl" />

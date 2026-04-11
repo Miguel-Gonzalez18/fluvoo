@@ -1,0 +1,200 @@
+"use client";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
+import { useEffect } from "react";
+import { BadgeDollarSign, Briefcase, Check, Laptop, Building} from "lucide-react";
+import Image from "next/image";
+
+const profilesData = [
+  {
+    id: 'empleado',
+    title: 'Empleado Asalariado',
+    description: 'Para profesionales con sueldo fijo que quieren entender sus deducciones, optimizar sus gastos, y construir ahorro con propósito.',
+    icon: Briefcase,
+    image: '/images/empleado-asalariado.svg',
+    imageAlt: 'Empleado Asalariado',
+    imageSize: { width: 100, height: 100 },
+    badge: { text: 'GRATIS', color: 'green' },
+    features: [
+      'Calculadora de nómina con TSS, SFS y SIPEN',
+      'Proyección de pensión SIPEN',
+      'Detección automática de gastos',
+      'Planes de ahorro con IA',
+      'Presupuestos por categoría'
+    ]
+  },
+  {
+    id: 'freelance',
+    title: 'Freelancer / Independiente',
+    description: 'Para profesionales con ingresos variables que necesitan estabilizarse, reservar para impuestos, y saber exactamente cuánto cobrar.',
+    icon: Laptop,
+    image: '/images/freelance.svg',
+    imageAlt: 'Freelancer',
+    imageSize: { width: 100, height: 100 },
+    badge: { text: 'GRATIS', color: 'green' },
+    features: [
+      'ISR estimado por trimestre (DGII)',
+      'Calculadora de tarifa sostenible',
+      'Fondo de estabilización inteligente',
+      'Registro de ingresos por proyecto',
+      'Cuentas por cobrar'
+    ]
+  },
+  {
+    id: 'business',
+    title: 'Dueño de Negocio',
+    description: 'Para emprendedores y pequeños empresarios que necesitan separar sus finanzas personales de las del negocio y ver ambas con claridad.',
+    icon: Building,
+    image: '/images/business.svg',
+    imageAlt: 'Business',
+    imageSize: { width: 70, height: 70 },
+    badges: [
+      { text: 'PRO', color: 'primary-900' },
+      { text: 'Proximamente', color: 'primary-900' }
+    ],
+    features: [
+      'Módulo empresarial separado',
+      'Flujo de caja proyectado',
+      'ITBIS y retenciones automáticas',
+      'Nómina básica de empleados',
+      'Punto de equilibrio mensual'
+    ]
+  }
+];
+
+export default function Profiles() {
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger, SplitText);
+    
+    const splitTitle = new SplitText('#profiles-title', {
+      type: 'words',
+      wordsClass: 'word',
+    });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#profiles-title',
+        start: 'top 80%',
+      },
+    });
+
+    tl.from(splitTitle.words, {
+      opacity: 0,
+      y: 16,
+      duration: 0.5,
+      ease: 'power3.out',
+      stagger: 0.1,
+    }).from('#profiles-subtitle', {
+      opacity: 0,
+      y: 16,
+      duration: 0.5,
+      ease: 'power3.out',
+    }).from('#profiles-paragraph', {
+      opacity: 0,
+      y: 16,
+      duration: 0.5,
+      ease: 'power3.out',
+    });
+    return () => {
+      tl.kill();
+      splitTitle.revert();
+    };
+  }, []);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    
+    const cards = document.querySelectorAll('.profile-card');
+    
+    const cardsTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '.profiles-grid',
+        start: 'top 75%',
+      },
+    });
+
+    cardsTl.from(cards, {
+      opacity: 0,
+      y: 30,
+      duration: 0.6,
+      ease: 'power3.out',
+      stagger: 0.15,
+    });
+
+    return () => {
+      cardsTl.kill();
+    };
+  }, []);
+
+  return (
+    <section className="w-full py-20 space-y-12 relative">
+        {/* Patrón decorativo de fondo */}
+        <div className="pointer-events-none absolute inset-0">
+            {/* Cuadrícula: líneas blancas sobre fondo blanco */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.04)_1px,transparent_1px)] bg-size-[48px_48px]" />
+        </div>
+        {/* Icono de fondo inferior derecha con opacidad */}
+        <div className="pointer-events-none absolute top-0 right-0 opacity-10">
+            <BadgeDollarSign className="w-96 h-96" />
+        </div>
+        <div className="mx-auto max-w-full space-y-1 px-4 md:px-12 relative">
+            <p className="text-md text-primary" id="profiles-subtitle">Hecho para ti</p>
+            <h2 className="text-3xl font-heading text-neutral-800 font-bold" id="profiles-title">Una app que se <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">adapta</span> a tu <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">situación</span></h2>
+            <p className="text-md text-neutral-600" id="profiles-paragraph">No importa cómo generes tus ingresos. Fluvoo tiene un perfil diseñado para tu realidad.</p>
+        </div>
+
+        {/* Cards de perfiles, empleado asalariado, freelance, dueño de empresa */}
+        <div className="mx-auto max-w-full space-y-1 px-4 md:px-12 relative">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 profiles-grid">
+                {profilesData.map((profile) => {
+                    const Icon = profile.icon;
+                    return (
+                        <div key={profile.id} className="bg-white p-6 rounded-xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow duration-300 relative space-y-4 profile-card">
+                            <div className="flex items-center justify-between">
+                                {profile.badges ? (
+                                    <div className="space-x-2">
+                                        {profile.badges.map((badge, index) => (
+                                            <span 
+                                                key={index}
+                                                className={`bg-${badge.color} text-white text-xs font-semibold px-2 py-1 rounded-full`}
+                                            >
+                                                {badge.text}
+                                            </span>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <span className={`bg-${profile.badge.color}-100 text-${profile.badge.color}-700 text-xs font-semibold px-2 py-1 rounded-full`}>
+                                        {profile.badge.text}
+                                    </span>
+                                )}
+                                <Image 
+                                    src={profile.image} 
+                                    alt={profile.imageAlt} 
+                                    width={profile.imageSize.width} 
+                                    height={profile.imageSize.height} 
+                                />
+                            </div>
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                                    <Icon className="w-6 h-6 text-primary" />
+                                </div>
+                                <h3 className="text-xl font-bold text-neutral-800">{profile.title}</h3>
+                            </div>
+                            <p className="text-neutral-600 mb-4 text-sm leading-relaxed">{profile.description}</p>
+                            <ul className="space-y-3">
+                                {profile.features.map((feature, index) => (
+                                    <li key={index} className="flex items-start gap-3">
+                                        <Check className="w-5 h-5 text-green-500 mt-0.5 shrink-0" />
+                                        <span className="text-sm text-neutral-700">{feature}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    </section>
+  );
+}
