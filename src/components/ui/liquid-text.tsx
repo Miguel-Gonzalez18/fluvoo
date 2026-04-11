@@ -127,7 +127,7 @@ const SvgFilters: React.FC = () => (
 );
 
 const MorphingText: React.FC<MorphingTextProps> = ({ texts, className }) => (
-    <h2 className="relative w-full isolate">
+    <h2 className="relative z-0 w-full isolate">
         {/* Fallback semántico para SEO y screen readers */}
         <span className="sr-only">{texts.join(" ")}</span>
 

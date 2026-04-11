@@ -47,14 +47,14 @@ export function Footer() {
                 La forma más inteligente de entender tus finanzas. Sin hojas de cálculo, sin complicaciones.
               </p>
               <div className="flex gap-3 justify-center md:justify-start">
-                <a href="#" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
-                  <Facebook className="w-5 h-5" />
+                <a href="https://facebook.com/fluvoo" aria-label="Fluvoo en Facebook" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
+                  <Facebook className="w-5 h-5" aria-hidden="true" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
-                  <Instagram className="w-5 h-5" />
+                <a href="https://instagram.com/fluvoo" aria-label="Fluvoo en Instagram" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
+                  <Instagram className="w-5 h-5" aria-hidden="true" />
                 </a>
-                <a href="#" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
-                  <Linkedin className="w-5 h-5" />
+                <a href="https://linkedin.com/company/fluvoo" aria-label="Fluvoo en LinkedIn" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
+                  <Linkedin className="w-5 h-5" aria-hidden="true" />
                 </a>
               </div>
             </div>

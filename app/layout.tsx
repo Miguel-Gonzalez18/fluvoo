@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Space_Grotesk, Syne } from "next/font/google";
+import { GoogleTagManager } from '@next/third-parties/google'
 import "./globals.css";
 
 const manrope = Manrope({
@@ -57,7 +58,7 @@ export const metadata: Metadata = {
     siteName: 'Fluvoo',
     images: [
       {
-        url: '/logo.svg',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Fluvoo - Claridad financiera para cada Dominicano',
@@ -68,7 +69,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Fluvoo | Claridad financiera para cada Dominicano',
     description: 'Fluvoo te ayuda a entender y gestionar tu dinero con claridad y control. La mejor herramienta financiera para dominicanos.',
-    images: ['/logo.svg'],
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
@@ -84,7 +85,7 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.svg',
     shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
+    apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
 };
@@ -94,12 +95,48 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Fluvoo",
+    "url": "https://fluvoo.com",
+    "logo": "https://fluvoo.com/logo.svg",
+    "sameAs": [
+      "https://www.instagram.com/fluvoo",
+      "https://www.linkedin.com/company/fluvoo"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "email": "hola@fluvoo.com",
+      "contactType": "customer support",
+      "availableLanguage": "Spanish"
+    }
+  };
+
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Fluvoo",
+    "url": "https://fluvoo.com"
+  };
+
   return (
     <html
       lang="es"
       className={`${manrope.variable} ${syne.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
-      <body className="bg-neutral-50">{children}</body>
+      <GoogleTagManager gtmId="GTM-M6N8ND86" />
+      <body className="bg-neutral-50">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

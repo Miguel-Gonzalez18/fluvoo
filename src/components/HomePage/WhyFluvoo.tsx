@@ -92,7 +92,7 @@ export function WhyFluvoo() {
         {cardData.map((card, index) => (
           <div key={index} className="p-6 space-y-3 why-fluvoo-card">
             <card.icon className="h-5 w-5 text-primary-700" aria-hidden="true" />
-            <h2 className="text-lg font-bold">{card.title}</h2>
+            <h3 className="text-lg font-bold">{card.title}</h3>
             <p className="text-neutral-600 text-sm leading-relaxed">
               {card.description}
             </p>
