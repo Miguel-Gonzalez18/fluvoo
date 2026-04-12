@@ -142,7 +142,7 @@ export function Profiles() {
                 {profilesData.map((profile) => {
                     const Icon = profile.icon;
                     return (
-                        <div key={profile.id} className="bg-white p-6 rounded-xl border-y-2 border-neutral-200 shadow-sm hover:shadow-md transition-all duration-300 relative space-y-4 profile-card hover:border-primary">
+                        <div id={`profile-card-${profile.id}`} key={profile.id} className="bg-white p-6 rounded-xl border-y-2 border-neutral-200 shadow-sm hover:shadow-md transition-all duration-300 relative space-y-4 profile-card hover:border-primary">
                             <div className="flex items-center justify-between">
                                 {profile.badges ? (
                                     <div className="space-x-2">

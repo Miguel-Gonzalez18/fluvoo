@@ -7,11 +7,11 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const itemsMenu = [
-  { label: "Inicio", href: "#inicio" },
-  { label: "Nosotros", href: "#nosotros" },
-  { label: "Beneficios", href: "#beneficios" },
-  { label: "Cómo funciona", href: "#como-funciona" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Inicio", href: "#inicio", id: "nav-link-inicio" },
+  { label: "Nosotros", href: "#nosotros", id: "nav-link-nosotros" },
+  { label: "Beneficios", href: "#beneficios", id: "nav-link-beneficios" },
+  { label: "Cómo funciona", href: "#como-funciona", id: "nav-link-como-funciona" },
+  { label: "FAQ", href: "#faq", id: "nav-link-faq" },
 ];
 
 const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -60,7 +60,7 @@ export function Header() {
           <ul className="flex gap-6">
             {itemsMenu.map((item) => (
               <li key={item.label} className="hover:text-primary-600 transition-colors">
-                <Link href={item.href} onClick={(e) => handleAnchorClick(e, item.href)}>{item.label}</Link>
+                <Link id={item.id} href={item.href} onClick={(e) => handleAnchorClick(e, item.href)}>{item.label}</Link>
               </li>
             ))}
           </ul>
@@ -106,6 +106,7 @@ export function Header() {
                 {itemsMenu.map((item) => (
                   <li key={item.label}>
                     <Link
+                      id={`mobile-${item.id}`}
                       href={item.href}
                       onClick={(e) => { handleAnchorClick(e, item.href); setIsMobileMenuOpen(false); }}
                       className="block py-1 text-sm font-semibold text-white/95 transition hover:text-primary-200"
@@ -118,10 +119,10 @@ export function Header() {
             </nav>
 
             <div className="mt-5 grid grid-cols-2 gap-2">
-              <button className="rounded-md border border-white/20 px-2 py-2 text-xs font-medium text-white/90">
-                Obtener prueba gratuita
+              <button id="mobile-button-ver-como-funciona" className="rounded-md border border-white/20 px-2 py-2 text-xs font-medium text-white/90">
+                Ver como funciona
               </button>
-              <button className="rounded-md bg-white px-2 py-2 text-xs font-semibold text-black">
+              <button id="mobile-button-comenzar" className="rounded-md bg-white px-2 py-2 text-xs font-semibold text-black">
                 Comenzar
               </button>
             </div>

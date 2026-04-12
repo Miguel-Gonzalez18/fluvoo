@@ -81,7 +81,7 @@ export function CTA() {
                     <p id="CTA-description" className="relative z-10 text-neutral-200 mt-3 text-sm max-w-lg mx-auto leading-relaxed">
                         Sin hojas de cálculo, sin configuraciones complejas.
                     </p>
-                    <Button id="hero-button-1" variant="ghost" className="relative z-10 cursor-pointer p-4 text-white border border-white/20 bg-white/10 backdrop-blur-lg">
+                    <Button id="cta-button-comenzar" variant="ghost" className="relative z-10 cursor-pointer p-4 text-white border border-white/20 bg-white/10 backdrop-blur-lg">
                         Comenzar ahora
                         <ArrowUpRight className="ml-2 h-4 w-4" />
                     </Button>

@@ -47,13 +47,13 @@ export function Footer() {
                 La forma más inteligente de entender tus finanzas. Sin hojas de cálculo, sin complicaciones.
               </p>
               <div className="flex gap-3 justify-center md:justify-start">
-                <a href="https://facebook.com/fluvoo" aria-label="Fluvoo en Facebook" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
+                <a id="footer-social-facebook" href="https://facebook.com/fluvoo" aria-label="Fluvoo en Facebook" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
                   <Facebook className="w-5 h-5" aria-hidden="true" />
                 </a>
-                <a href="https://instagram.com/fluvoo" aria-label="Fluvoo en Instagram" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
+                <a id="footer-social-instagram" href="https://instagram.com/fluvoo" aria-label="Fluvoo en Instagram" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
                   <Instagram className="w-5 h-5" aria-hidden="true" />
                 </a>
-                <a href="https://linkedin.com/company/fluvoo" aria-label="Fluvoo en LinkedIn" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
+                <a id="footer-social-linkedin" href="https://linkedin.com/company/fluvoo" aria-label="Fluvoo en LinkedIn" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
                   <Linkedin className="w-5 h-5" aria-hidden="true" />
                 </a>
               </div>
@@ -64,17 +64,17 @@ export function Footer() {
               <h3 className="text-lg font-semibold">Producto</h3>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <a href="#" className="text-neutral-400 hover:text-white transition-colors">
+                  <a id="footer-link-caracteristicas" href="#" className="text-neutral-400 hover:text-white transition-colors">
                     Características
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-neutral-400 hover:text-white transition-colors">
+                  <a id="footer-link-seguridad" href="#" className="text-neutral-400 hover:text-white transition-colors">
                     Seguridad
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-neutral-400 hover:text-white transition-colors">
+                  <a id="footer-link-integraciones" href="#" className="text-neutral-400 hover:text-white transition-colors">
                     Integraciones
                   </a>
                 </li>
@@ -86,17 +86,17 @@ export function Footer() {
               <h3 className="text-lg font-semibold">Compañía</h3>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <a href="#" className="text-neutral-400 hover:text-white transition-colors">
+                  <a id="footer-link-sobre-nosotros" href="#" className="text-neutral-400 hover:text-white transition-colors">
                     Sobre nosotros
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-neutral-400 hover:text-white transition-colors">
+                  <a id="footer-link-blog" href="#" className="text-neutral-400 hover:text-white transition-colors">
                     Blog
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-neutral-400 hover:text-white transition-colors">
+                  <a id="footer-link-contacto" href="#" className="text-neutral-400 hover:text-white transition-colors">
                     Contacto
                   </a>
                 </li>
@@ -108,17 +108,17 @@ export function Footer() {
               <h3 className="text-lg font-semibold">Recursos</h3>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <a href="#" className="text-neutral-400 hover:text-white transition-colors">
+                  <a id="footer-link-documentacion" href="#" className="text-neutral-400 hover:text-white transition-colors">
                     Documentación
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-neutral-400 hover:text-white transition-colors">
+                  <a id="footer-link-comunidad" href="#" className="text-neutral-400 hover:text-white transition-colors">
                     Comunidad
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-neutral-400 hover:text-white transition-colors">
+                  <a id="footer-link-soporte" href="#" className="text-neutral-400 hover:text-white transition-colors">
                     Soporte
                   </a>
                 </li>
@@ -139,11 +139,13 @@ export function Footer() {
               </div>
               <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
                 <input
+                  id="footer-newsletter-email"
+                  name="newsletter-email"
                   type="email"
                   placeholder="Tu correo electrónico"
                   className="flex-1 px-4 py-3 bg-neutral-900 border border-neutral-800 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:border-primary transition-colors"
                 />
-                <button className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium">
+                <button id="footer-newsletter-submit" className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium">
                   Suscribirse
                 </button>
               </div>
@@ -160,17 +162,17 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-1 text-xs">
                 <span>Creado por</span>
-                <a href="https://miguelcode.com" target="_blank" className="text-primary-400 hover:text-primary-300 transition-colors text-xs">miguelcode.com
+                <a id="footer-link-miguelcode" href="https://miguelcode.com" target="_blank" className="text-primary-400 hover:text-primary-300 transition-colors text-xs">miguelcode.com
                 </a>
               </div>
               <div className="flex gap-6">
-                <a href="#" className="text-neutral-400 hover:text-white transition-colors text-xs">
+                <a id="footer-link-privacidad" href="#" className="text-neutral-400 hover:text-white transition-colors text-xs">
                   Privacidad
                 </a>
-                <a href="#" className="text-neutral-400 hover:text-white transition-colors text-xs">
+                <a id="footer-link-terminos" href="#" className="text-neutral-400 hover:text-white transition-colors text-xs">
                   Términos
                 </a>
-                <a href="#" className="text-neutral-400 hover:text-white transition-colors text-xs">
+                <a id="footer-link-cookies" href="#" className="text-neutral-400 hover:text-white transition-colors text-xs">
                   Cookies
                 </a>
               </div>

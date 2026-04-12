@@ -103,6 +103,7 @@ export function FAQ() {
                                 Escríbenos y te respondemos en menos de 24 horas.
                             </p>
                             <a
+                                id="faq-link-soporte-desktop"
                                 href="mailto:hola@fluvoo.com"
                                 className="mt-2 inline-block text-xs font-medium text-primary hover:underline"
                             >
@@ -117,6 +118,7 @@ export function FAQ() {
                     <Accordion type="single" collapsible className="w-full space-y-3">
                         {faqItems.map((item, index) => (
                             <AccordionItem
+                                id={`faq-item-${item.id}`}
                                 key={item.id}
                                 value={item.id}
                                 className="border border-neutral-200 rounded-xl px-5 overflow-hidden bg-white transition-colors hover:border-primary/30 data-[state=open]:border-primary/40 data-[state=open]:bg-primary/2"
@@ -149,6 +151,7 @@ export function FAQ() {
                                 Escríbenos y te respondemos en menos de 24 horas.
                             </p>
                             <a
+                                id="faq-link-soporte-mobile"
                                 href="mailto:hola@fluvoo.com"
                                 className="mt-2 inline-block text-xs font-medium text-primary hover:underline"
                             >
