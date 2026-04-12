@@ -170,7 +170,7 @@ export function Benefits() {
     };
 
     return (
-        <section className="mx-auto max-w-full px-4 md:px-12 relative py-12 flex flex-col md:flex-row gap-16">
+        <section id="beneficios" className="mx-auto max-w-full px-4 md:px-12 relative py-12 flex flex-col md:flex-row gap-16">
             {/* Textos en sticky */}
             <div id="benefits-container" className="flex flex-col gap-2 md:sticky md:top-24 md:self-start w-full md:w-2/5 space-y-2 text-center md:text-left">
                 <p className="text-md text-primary" id="benefits-subtitle">En la práctica</p>

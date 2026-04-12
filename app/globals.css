@@ -203,13 +203,17 @@
   }
 
   body::-webkit-scrollbar {
-    width: 7px;
-    background-color: var(--background);
+    width: 6px;
+    background-color: #0d0d0d;
   }
 
   body::-webkit-scrollbar-thumb {
-    background: var(--primary);
+    background: var(--eucalyptus-400);
     border-radius: 10px;
+  }
+
+  body::-webkit-scrollbar-thumb:hover {
+    background: var(--eucalyptus-300);
   }
 
   html {

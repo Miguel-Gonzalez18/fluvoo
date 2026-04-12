@@ -46,7 +46,7 @@ export function CTA() {
     }, []);
 
     return (
-        <section className="relative py-28 bg-foreground overflow-hidden">
+        <section id="planes" className="relative py-28 bg-foreground overflow-hidden">
             {/* Patrón decorativo de fondo */}
             <div className="absolute inset-0 z-0">
                 <PixelBlast

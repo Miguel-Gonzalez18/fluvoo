@@ -84,7 +84,7 @@ export function HowItWorks() {
     }, []);
 
     return (
-        <section className="relative py-20 bg-foreground overflow-hidden">
+        <section id="como-funciona" className="relative py-20 bg-foreground overflow-hidden">
             {/* Patrón decorativo de fondo */}
             <div className="pointer-events-none absolute inset-0">
                 {/* Cuadrícula: líneas blancas sobre fondo oscuro */}

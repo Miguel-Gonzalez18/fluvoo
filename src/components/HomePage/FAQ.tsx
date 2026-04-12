@@ -73,7 +73,7 @@ export function FAQ() {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
             />
-            <section className="relative py-12 bg-white">
+            <section id="faq" className="relative py-12 bg-white">
             <div className="mx-auto max-w-full px-4 md:px-12 flex flex-col md:flex-row gap-4">
                 {/* Left column */}
                 <div className="flex flex-col gap-4 w-full md:w-2/5 text-center md:text-left md:sticky md:top-24 md:self-start">

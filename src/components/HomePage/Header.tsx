@@ -7,12 +7,23 @@ import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const itemsMenu = [
-  { label: "Inicio", href: "#" },
-  { label: "Nosotros", href: "#" },
-  { label: "Planes", href: "#" },
-  { label: "Blog", href: "#" },
-  { label: "Contacto", href: "#" },
+  { label: "Inicio", href: "#inicio" },
+  { label: "Nosotros", href: "#nosotros" },
+  { label: "Beneficios", href: "#beneficios" },
+  { label: "Cómo funciona", href: "#como-funciona" },
+  { label: "FAQ", href: "#faq" },
 ];
+
+const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  if (!href.startsWith("#")) return;
+  e.preventDefault();
+  const target = document.querySelector(href);
+  if (target) {
+    const offset = 80;
+    const top = (target as HTMLElement).getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: "smooth" });
+  }
+};
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -49,7 +60,7 @@ export function Header() {
           <ul className="flex gap-6">
             {itemsMenu.map((item) => (
               <li key={item.label} className="hover:text-primary-600 transition-colors">
-                <Link href={item.href}>{item.label}</Link>
+                <Link href={item.href} onClick={(e) => handleAnchorClick(e, item.href)}>{item.label}</Link>
               </li>
             ))}
           </ul>
@@ -96,7 +107,7 @@ export function Header() {
                   <li key={item.label}>
                     <Link
                       href={item.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
+                      onClick={(e) => { handleAnchorClick(e, item.href); setIsMobileMenuOpen(false); }}
                       className="block py-1 text-sm font-semibold text-white/95 transition hover:text-primary-200"
                     >
                       {item.label}
