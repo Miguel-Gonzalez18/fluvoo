@@ -48,7 +48,6 @@ export function CTA() {
     return (
         <section className="relative py-28 bg-foreground overflow-hidden">
             {/* Patrón decorativo de fondo */}
-            <div className="absolute inset-0 bg-black/50"></div>
             <div className="absolute inset-0 z-0">
                 <PixelBlast
                     className="bg-black"
@@ -77,7 +76,7 @@ export function CTA() {
                 <div id="CTA-header" className="text-center relative isolate space-y-4">
                     <MorphingText 
                         texts={["Empieza", "a entender", "tu dinero"]} 
-                        className="font-heading leading-inherit h-auto md:h-auto lg:h-auto text-white"
+                        className="font-heading text-white"
                     />
                     <p id="CTA-description" className="relative z-10 text-neutral-200 mt-3 text-sm max-w-lg mx-auto leading-relaxed">
                         Sin hojas de cálculo, sin configuraciones complejas.

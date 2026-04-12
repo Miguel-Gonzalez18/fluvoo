@@ -1,5 +1,5 @@
 "use client";
-
+import TextPressure from "@/components/ui/TextPressure";
 import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -152,7 +152,7 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-neutral-800">
+        <div className="border-y border-neutral-800">
           <div className="mx-auto max-w-full px-4 md:px-12 py-6">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <div className="flex items-center gap-6 text-neutral-400 text-xs">
@@ -176,6 +176,20 @@ export function Footer() {
               </div>
             </div>
           </div>
+        </div>
+        <div className="relative max-w-7xl mx-auto px-8">
+          <TextPressure
+            text="Fluvoo"
+            flex
+            alpha={false}
+            stroke={false}
+            width
+            weight
+            italic
+            textColor="#048059"
+            strokeColor="#5227FF"
+            minFontSize={36}
+          />
         </div>
       </div>
     </footer>
