@@ -67,7 +67,7 @@ export function Header() {
         </nav>
 
         {/* cta */}
-        <GetStartedButton />
+        <GetStartedButton id="cta-button-header" />
       </div>
 
       {/* mobile */}

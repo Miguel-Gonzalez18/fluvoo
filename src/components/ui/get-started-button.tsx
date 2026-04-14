@@ -8,6 +8,7 @@ interface GetStartedButtonProps
     VariantProps<typeof buttonVariants> {
   label?: string;
   icon?: React.ReactNode;
+  id?: string;
 }
 
 export function GetStartedButton({
@@ -16,10 +17,12 @@ export function GetStartedButton({
   variant,
   size = "lg",
   className,
+  id,
   ...props
 }: GetStartedButtonProps) {
   return (
     <Button
+      id={id}
       variant={variant}
       size={size}
       className={`group relative overflow-hidden cursor-pointer${className ? ` ${className}` : ""}`}
