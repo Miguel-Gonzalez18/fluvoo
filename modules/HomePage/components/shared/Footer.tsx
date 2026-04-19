@@ -1,5 +1,5 @@
 "use client";
-import TextPressure from "@/components/ui/TextPressure";
+import TextPressure from "@/modules/HomePage/components/ui/TextPressure";
 import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

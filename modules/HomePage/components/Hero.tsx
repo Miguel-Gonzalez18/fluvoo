@@ -1,10 +1,10 @@
 "use client";
 import { useEffect } from "react";
-import { GetStartedButton } from "../ui/get-started-button";
-import { Button } from "../ui/button";
+import { GetStartedButton } from "./ui/get-started-button";
+import { Button } from "./ui/button";
 import Image from "next/image";
 import { Star } from "lucide-react";
-import { BankCarousel } from "../ui/BankCarousel";
+import { BankCarousel } from "./ui/BankCarousel";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 

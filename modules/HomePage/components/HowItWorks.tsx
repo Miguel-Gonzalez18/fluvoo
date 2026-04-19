@@ -1,87 +1,16 @@
 "use client";
-import { useEffect } from "react";
-import { User, Link, ChartNoAxesColumn } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
-
-const cardsData = [
-    {
-        id: 1,
-        title: "Cuéntanos quién eres",
-        description: "Selecciona tu perfil asalariado, freelancer, o dueño de negocio. Fluvoo adapta toda la experiencia a tu realidad financiera específica desde el primer minuto.",
-        icon: User,
-    },
-    {
-        id: 2,
-        title: "Conecta tus notificaciones bancarias",
-        description: "Autoriza el correo donde llegan las alertas de tu banco. Fluvoo lee solo esos mensajes, nada personal y empieza a detectar tus gastos automáticamente.",
-        icon: Link,
-    },
-    {
-        id: 3,
-        title: "Recibe claridad financiera",
-        description: "Tu dashboard se llena con datos reales. La IA analiza tus patrones, resume tu estado financiero, y te propone planes de acción concretos y personalizados.",
-        icon: ChartNoAxesColumn,
-    },
-];
+import { useSectionRevealHome } from "../hooks/useSectionRevealHome";
+import { cardsData } from "../config/howItWorksHome";
 
 export function HowItWorks() {
-    useEffect((): () => void => {
-        gsap.registerPlugin(ScrollTrigger, SplitText);
-
-        // Divide el h2 en palabras para animarlas de izquierda a derecha
-        const splitTitle = new SplitText('#how-it-works-title', {
-            type: 'words',
-            wordsClass: 'word',
-        });
-
-        // Timeline del header: se dispara cuando #how-it-works-header entra al viewport
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: '#how-it-works-header',
-                start: 'top 80%',
-            },
-        });
-
-        tl.from('#how-it-works-subtitle', {
-            opacity: 0,
-            y: 16,
-            duration: 0.5,
-            ease: 'power3.out',
-        })
-        .from(splitTitle.words, {
-            opacity: 0,
-            x: 30,
-            duration: 0.6,
-            stagger: 0.05,
-            ease: 'power3.out',
-        }, '-=0.2')
-        .from('#how-it-works-description', {
-            opacity: 0,
-            y: 16,
-            duration: 0.5,
-            ease: 'power3.out',
-        }, '-=0.2');
-
-        // Cards: stagger de entrada desde abajo cuando el contenedor entra al viewport
-        gsap.fromTo('.how-it-works-card', {
-            opacity: 0,
-            y: 60,
-        }, {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            stagger: 0.15,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '.how-it-works-container',
-                start: 'top 75%',
-            },
-        });
-
-        return () => tl.kill();
-    }, []);
+    useSectionRevealHome({
+        headerTrigger: '#how-it-works-header',
+        titleSelector: '#how-it-works-title',
+        subtitleSelector: '#how-it-works-subtitle',
+        descriptionSelector: '#how-it-works-description',
+        cardSelector: '.how-it-works-card',
+        containerSelector: '.how-it-works-container',
+    });
 
     return (
         <section id="como-funciona" className="relative py-20 bg-foreground overflow-hidden">

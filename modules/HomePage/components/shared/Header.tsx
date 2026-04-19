@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { GetStartedButton } from "@/components/ui/get-started-button";
+import { GetStartedButton } from "@/modules/HomePage/components/ui/get-started-button";
 import Link from "next/link";
 import gsap from "gsap";
 import { Menu, X } from "lucide-react";

@@ -1,123 +1,20 @@
 "use client";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
-import { useEffect } from "react";
-import { BadgeDollarSign, Briefcase, Check, Laptop, Building} from "lucide-react";
+import { BadgeDollarSign, Check } from "lucide-react";
 import Image from "next/image";
-
-const profilesData = [
-  {
-    id: 'empleado',
-    title: 'Empleado Asalariado',
-    description: 'Para profesionales con sueldo fijo que quieren entender sus deducciones, optimizar sus gastos, y construir ahorro con propósito.',
-    icon: Briefcase,
-    image: '/images/empleado-asalariado.svg',
-    imageAlt: 'Empleado Asalariado',
-    imageSize: { width: 100, height: 100 },
-    badge: { text: 'GRATIS', color: 'primary' },
-    features: [
-      'Calculadora de nómina con TSS, SFS y SIPEN',
-      'Proyección de pensión SIPEN',
-      'Detección automática de gastos',
-      'Planes de ahorro con IA',
-      'Presupuestos por categoría'
-    ]
-  },
-  {
-    id: 'freelance',
-    title: 'Freelancer / Independiente',
-    description: 'Para profesionales con ingresos variables que necesitan estabilizarse, reservar para impuestos, y saber exactamente cuánto cobrar.',
-    icon: Laptop,
-    image: '/images/freelance.svg',
-    imageAlt: 'Freelancer',
-    imageSize: { width: 100, height: 100 },
-    badge: { text: 'GRATIS', color: 'primary' },
-    features: [
-      'ISR estimado por trimestre (DGII)',
-      'Calculadora de tarifa sostenible',
-      'Fondo de estabilización inteligente',
-      'Registro de ingresos por proyecto',
-      'Cuentas por cobrar'
-    ]
-  },
-  {
-    id: 'business',
-    title: 'Dueño de Negocio',
-    description: 'Para emprendedores y pequeños empresarios que necesitan separar sus finanzas personales de las del negocio y ver ambas con claridad.',
-    icon: Building,
-    image: '/images/business.svg',
-    imageAlt: 'Business',
-    imageSize: { width: 70, height: 70 },
-    badges: [
-      { text: 'PRO', color: 'black' },
-      { text: 'Proximamente', color: 'black' }
-    ],
-    features: [
-      'Módulo empresarial separado',
-      'Flujo de caja proyectado',
-      'ITBIS y retenciones automáticas',
-      'Nómina básica de empleados',
-      'Punto de equilibrio mensual'
-    ]
-  }
-];
+import { profilesData } from "../config/profilesHome";
+import { useSectionRevealHome } from "../hooks/useSectionRevealHome";
 
 export function Profiles() {
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger, SplitText);
-    
-    const splitTitle = new SplitText('#profiles-title', {
-      type: 'words',
-      wordsClass: 'word',
-    });
-
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '#profiles-title',
-        start: 'top 80%',
-      },
-    });
-
-    tl.from(splitTitle.words, {
-      opacity: 0,
-      y: 16,
-      duration: 0.5,
-      ease: 'power3.out',
-      stagger: 0.1,
-    }).from('#profiles-subtitle', {
-      opacity: 0,
-      y: 16,
-      duration: 0.5,
-      ease: 'power3.out',
-    }).from('#profiles-paragraph', {
-      opacity: 0,
-      y: 16,
-      duration: 0.5,
-      ease: 'power3.out',
-    });
-
-    gsap.fromTo('.profile-card', {
-        opacity: 0,
-        y: 60,
-    }, {
-        opacity: 1,
-        y: 0,
-        duration: 0.7,
-        stagger: 0.15,
-        ease: 'power3.out',
-        scrollTrigger: {
-            trigger: '.profiles-grid',
-            start: 'top 75%',
-        },
-    });
-
-    
-    return () => {
-      tl.kill();
-      splitTitle.revert();
-    };
-  }, []);
+  useSectionRevealHome({
+    headerTrigger: '#profiles-title',
+    titleSelector: '#profiles-title',
+    subtitleSelector: '#profiles-subtitle',
+    descriptionSelector: '#profiles-paragraph',
+    cardSelector: '.profile-card',
+    containerSelector: '.profiles-grid',
+    order: 'title-subtitle-desc',
+    titleSlide: 'y',
+  });
 
   return (
     <section className="w-full py-20 space-y-12 relative">
@@ -156,8 +53,8 @@ export function Profiles() {
                                         ))}
                                     </div>
                                 ) : (
-                                    <span className={`bg-${profile.badge.color} text-white text-xs font-semibold px-2 py-1 rounded-full`}>
-                                        {profile.badge.text}
+                                    <span className={`bg-${profile.badge!.color} text-white text-xs font-semibold px-2 py-1 rounded-full`}>
+                                        {profile.badge!.text}
                                     </span>
                                 )}
                                 <Image 
