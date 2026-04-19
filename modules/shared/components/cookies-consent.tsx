@@ -46,19 +46,19 @@ interface CookiePreferences {
 const DEFAULT_COOKIE_CATEGORIES: CookieCategory[] = [
   {
     id: "essential",
-    name: "Essential Cookies",
-    description: "Required for core website functionality, such as navigation and security.",
+    name: "Cookies esenciales",
+    description: "Necesarias para el funcionamiento básico del sitio web, como la navegación y la seguridad.",
     isEssential: true,
   },
   {
     id: "analytics",
-    name: "Analytics Cookies",
-    description: "Track anonymous usage to improve our services.",
+    name: "Cookies de analítica",
+    description: "Rastrean el uso anónimo para ayudarnos a mejorar nuestros servicios.",
   },
   {
     id: "marketing",
-    name: "Marketing Cookies",
-    description: "Enable personalized ads across websites.",
+    name: "Cookies de marketing",
+    description: "Permiten mostrar anuncios personalizados en distintos sitios web.",
   },
 ];
 
@@ -211,7 +211,7 @@ function CookieBanner({
           exit={{ opacity: 0, y: 100 }}
           transition={{ duration: 0.4, ease: "easeOut" }}
           className={cn(
-            "fixed bottom-0 left-0 right-0 sm:left-4 sm:bottom-4 z-50 w-full sm:max-w-md",
+            "fixed bottom-0 left-0 right-0 sm:left-auto sm:right-4 sm:bottom-4 z-50 w-full sm:max-w-md",
             className
           )}
         >
@@ -220,17 +220,17 @@ function CookieBanner({
               <div className="bg-primary/10 p-2 rounded-lg">
                 <CookieIcon className="h-5 w-5 text-primary" />
               </div>
-              <h2 className="text-lg font-semibold">Cookie Preferences</h2>
+              <h2 className="text-lg font-semibold">Preferencias de cookies</h2>
             </div>
             <div className="px-6 pb-4">
               <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                We use cookies to enhance your experience, personalize content, and analyze traffic.
+                Usamos cookies para mejorar tu experiencia, personalizar el contenido y analizar el tráfico.
               </p>
               <Link
                 href={cookiePolicyUrl}
                 className="text-xs inline-flex items-center text-primary hover:underline group font-medium transition-colors"
               >
-                Cookie Policy
+                Política de cookies
                 <ChevronRight className="h-3 w-3 ml-1 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </div>
@@ -240,7 +240,7 @@ function CookieBanner({
                 size="sm"
                 className="w-full sm:flex-1 h-9 rounded-lg text-sm transition-all hover:shadow-md"
               >
-                Accept All
+                Aceptar todas
               </Button>
               <Button
                 onClick={onCustomize}
@@ -248,7 +248,7 @@ function CookieBanner({
                 variant="outline"
                 className="w-full sm:flex-1 h-9 rounded-lg text-sm transition-all hover:shadow-md"
               >
-                Customize
+                Personalizar
               </Button>
             </div>
           </div>
@@ -281,9 +281,9 @@ function CookieCustomizeDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-card/95 backdrop-blur-lg z-200 sm:max-w-[500px] p-0 gap-0 border-border/50 shadow-2xl">
         <DialogHeader className="p-6 pb-4 border-b border-border/50">
-          <DialogTitle className="text-xl font-semibold">Manage Cookies</DialogTitle>
+          <DialogTitle className="text-xl font-semibold">Gestionar cookies</DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            Customize your cookie preferences below.
+            Personaliza tus preferencias de cookies a continuación.
           </DialogDescription>
         </DialogHeader>
         <div className="px-6 py-6 space-y-4 max-h-[calc(100vh-250px)] overflow-y-auto">
@@ -318,11 +318,11 @@ function CookieCustomizeDialog({
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
-                              Required
+                              Requerida
                             </span>
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p className="text-xs">These cookies cannot be disabled.</p>
+                            <p className="text-xs">Estas cookies no se pueden desactivar.</p>
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
@@ -349,13 +349,13 @@ function CookieCustomizeDialog({
               onClick={onRejectAll} 
               className="min-w-[120px] transition-all hover:shadow-md"
             >
-              Reject All
+              Rechazar todas
             </Button>
             <Button 
               onClick={onSave} 
               className="min-w-[140px] transition-all hover:shadow-md"
             >
-              Save Preferences
+              Guardar preferencias
             </Button>
           </div>
         </DialogFooter>

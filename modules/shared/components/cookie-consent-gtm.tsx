@@ -48,7 +48,7 @@ export function CookieConsentGTM() {
 
   return (
     <CookieConsent
-      cookiePolicyUrl="/privacidad"
+      cookiePolicyUrl="/cookies"
       categories={CATEGORIES}
       onAccept={handleAccept}
     />

@@ -17,7 +17,7 @@ export function Footer() {
             {/* Columna 1: Logo y descripción */}
             <div className="footer-section text-center md:text-left space-y-6">
               <div className="flex items-center justify-center md:justify-start gap-2">
-                <Image src="/logo-White.svg" alt="Fluvoo" width={100} height={100} />
+                <Image src="/logo-White.svg" alt="Fluvoo" width={100} height={100} style={{ width: 100, height: "auto" }} />
               </div>
               <p className="text-neutral-400 text-sm leading-relaxed">
                 La forma más inteligente de entender tus finanzas. Sin hojas de cálculo, sin complicaciones.
@@ -79,7 +79,7 @@ export function Footer() {
           <div className="mx-auto max-w-full px-4 md:px-12 py-6">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <div className="flex items-center gap-6 text-neutral-400 text-xs">
-                <span className="flex gap-2">© 2026 Fluvoo. Todos los derechos reservados. Hecho en <Image src="/images/banderaDo.png" alt="Bandera de República Dominicana" width={15} height={15} /></span>
+                <span className="flex gap-2">© 2026 Fluvoo. Todos los derechos reservados. Hecho en <Image src="/images/banderaDo.png" alt="Bandera de República Dominicana" width={15} height={15} style={{ width: 15, height: "auto" }} /></span>
               </div>
               <div className="flex items-center gap-1 text-xs">
                 <span>Creado por</span>

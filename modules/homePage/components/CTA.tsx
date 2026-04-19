@@ -12,37 +12,23 @@ export function CTA() {
     useEffect((): () => void => {
         gsap.registerPlugin(ScrollTrigger, SplitText);
 
-        // Timeline del header: se dispara cuando #CTA-header entra al viewport
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: '#CTA-header',
-                start: 'top 80%',
-            },
-        });
-        tl.from('#CTA-description', {
-            opacity: 0,
-            y: 16,
-            duration: 0.5,
-            ease: 'power3.out',
-        }, '-=0.2');
+        const ctx = gsap.context(() => {
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: '#CTA-header',
+                    start: 'top 80%',
+                },
+            });
 
-        // Cards: stagger de entrada desde abajo cuando el contenedor entra al viewport
-        gsap.fromTo('.CTA-card', {
-            opacity: 0,
-            y: 60,
-        }, {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            stagger: 0.15,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '.CTA-container',
-                start: 'top 75%',
-            },
+            tl.from('#CTA-description', {
+                opacity: 0,
+                y: 16,
+                duration: 0.5,
+                ease: 'power3.out',
+            }, '-=0.2');
         });
 
-        return () => tl.kill();
+        return () => ctx.revert();
     }, []);
 
     return (

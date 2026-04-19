@@ -62,6 +62,7 @@ export function Profiles() {
                                     alt={profile.imageAlt} 
                                     width={profile.imageSize.width} 
                                     height={profile.imageSize.height} 
+                                    style={{ width: profile.imageSize.width, height: "auto" }}
                                     unoptimized
                                 />
                             </div>

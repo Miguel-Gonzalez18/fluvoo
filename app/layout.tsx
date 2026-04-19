@@ -125,10 +125,11 @@ export default function RootLayout({
   return (
     <html
       lang="es"
+      suppressHydrationWarning
       className={`${manrope.variable} ${syne.variable} ${spaceGrotesk.variable} h-full antialiased`}
     >
       <GoogleTagManager gtmId="GTM-M6N8ND86" />
-      <body className="bg-neutral-50">
+      <body suppressHydrationWarning className="bg-neutral-50">
         <Script id="gtag-consent-init" strategy="beforeInteractive">{`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}

@@ -56,5 +56,5 @@ export const footerNavColumns: FooterNavColumn[] = [
 export const footerLegalLinks: FooterLegalLink[] = [
   { id: "footer-link-privacidad", label: "Privacidad", href: "#" },
   { id: "footer-link-terminos", label: "Términos", href: "#" },
-  { id: "footer-link-cookies", label: "Cookies", href: "#" },
+  { id: "footer-link-cookies", label: "Cookies", href: "/cookies" },
 ];
