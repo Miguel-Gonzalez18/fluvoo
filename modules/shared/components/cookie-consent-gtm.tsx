@@ -37,7 +37,7 @@ export function CookieConsentGTM() {
       ad_personalization: preferences[2] ? "granted" : "denied",
     };
 
-    const w = window as Window & { dataLayer: Record<string, unknown>[]; gtag?: (...args: unknown[]) => void };
+    const w = window as unknown as Window & { dataLayer: Record<string, unknown>[]; gtag?: (...args: unknown[]) => void };
     w.dataLayer = w.dataLayer || [];
     w.dataLayer.push({ event: "cookie_consent_update", ...consentUpdate });
 
