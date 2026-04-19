@@ -4,13 +4,6 @@ import { useCallback } from "react";
 import { CookieConsent } from "./cookies-consent";
 import { ShieldCheck, BarChart3, Megaphone } from "lucide-react";
 
-declare global {
-  interface Window {
-    dataLayer: Record<string, unknown>[];
-    gtag: (...args: unknown[]) => void;
-  }
-}
-
 const CATEGORIES = [
   {
     id: "essential",
@@ -44,11 +37,12 @@ export function CookieConsentGTM() {
       ad_personalization: preferences[2] ? "granted" : "denied",
     };
 
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ event: "cookie_consent_update", ...consentUpdate });
+    const w = window as Window & { dataLayer: Record<string, unknown>[]; gtag?: (...args: unknown[]) => void };
+    w.dataLayer = w.dataLayer || [];
+    w.dataLayer.push({ event: "cookie_consent_update", ...consentUpdate });
 
-    if (typeof window.gtag === "function") {
-      window.gtag("consent", "update", consentUpdate);
+    if (typeof w.gtag === "function") {
+      w.gtag("consent", "update", consentUpdate);
     }
   }, []);
 
