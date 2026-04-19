@@ -45,3 +45,33 @@ export interface FAQItem {
   question: string;
   answer: string;
 }
+
+export interface NavItem {
+  label: string;
+  href: string;
+  id: string;
+}
+
+export interface FooterSocialLink {
+  id: string;
+  href: string;
+  ariaLabel: string;
+  icon: LucideIcon;
+}
+
+export interface FooterNavLink {
+  id: string;
+  label: string;
+  href: string;
+}
+
+export interface FooterNavColumn {
+  title: string;
+  links: FooterNavLink[];
+}
+
+export interface FooterLegalLink {
+  id: string;
+  label: string;
+  href: string;
+}

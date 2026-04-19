@@ -2,49 +2,14 @@
 import Image from "next/image";
 import { GetStartedButton } from "@/modules/HomePage/components/ui/get-started-button";
 import Link from "next/link";
-import gsap from "gsap";
 import { Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
-
-const itemsMenu = [
-  { label: "Inicio", href: "#inicio", id: "nav-link-inicio" },
-  { label: "Nosotros", href: "#nosotros", id: "nav-link-nosotros" },
-  { label: "Beneficios", href: "#beneficios", id: "nav-link-beneficios" },
-  { label: "Cómo funciona", href: "#como-funciona", id: "nav-link-como-funciona" },
-  { label: "FAQ", href: "#faq", id: "nav-link-faq" },
-];
-
-const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-  if (!href.startsWith("#")) return;
-  e.preventDefault();
-  const target = document.querySelector(href);
-  if (target) {
-    const offset = 80;
-    const top = (target as HTMLElement).getBoundingClientRect().top + window.scrollY - offset;
-    window.scrollTo({ top, behavior: "smooth" });
-  }
-};
+import { useState } from "react";
+import { useHeaderAnimationHome } from "../../hooks/useHeaderAnimationHome";
+import { itemsMenu, handleAnchorClick } from "../../config/navMenuHome";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    gsap.fromTo(
-      "#header",
-      {
-        duration: 0.5,
-        y: -100,
-        opacity: 0,
-      },
-      {
-        duration: 0.5,
-        y: 0,
-        opacity: 1,
-        ease: "power4.inOut",
-        delay: 0.8,
-      }
-    );
-  }, []);
+  useHeaderAnimationHome();
 
   return (
     <header id="header" className="w-full px-2 py-4 fixed top-0 left-0 right-0 z-50">

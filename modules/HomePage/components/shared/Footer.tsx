@@ -1,35 +1,11 @@
 "use client";
 import TextPressure from "@/modules/HomePage/components/ui/TextPressure";
-import { useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SplitText } from "gsap/SplitText";
 import Image from "next/image";
-import { 
-  Facebook, 
-  Instagram, 
-  Linkedin,
-} from "lucide-react";
+import { useFooterAnimationHome } from "../../hooks/useFooterAnimationHome";
+import { footerSocialLinks, footerNavColumns, footerLegalLinks } from "../../config/footerHome";
 
 export function Footer() {
-  useEffect((): () => void => {
-    gsap.registerPlugin(ScrollTrigger, SplitText);
-
-    // Animación de las columnas del footer
-    gsap.from('.footer-section', {
-      opacity: 0,
-      y: 30,
-      duration: 0.6,
-      stagger: 0.1,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: '.footer-content',
-        start: 'top 80%',
-      },
-    });
-
-    return () => {};
-  }, []);
+  useFooterAnimationHome();
 
   return (
     <footer className="relative bg-black text-white overflow-hidden">
@@ -47,83 +23,28 @@ export function Footer() {
                 La forma más inteligente de entender tus finanzas. Sin hojas de cálculo, sin complicaciones.
               </p>
               <div className="flex gap-3 justify-center md:justify-start">
-                <a id="footer-social-facebook" href="https://facebook.com/fluvoo" aria-label="Fluvoo en Facebook" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
-                  <Facebook className="w-5 h-5" aria-hidden="true" />
-                </a>
-                <a id="footer-social-instagram" href="https://instagram.com/fluvoo" aria-label="Fluvoo en Instagram" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
-                  <Instagram className="w-5 h-5" aria-hidden="true" />
-                </a>
-                <a id="footer-social-linkedin" href="https://linkedin.com/company/fluvoo" aria-label="Fluvoo en LinkedIn" className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
-                  <Linkedin className="w-5 h-5" aria-hidden="true" />
-                </a>
+                {footerSocialLinks.map((social) => (
+                  <a key={social.id} id={social.id} href={social.href} aria-label={social.ariaLabel} className="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center hover:bg-neutral-700 transition-colors">
+                    <social.icon className="w-5 h-5" aria-hidden="true" />
+                  </a>
+                ))}
               </div>
             </div>
 
-            {/* Columna 2: Producto */}
-            <div className="footer-section space-y-6">
-              <h3 className="text-lg font-semibold">Producto</h3>
-              <ul className="space-y-3 text-sm">
-                <li>
-                  <a id="footer-link-caracteristicas" href="#" className="text-neutral-400 hover:text-white transition-colors">
-                    Características
-                  </a>
-                </li>
-                <li>
-                  <a id="footer-link-seguridad" href="#" className="text-neutral-400 hover:text-white transition-colors">
-                    Seguridad
-                  </a>
-                </li>
-                <li>
-                  <a id="footer-link-integraciones" href="#" className="text-neutral-400 hover:text-white transition-colors">
-                    Integraciones
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Columna 3: Compañía */}
-            <div className="footer-section space-y-6">
-              <h3 className="text-lg font-semibold">Compañía</h3>
-              <ul className="space-y-3 text-sm">
-                <li>
-                  <a id="footer-link-sobre-nosotros" href="#" className="text-neutral-400 hover:text-white transition-colors">
-                    Sobre nosotros
-                  </a>
-                </li>
-                <li>
-                  <a id="footer-link-blog" href="#" className="text-neutral-400 hover:text-white transition-colors">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a id="footer-link-contacto" href="#" className="text-neutral-400 hover:text-white transition-colors">
-                    Contacto
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Columna 4: Recursos */}
-            <div className="footer-section space-y-6">
-              <h3 className="text-lg font-semibold">Recursos</h3>
-              <ul className="space-y-3 text-sm">
-                <li>
-                  <a id="footer-link-documentacion" href="#" className="text-neutral-400 hover:text-white transition-colors">
-                    Documentación
-                  </a>
-                </li>
-                <li>
-                  <a id="footer-link-comunidad" href="#" className="text-neutral-400 hover:text-white transition-colors">
-                    Comunidad
-                  </a>
-                </li>
-                <li>
-                  <a id="footer-link-soporte" href="#" className="text-neutral-400 hover:text-white transition-colors">
-                    Soporte
-                  </a>
-                </li>
-              </ul>
-            </div>
+            {footerNavColumns.map((col) => (
+              <div key={col.title} className="footer-section space-y-6">
+                <h3 className="text-lg font-semibold">{col.title}</h3>
+                <ul className="space-y-3 text-sm">
+                  {col.links.map((link) => (
+                    <li key={link.id}>
+                      <a id={link.id} href={link.href} className="text-neutral-400 hover:text-white transition-colors">
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -166,15 +87,11 @@ export function Footer() {
                 </a>
               </div>
               <div className="flex gap-6">
-                <a id="footer-link-privacidad" href="#" className="text-neutral-400 hover:text-white transition-colors text-xs">
-                  Privacidad
-                </a>
-                <a id="footer-link-terminos" href="#" className="text-neutral-400 hover:text-white transition-colors text-xs">
-                  Términos
-                </a>
-                <a id="footer-link-cookies" href="#" className="text-neutral-400 hover:text-white transition-colors text-xs">
-                  Cookies
-                </a>
+                {footerLegalLinks.map((link) => (
+                  <a key={link.id} id={link.id} href={link.href} className="text-neutral-400 hover:text-white transition-colors text-xs">
+                    {link.label}
+                  </a>
+                ))}
               </div>
             </div>
           </div>
