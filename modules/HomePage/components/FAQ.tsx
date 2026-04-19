@@ -5,7 +5,7 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from "@/modules/HomePage/components/ui/accordion";
+} from "@/modules/homePage/components/ui/accordion";
 import Image from "next/image";
 import { faqItems } from "../config/faqHome";
 

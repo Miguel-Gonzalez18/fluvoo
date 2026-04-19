@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, buttonVariants } from "@/modules/HomePage/components/ui/button";
+import { Button, buttonVariants } from "@/modules/homePage/components/ui/button";
 import { type VariantProps } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
 

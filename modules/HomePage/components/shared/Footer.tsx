@@ -1,5 +1,5 @@
 "use client";
-import TextPressure from "@/modules/HomePage/components/ui/TextPressure";
+import TextPressure from "@/modules/homePage/components/ui/TextPressure";
 import Image from "next/image";
 import { useFooterAnimationHome } from "../../hooks/useFooterAnimationHome";
 import { footerSocialLinks, footerNavColumns, footerLegalLinks } from "../../config/footerHome";

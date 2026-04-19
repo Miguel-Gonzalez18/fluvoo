@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Manrope, Space_Grotesk, Syne } from "next/font/google";
 import { GoogleTagManager } from '@next/third-parties/google'
+import Script from "next/script";
+import { CookieConsentGTM } from "@/modules/shared/components/cookie-consent-gtm";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -127,6 +129,17 @@ export default function RootLayout({
     >
       <GoogleTagManager gtmId="GTM-M6N8ND86" />
       <body className="bg-neutral-50">
+        <Script id="gtag-consent-init" strategy="beforeInteractive">{`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('consent', 'default', {
+            analytics_storage: 'denied',
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            wait_for_update: 500
+          });
+        `}</Script>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
@@ -136,6 +149,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
         />
         {children}
+        <CookieConsentGTM />
       </body>
     </html>
   );

@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
-import { Button } from "@/modules/HomePage/components/ui/button";
-import PixelBlast from "@/modules/HomePage/components/ui/PixelBlast";
-import { MorphingText } from "@/modules/HomePage/components/ui/liquid-text";
+import { Button } from "@/modules/homePage/components/ui/button";
+import PixelBlast from "@/modules/homePage/components/ui/PixelBlast";
+import { MorphingText } from "@/modules/homePage/components/ui/liquid-text";
 import { ArrowUpRight } from "lucide-react";
 
 export function CTA() {
