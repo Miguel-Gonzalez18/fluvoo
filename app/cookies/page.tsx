@@ -95,7 +95,39 @@ export default function CookiesPolicyPage() {
 
           <div className="space-y-4">
             <h2 className="text-xl font-semibold text-neutral-900">Tipos de cookies que utilizamos</h2>
-            <div className="overflow-x-auto rounded-xl border border-neutral-200">
+
+            {/* Mobile: cards */}
+            <div className="flex flex-col gap-3 md:hidden">
+              {cookieRows.map((row) => {
+                const Icon = row.icon;
+                return (
+                  <div key={row.type} className="rounded-xl border border-neutral-200 bg-neutral-50 p-4 space-y-2">
+                    <p className="inline-flex items-center gap-2 font-semibold text-neutral-900 text-sm">
+                      <Icon className="h-4 w-4 text-primary shrink-0" />
+                      {row.type}
+                    </p>
+                    <p className="text-xs text-neutral-500">{row.examples}</p>
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">Duración</p>
+                        <p className="text-sm text-neutral-700">{row.duration}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">Desactivable</p>
+                        <p className="text-sm text-neutral-700">{row.canDisable}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide text-neutral-400">Finalidad</p>
+                      <p className="text-sm text-neutral-700">{row.purpose}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop: table */}
+            <div className="hidden md:block overflow-x-auto rounded-xl border border-neutral-200">
               <table className="min-w-full divide-y divide-neutral-200 text-left text-sm">
                 <thead className="bg-neutral-100/80 text-xs uppercase tracking-wide text-neutral-600">
                   <tr>

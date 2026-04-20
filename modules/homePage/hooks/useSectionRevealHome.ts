@@ -30,57 +30,56 @@ export function useSectionRevealHome({
   useEffect((): (() => void) => {
     gsap.registerPlugin(ScrollTrigger, SplitText);
 
-    const splitTitle = new SplitText(titleSelector, {
-      type: "words",
-      wordsClass: "word",
-    });
+    const ctx = gsap.context(() => {
+      const splitTitle = new SplitText(titleSelector, {
+        type: "words",
+        wordsClass: "word",
+      });
 
-    const tl = gsap.timeline({
-      scrollTrigger: { trigger: headerTrigger, start: "top 80%" },
-    });
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: headerTrigger, start: "top 80%" },
+      });
 
-    const titleVars =
-      titleSlide === "x"
-        ? { opacity: 0, x: 30, duration: 0.6, stagger: 0.05, ease: "power3.out" }
-        : { opacity: 0, y: 16, duration: 0.5, stagger: 0.1, ease: "power3.out" };
+      const titleVars =
+        titleSlide === "x"
+          ? { opacity: 0, x: 30, duration: 0.6, stagger: 0.05, ease: "power3.out" }
+          : { opacity: 0, y: 16, duration: 0.5, stagger: 0.1, ease: "power3.out" };
 
-    if (order === "subtitle-title-desc") {
-      if (subtitleSelector) {
-        tl.from(subtitleSelector, { opacity: 0, y: 16, duration: 0.5, ease: "power3.out" });
-      }
-      tl.from(splitTitle.words, titleVars, subtitleSelector ? "-=0.2" : undefined);
-      if (descriptionSelector) {
-        tl.from(descriptionSelector, { opacity: 0, y: 16, duration: 0.5, ease: "power3.out" }, "-=0.2");
-      }
-    } else {
-      tl.from(splitTitle.words, titleVars);
-      if (subtitleSelector) {
-        tl.from(subtitleSelector, { opacity: 0, y: 16, duration: 0.5, ease: "power3.out" });
-      }
-      if (descriptionSelector) {
-        tl.from(descriptionSelector, { opacity: 0, y: 16, duration: 0.5, ease: "power3.out" });
-      }
-    }
-
-    if (cardSelector && containerSelector) {
-      gsap.fromTo(
-        cardSelector,
-        { opacity: 0, y: 60 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: { trigger: containerSelector, start: containerStart },
+      if (order === "subtitle-title-desc") {
+        if (subtitleSelector) {
+          tl.from(subtitleSelector, { opacity: 0, y: 16, duration: 0.5, ease: "power3.out" });
         }
-      );
-    }
+        tl.from(splitTitle.words, titleVars, subtitleSelector ? "-=0.2" : undefined);
+        if (descriptionSelector) {
+          tl.from(descriptionSelector, { opacity: 0, y: 16, duration: 0.5, ease: "power3.out" }, "-=0.2");
+        }
+      } else {
+        tl.from(splitTitle.words, titleVars);
+        if (subtitleSelector) {
+          tl.from(subtitleSelector, { opacity: 0, y: 16, duration: 0.5, ease: "power3.out" });
+        }
+        if (descriptionSelector) {
+          tl.from(descriptionSelector, { opacity: 0, y: 16, duration: 0.5, ease: "power3.out" });
+        }
+      }
 
-    return () => {
-      tl.kill();
-      splitTitle.revert();
-    };
+      if (cardSelector && containerSelector) {
+        gsap.fromTo(
+          cardSelector,
+          { opacity: 0, y: 60 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            stagger: 0.15,
+            ease: "power3.out",
+            scrollTrigger: { trigger: containerSelector, start: containerStart },
+          }
+        );
+      }
+    });
+
+    return () => ctx.revert();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

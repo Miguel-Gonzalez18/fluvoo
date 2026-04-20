@@ -10,79 +10,80 @@ import { SplitText } from "gsap/SplitText";
 
 export function Hero() {
 
-    useEffect((): () => void => {
-        gsap.registerPlugin(SplitText);
-        const tl = gsap.timeline();
-        
-        const splitText = new SplitText('#hero-title', {
-            type: 'words,chars',
-            charsClass: 'char',
-            wordsClass: 'word'
-        });
-        
-        tl.fromTo(splitText.words, {
-            opacity: 0,
-            x: 150,
-        }, {
-            opacity: 1,
-            x: 0,
-            duration: 0.8,
-            stagger: 0.05,
-            ease: 'power3.out'
-        }, 0.5)
-        .from('#hero-subtitle', {
-            opacity: 0,
-            y: 50,
-            duration: 0.8,
-            ease: 'power3.out'
-        }, 0.7)
-        .from('#hero-paragraph', {
-            opacity: 0,
-            y: 50,
-            duration: 0.8,
-            ease: 'power3.out'
-        }, 0.7)
-        .fromTo("#hero-button-1", {
-            opacity: 0,
-            y: 50,
-        }, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power3.inOut'
-        }, 1.2)
-        .fromTo("#hero-button-2", {
-            opacity: 0,
-            y: 50,
-        }, {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            ease: 'power3.inOut'
-        }, 1.5);
-        
-        return () => tl.kill();
-    }, []);
-
     useEffect(() => {
-        gsap.fromTo("#hero-image", {
-            opacity: 0,
-            y: 50,
-        }, {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power3.inOut'
+        gsap.registerPlugin(SplitText);
+
+        const ctx = gsap.context(() => {
+            const tl = gsap.timeline();
+
+            const splitText = new SplitText('#hero-title', {
+                type: 'words,chars',
+                charsClass: 'char',
+                wordsClass: 'word'
+            });
+
+            tl.fromTo(splitText.words, {
+                opacity: 0,
+                x: 150,
+            }, {
+                opacity: 1,
+                x: 0,
+                duration: 0.8,
+                stagger: 0.05,
+                ease: 'power3.out'
+            }, 0.5)
+            .from('#hero-subtitle', {
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                ease: 'power3.out'
+            }, 0.7)
+            .from('#hero-paragraph', {
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                ease: 'power3.out'
+            }, 0.7)
+            .fromTo("#hero-button-1", {
+                opacity: 0,
+                y: 50,
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                ease: 'power3.inOut'
+            }, 1.2)
+            .fromTo("#hero-button-2", {
+                opacity: 0,
+                y: 50,
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 0.6,
+                ease: 'power3.inOut'
+            }, 1.5);
+
+            gsap.fromTo("#hero-image", {
+                opacity: 0,
+                y: 50,
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.inOut'
+            });
+
+            gsap.from(".hero-description", {
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                delay: 0.5,
+                stagger: 0.2,
+                ease: 'power3.inOut'
+            });
         });
 
-        gsap.from(".hero-description", {
-            opacity: 0,
-            y: 50,
-            duration: 0.8,
-            delay: 0.5,
-            stagger: 0.2,
-            ease: 'power3.inOut'
-        });
+        return () => ctx.revert();
     }, [])
 
   return (
