@@ -79,7 +79,7 @@ export function Footer() {
           <div className="mx-auto max-w-full px-4 md:px-12 py-6">
             <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
               <div className="flex items-center gap-6 text-neutral-400 text-xs">
-                <span className="flex gap-2">© 2026 Fluvoo. Todos los derechos reservados. Hecho en                 <Image src="/images/banderaDo.png" alt="Bandera de República Dominicana" width={15} height={15} style={{ width: "auto", height: "auto" }} /></span>
+                <span className="flex gap-2">© 2026 Fluvoo. Todos los derechos reservados. Hecho en <Image src="/images/banderaDo.png" alt="Bandera de República Dominicana" width={15} height={15} className="w-4 h-4" /></span>
               </div>
               <div className="flex items-center gap-1 text-xs">
                 <span>Creado por</span>
