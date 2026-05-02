@@ -13,7 +13,7 @@ export function HowItWorks() {
     });
 
     return (
-        <section id="como-funciona" className="relative py-20 bg-foreground overflow-hidden">
+        <section id="como-funciona" className="min-h-[calc(100vh-300px)] relative py-20 flex items-center bg-foreground overflow-hidden">
             {/* Patrón decorativo de fondo */}
             <div className="pointer-events-none absolute inset-0">
                 {/* Cuadrícula: líneas blancas sobre fondo oscuro */}
