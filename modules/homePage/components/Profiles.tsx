@@ -71,7 +71,7 @@ export function Profiles() {
                                      alt={profile.imageAlt}
                                      width={profile.imageSize.width}
                                      height={profile.imageSize.height}
-                                     style={{ width: profile.imageSize.width, height: "auto" }}
+                                     style={{ width: "auto", height: "auto" }}
                                  />
                             </div>
                             <div className="flex items-center gap-3 mb-4">
