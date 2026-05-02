@@ -63,6 +63,10 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+@utility text-highlight {
+  background-image: linear-gradient(180deg, transparent 55%, rgba(52, 168, 100, 0.22) 55%);
+}
+
 :root {
   --font-body: "Manrope";
   --font-label: "Space Grotesk";
@@ -204,7 +208,7 @@
 
   body::-webkit-scrollbar {
     width: 6px;
-    background-color: #0d0d0d;
+    background-color: var(--bunker-950);
   }
 
   body::-webkit-scrollbar-thumb {

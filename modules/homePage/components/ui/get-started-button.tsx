@@ -2,6 +2,7 @@ import * as React from "react";
 import { Button, buttonVariants } from "@/modules/homePage/components/ui/button";
 import { type VariantProps } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface GetStartedButtonProps
   extends React.ComponentProps<"button">,
@@ -25,7 +26,7 @@ export function GetStartedButton({
       id={id}
       variant={variant}
       size={size}
-      className={`group relative overflow-hidden cursor-pointer${className ? ` ${className}` : ""}`}
+      className={cn("group relative overflow-hidden cursor-pointer", className)}
       {...props}
     >
       <span className="mr-8 transition-opacity duration-500 group-hover:opacity-0">

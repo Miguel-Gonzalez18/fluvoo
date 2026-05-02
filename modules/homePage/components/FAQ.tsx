@@ -38,7 +38,7 @@ export function FAQ() {
                     </p>
                     <h2 className="text-3xl font-heading text-neutral-800 font-bold leading-tight">
                         Respuestas{" "}
-                        <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">
+                        <span className="text-primary text-highlight">
                             directas
                         </span>
                     </h2>

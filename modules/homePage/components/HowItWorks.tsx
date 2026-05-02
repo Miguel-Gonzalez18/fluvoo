@@ -27,7 +27,7 @@ export function HowItWorks() {
                 <div id="how-it-works-header" className="mb-12 text-center relative">
                     <p id="how-it-works-subtitle" className="text-xs text-primary font-semibold mb-3 uppercase tracking-widest">¿Cómo funciona?</p>
                     <h2 id="how-it-works-title" className="text-4xl font-heading font-bold text-neutral-50">
-                        Tres pasos para tomar <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">el control</span>
+                        Tres pasos para tomar <span className="text-primary text-highlight">el control</span>
                     </h2>
                     <p id="how-it-works-description" className="text-neutral-200 mt-3 text-sm max-w-lg mx-auto leading-relaxed">
                         Sin configuraciones complejas. Sin conocimientos financieros previos. Solo conecta y empieza.

@@ -13,19 +13,6 @@ import { Footer } from "./components/shared/Footer";
 export const metadata: Metadata = {
   title: "Fluvoo | Claridad financiera para cada Dominicano",
   description: "Descubre Fluvoo, la app financiera diseñada para dominicanos. Controla tus gastos, ahorra mejor y toma decisiones inteligentes con tu dinero.",
-  openGraph: {
-    title: "Fluvoo - Tu finanzas, claras y sencillas",
-    description: "La mejor herramienta financiera para dominicanos. Empieza hoy a tomar control de tu dinero.",
-    url: 'https://fluvoo.com',
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Fluvoo - App financiera para dominicanos',
-      },
-    ],
-  },
 };
 
 export default function HomePage() {

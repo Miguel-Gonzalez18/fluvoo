@@ -98,9 +98,9 @@ export function Hero() {
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.04)_1px,transparent_1px)] bg-size-[48px_48px] opacity-80" />
         </div>
 
-        <div className="w-full md:w-3/5 flex flex-col gap-4 relative z-10 mt-15 md:mt-0">
+        <div className="w-full md:w-3/5 flex flex-col gap-4 relative z-10 mt-16 md:mt-0">
           <p id="hero-subtitle" className="text-xs mt-20 md:mt-0 mx-auto md:mx-0 text-center md:text-left text-primary-800 px-3 py-1 border border-neutral-200 rounded-lg w-fit">Claridad financiera para cada dominicano</p>
-          <h1 id="hero-title" className="md:text-5xl text-4xl text-center md:text-left font-bold font-heading text-balance">Tu dinero <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">analizado</span>, <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">planificado</span> y bajo control.</h1>
+          <h1 id="hero-title" className="md:text-5xl text-4xl text-center md:text-left font-bold font-heading text-balance">Tu dinero <span className="text-primary text-highlight">analizado</span>, <span className="text-primary text-highlight">planificado</span> y bajo control.</h1>
           <p id="hero-paragraph" className="text-lg text-center md:text-left text-neutral-600 mt-4">Descubre cómo Fluvoo transforma tu relación con el dinero.</p>
           <div className="w-full flex items-center gap-2 justify-center md:justify-start">
             <Button id="hero-button-1" variant="outline" className="cursor-pointer p-4">Comenzar ahora</Button>

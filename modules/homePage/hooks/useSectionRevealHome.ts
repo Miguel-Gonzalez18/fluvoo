@@ -80,6 +80,8 @@ export function useSectionRevealHome({
     });
 
     return () => ctx.revert();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Intentionally using empty deps array: the hook is called once per component mount.
+    // All config values are static selectors that do not change at runtime, and GSAP
+    // context cleanup via ctx.revert() handles SSR hydration safely.
   }, []);
 }

@@ -4,6 +4,15 @@ import Image from "next/image";
 import { profilesData } from "../config/profilesHome";
 import { useSectionRevealHome } from "../hooks/useSectionRevealHome";
 
+const badgeColorMap: Record<string, string> = {
+    primary: "bg-primary",
+    black: "bg-black",
+};
+
+function getBadgeClasses(color: string): string {
+    return `${badgeColorMap[color] || "bg-neutral-500"} text-white text-xs font-semibold px-2 py-1 rounded-full`;
+}
+
 export function Profiles() {
   useSectionRevealHome({
     headerTrigger: '#profiles-title',
@@ -29,7 +38,7 @@ export function Profiles() {
         </div>
         <div className="mx-auto max-w-full space-y-1 px-4 md:px-12 relative text-center md:text-left">
             <p className="text-md text-primary" id="profiles-subtitle">Hecho para ti</p>
-            <h2 className="text-3xl font-heading text-neutral-800 font-bold" id="profiles-title">Una app que se <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">adapta</span> a tu <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">situación</span></h2>
+            <h2 className="text-3xl font-heading text-neutral-800 font-bold" id="profiles-title">Una app que se <span className="text-primary text-highlight">adapta</span> a tu <span className="text-primary text-highlight">situación</span></h2>
             <p className="text-md text-neutral-600" id="profiles-paragraph">No importa cómo generes tus ingresos. Fluvoo tiene un perfil diseñado para tu realidad.</p>
         </div>
 
@@ -44,27 +53,26 @@ export function Profiles() {
                                 {profile.badges ? (
                                     <div className="space-x-2">
                                         {profile.badges.map((badge, index) => (
-                                            <span 
+                                            <span
                                                 key={index}
-                                                className={`bg-${badge.color} text-white text-xs font-semibold px-2 py-1 rounded-full`}
+                                                className={getBadgeClasses(badge.color)}
                                             >
                                                 {badge.text}
                                             </span>
                                         ))}
                                     </div>
                                 ) : (
-                                    <span className={`bg-${profile.badge!.color} text-white text-xs font-semibold px-2 py-1 rounded-full`}>
+                                    <span className={getBadgeClasses(profile.badge!.color)}>
                                         {profile.badge!.text}
                                     </span>
                                 )}
-                                <Image 
-                                    src={profile.image} 
-                                    alt={profile.imageAlt} 
-                                    width={profile.imageSize.width} 
-                                    height={profile.imageSize.height} 
-                                    style={{ width: profile.imageSize.width, height: "auto" }}
-                                    unoptimized
-                                />
+                                 <Image
+                                     src={profile.image}
+                                     alt={profile.imageAlt}
+                                     width={profile.imageSize.width}
+                                     height={profile.imageSize.height}
+                                     style={{ width: profile.imageSize.width, height: "auto" }}
+                                 />
                             </div>
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">

@@ -12,7 +12,7 @@ export function Benefits() {
             {/* Textos en sticky */}
             <div id="benefits-container" className="flex flex-col gap-2 md:sticky md:top-24 md:self-start w-full md:w-2/5 space-y-2 text-center md:text-left">
                 <p className="text-md text-primary" id="benefits-subtitle">En la práctica</p>
-                <h2 className="text-3xl font-heading text-neutral-800 font-bold" id="benefits-title">Lo que Fluvoo hace por ti <span className="text-primary bg-[linear-gradient(180deg,transparent_55%,rgba(52,168,100,0.22)_55%)]">cada día</span></h2>
+                <h2 className="text-3xl font-heading text-neutral-800 font-bold" id="benefits-title">Lo que Fluvoo hace por ti <span className="text-primary text-highlight">cada día</span></h2>
                 <p className="text-md text-neutral-600" id="benefits-paragraph">No solo es lo que promete es lo que ves en pantalla cada vez que abres la app.</p>
                 {/* Items del índice: se activan por scroll o al hacer clic */}
                 <div id="benefits-container-items" className="flex flex-col gap-2">
