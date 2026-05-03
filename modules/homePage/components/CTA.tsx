@@ -4,7 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { Button } from "@/modules/homePage/components/ui/button";
-import PixelBlast from "@/modules/homePage/components/ui/PixelBlast";
+import PixelBlast from "@/modules/shared/components/ui/PixelBlast";
 import { MorphingText } from "@/modules/homePage/components/ui/liquid-text";
 import { ArrowUpRight } from "lucide-react";
 
@@ -47,7 +47,7 @@ export function CTA() {
                     rippleSpeed={0.4}
                     rippleThickness={0.12}
                     rippleIntensityScale={1.5}
-                    liquid={false}
+                    liquid={true}
                     liquidStrength={0.12}
                     liquidRadius={1.2}
                     liquidWobbleSpeed={5}

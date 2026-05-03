@@ -4,6 +4,8 @@ import { GoogleTagManager } from '@next/third-parties/google'
 import Script from "next/script";
 import { CookieConsentGTM } from "@/modules/shared/components/cookie-consent-gtm";
 import "./globals.css";
+import { Toaster } from "sileo";
+
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -156,6 +158,7 @@ export default function RootLayout({
         />
         {children}
         <CookieConsentGTM />
+        <Toaster position="top-center" />
       </body>
     </html>
   );
