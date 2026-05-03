@@ -3,11 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginSchemaOutput } from "../lib/loginSchemas";
 
 export function useLoginForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginSchemaOutput>({
+  const { register, handleSubmit, formState: { errors, isSubmitting }, } = useForm<LoginSchemaOutput>({
     resolver: zodResolver(loginSchema),
     mode: "onBlur",
     defaultValues: {
