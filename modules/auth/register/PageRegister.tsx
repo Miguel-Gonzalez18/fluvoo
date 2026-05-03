@@ -103,7 +103,7 @@ export default function PageRegister() {
           {/* Logo */}
           <div className="space-y-2">
             <Link href="/">
-              <Image src="/logo.svg" alt="Fluvoo" width={100} height={100} />
+              <Image src="/logo.svg" alt="Fluvoo" width={100} height={100} className="w-[100px] h-auto object-contain" />
             </Link>
           </div>
         </div>

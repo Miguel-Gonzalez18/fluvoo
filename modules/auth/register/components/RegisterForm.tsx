@@ -35,7 +35,7 @@ export function RegisterForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex w-full max-w-sm flex-col gap-5" noValidate>
       <Link href="/" className="block lg:hidden">
-        <Image src="/logo.svg" alt="Fluvoo" width={100} height={100} />
+        <Image src="/logo.svg" alt="Fluvoo" width={100} height={100} className="w-[100px] h-auto object-contain" />
       </Link>
       <div className="space-y-1">
         <h1 className="font-heading text-2xl font-semibold text-neutral-900">
