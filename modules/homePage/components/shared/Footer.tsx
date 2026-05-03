@@ -3,6 +3,7 @@ import TextPressure from "@/modules/homePage/components/ui/TextPressure";
 import Image from "next/image";
 import { useFooterAnimationHome } from "../../hooks/useFooterAnimationHome";
 import { footerSocialLinks, footerNavColumns, footerLegalLinks } from "../../config/footerHome";
+import Link from "next/link";
 
 export function Footer() {
   useFooterAnimationHome();
@@ -17,7 +18,9 @@ export function Footer() {
             {/* Columna 1: Logo y descripción */}
             <div className="footer-section text-center md:text-left space-y-6">
               <div className="flex items-center justify-center md:justify-start gap-2">
-                <Image src="/logo-White.svg" alt="Fluvoo" width={100} height={100} />
+                <Link href="/">
+                  <Image src="/logo-White.svg" alt="Fluvoo" width={100} height={100} />
+                </Link>
               </div>
               <p className="text-neutral-400 text-sm leading-relaxed">
                 La forma más inteligente de entender tus finanzas. Sin hojas de cálculo, sin complicaciones.
