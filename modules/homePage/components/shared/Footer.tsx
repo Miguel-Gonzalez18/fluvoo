@@ -17,7 +17,7 @@ export function Footer() {
             {/* Columna 1: Logo y descripción */}
             <div className="footer-section text-center md:text-left space-y-6">
               <div className="flex items-center justify-center md:justify-start gap-2">
-                <Image src="/logo-White.svg" alt="Fluvoo" width={100} height={100} style={{ width: "auto", height: "auto" }} />
+                <Image src="/logo-White.svg" alt="Fluvoo" width={100} height={100} />
               </div>
               <p className="text-neutral-400 text-sm leading-relaxed">
                 La forma más inteligente de entender tus finanzas. Sin hojas de cálculo, sin complicaciones.
