@@ -1,8 +1,7 @@
-// middleware.ts  ← raíz del proyecto (mismo nivel que package.json)
 import { updateSession } from '@/src/lib/proxy'
 import type { NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   return await updateSession(request)
 }
 

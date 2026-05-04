@@ -10,7 +10,7 @@ import type { LoginSchemaOutput } from "../lib/loginSchemas";
 import { sileo } from "sileo"
 import Image from "next/image";
 import Link from "next/link";
-import { signIn } from "../../actions/authActions";
+import { signIn } from "../../../shared/actions/authActions";
 
 export function LoginForm() {
   const { showPassword, toggle } = usePasswordToggle();

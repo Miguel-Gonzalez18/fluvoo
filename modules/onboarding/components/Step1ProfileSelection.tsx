@@ -24,7 +24,7 @@ function ProfileCard({ profile, isSelected, onSelect }: ProfileCardProps) {
       onClick={() => !isDisabled && onSelect(profile.id)}
       disabled={isDisabled}
       className={cn(
-        "relative flex flex-col items-start p-5 sm:p-6 rounded-xl border-2 text-left transition-all duration-200",
+        "relative flex flex-col items-start p-5 sm:p-6 rounded-md border-2 text-left transition-all duration-200",
         isDisabled
           ? "border-border/50 bg-muted/30 cursor-not-allowed opacity-60"
           : "hover:border-primary/50 hover:bg-primary/5 border-border bg-card",

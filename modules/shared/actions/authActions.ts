@@ -28,7 +28,8 @@ export async function signUp(email: string, password: string, fullName: string) 
 
 export async function signOut() {
   const supabase = await createClient()
-  await supabase.auth.signOut()
+  const { error } = await supabase.auth.signOut()
+  if (error) return { error: error.message }
   revalidatePath('/', 'layout')
   redirect('/login')
 }

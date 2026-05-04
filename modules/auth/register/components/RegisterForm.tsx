@@ -13,7 +13,7 @@ import type { RegisterSchemaOutput } from "../lib/registerSchemas";
 import { sileo } from "sileo";
 import Image from "next/image";
 import Link from "next/link";
-import { signUp } from "../../actions/authActions";
+import { signUp } from "../../../shared/actions/authActions";
 
 export function RegisterForm() {
   const { showPassword, toggle } = usePasswordToggle();

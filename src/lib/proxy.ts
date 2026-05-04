@@ -45,9 +45,22 @@ export async function updateSession(request: NextRequest) {
     request.nextUrl.pathname.startsWith(path + '/')
   )
 
+  // Usuario no autenticado intentando acceder a ruta protegida
   if (!user && !isPublic) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
+    return NextResponse.redirect(url)
+  }
+
+  // Usuario autenticado intentando acceder a landing, login o register
+  const AUTH_REDIRECT_PATHS = ['/', '/login', '/register']
+  const shouldRedirectToDashboard = user && AUTH_REDIRECT_PATHS.some(path =>
+    request.nextUrl.pathname === path
+  )
+
+  if (shouldRedirectToDashboard) {
+    const url = request.nextUrl.clone()
+    url.pathname = '/dashboard'
     return NextResponse.redirect(url)
   }
 

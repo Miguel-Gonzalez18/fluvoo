@@ -15,11 +15,11 @@
   "menuColor": "default",
   "menuAccent": "subtle",
   "aliases": {
-    "components": "@/components",
+    "components": "@/modules/shared/components",
     "utils": "@/lib/utils",
-    "ui": "@/components/ui",
+    "ui": "@/modules/shared/components/ui",
     "lib": "@/lib",
-    "hooks": "@/hooks"
+    "hooks": "@/modules/shared/hooks"
   },
   "registries": {
     "@react-bits": "https://reactbits.dev/r/{name}.json",

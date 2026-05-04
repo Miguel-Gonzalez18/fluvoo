@@ -95,7 +95,7 @@ export function OnboardingPage() {
               <Button
                 onClick={goToNext}
                 disabled={!canProceed || isLoading}
-                className="gap-2 bg-foreground hover:bg-foreground/90"
+                className="gap-2 bg-foreground hover:bg-foreground/90 rounded-sm cursor-pointer"
               >
                 {isLoading ? (
                   <>
