@@ -33,8 +33,9 @@ export function TaxSummaryCard({
   gastosEstimados = 30, // Default 30%
   className,
 }: TaxSummaryCardProps) {
+  const [period, setPeriod] = useState<"annual" | "monthly">("monthly");
+
   if (profileType === "employee" && monthlySalary && monthlySalary > 0) {
-    const [period, setPeriod] = useState<"annual" | "monthly">("monthly");
     const calculation = calcularISRAsalariado(monthlySalary);
 
     const isAnnual = period === "annual";
