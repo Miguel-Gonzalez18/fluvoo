@@ -1,23 +1,13 @@
 "use client";
 
-import { Building2, Shield, Filter, XCircle } from "lucide-react";
+import { Building2 } from "lucide-react";
 import { Button } from "@/modules/homePage/components/ui/button";
+import { SUPPORTED_BANKS, GMAIL_FEATURES } from "../config/gmail";
 
 interface Step3GmailConnectProps {
   onConnect: () => void;
   onSkip: () => void;
 }
-
-const banks = [
-  "Banreservas",
-  "Popular",
-  "BHD",
-  "APAP",
-  "Scotiabank",
-  "Qik",
-  "Santa Cruz",
-  "Cibao",
-];
 
 export function Step3GmailConnect({ onConnect, onSkip }: Step3GmailConnectProps) {
   return (
@@ -38,39 +28,20 @@ export function Step3GmailConnect({ onConnect, onSkip }: Step3GmailConnectProps)
 
       {/* Features */}
       <div className="max-w-sm mx-auto space-y-4">
-        <div className="flex items-start gap-3">
-          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-            <Shield className="w-3.5 h-3.5 text-primary" />
-          </div>
-          <p className="text-sm text-foreground">
-            <span className="font-medium">Solo lectura:</span>{" "}
-            <span className="text-muted-foreground">
-              Nunca podremos enviar correos por ti.
-            </span>
-          </p>
-        </div>
-        <div className="flex items-start gap-3">
-          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-            <Filter className="w-3.5 h-3.5 text-primary" />
-          </div>
-          <p className="text-sm text-foreground">
-            <span className="font-medium">Privacidad:</span>{" "}
-            <span className="text-muted-foreground">
-              Solo filtramos correos de entidades bancarias.
-            </span>
-          </p>
-        </div>
-        <div className="flex items-start gap-3">
-          <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
-            <XCircle className="w-3.5 h-3.5 text-primary" />
-          </div>
-          <p className="text-sm text-foreground">
-            <span className="font-medium">Control:</span>{" "}
-            <span className="text-muted-foreground">
-              Puedes desconectarlo en cualquier momento.
-            </span>
-          </p>
-        </div>
+        {GMAIL_FEATURES.map((feature) => {
+          const Icon = feature.icon;
+          return (
+            <div key={feature.title} className="flex items-start gap-3">
+              <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 mt-0.5">
+                <Icon className="w-3.5 h-3.5 text-primary" />
+              </div>
+              <p className="text-sm text-foreground">
+                <span className="font-medium">{feature.title}:</span>{" "}
+                <span className="text-muted-foreground">{feature.description}</span>
+              </p>
+            </div>
+          );
+        })}
       </div>
 
       {/* Banks */}
@@ -79,7 +50,7 @@ export function Step3GmailConnect({ onConnect, onSkip }: Step3GmailConnectProps)
           Bancos compatibles
         </p>
         <div className="flex flex-wrap justify-center gap-2 max-w-md mx-auto">
-          {banks.map((bank) => (
+          {SUPPORTED_BANKS.map((bank) => (
             <span
               key={bank}
               className="px-3 py-1.5 bg-muted rounded-lg text-xs font-medium text-muted-foreground"

@@ -25,7 +25,8 @@ export async function saveOnboardingData(data: OnboardingData) {
   //     profile_type: data.profileType,
   //     monthly_salary: data.monthlySalary,
   //     employer_name: data.employerName,
-  //     contributes_sipen: data.contributesSipen,
+  //     contributes_sipen: data.contributesSipen ?? true,  // ARS/SFS 3.04% - obligatorio
+  //     contributes_afp: data.contributesAfp ?? true,      // AFP 2.87% - obligatorio
   //     average_monthly_income: data.averageMonthlyIncome,
   //     profession_sector: data.professionSector,
   //     business_monthly_revenue: data.businessMonthlyRevenue,
