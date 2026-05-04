@@ -13,6 +13,7 @@ import type { RegisterSchemaOutput } from "../lib/registerSchemas";
 import { sileo } from "sileo";
 import Image from "next/image";
 import Link from "next/link";
+import { signUp } from "../../actions/authActions";
 
 export function RegisterForm() {
   const { showPassword, toggle } = usePasswordToggle();
@@ -21,10 +22,9 @@ export function RegisterForm() {
   const { strength, feedback } = usePasswordStrength(password);
 
   const onSubmit = async (data: RegisterSchemaOutput) => {
-    // TODO: Implementar lógica de registro cuando haya servidor
-    console.log(data);
-    sileo.success({ title: "Cuenta creada correctamente!" });
-  };
+    const result = await signUp(data.email, data.password, data.fullName)
+    if (result?.error) sileo.error({ title: result.error })
+  }
 
   const strengthColors: Record<string, string> = {
     weak: "bg-red-500",

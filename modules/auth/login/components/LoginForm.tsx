@@ -10,16 +10,16 @@ import type { LoginSchemaOutput } from "../lib/loginSchemas";
 import { sileo } from "sileo"
 import Image from "next/image";
 import Link from "next/link";
+import { signIn } from "../../actions/authActions";
 
 export function LoginForm() {
   const { showPassword, toggle } = usePasswordToggle();
   const { register, handleSubmit, errors, isSubmitting } = useLoginForm();
 
   const onSubmit = async (data: LoginSchemaOutput) => {
-    // TODO: Implementar lógica de autenticación cuando haya servidor
-    console.log(data);
-    sileo.success({ title: "Sesión iniciada correctamente!" });
-  };
+    const result = await signIn(data.email, data.password)
+    if (result?.error) sileo.error({ title: result.error })
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex w-full max-w-sm flex-col gap-5" noValidate>
