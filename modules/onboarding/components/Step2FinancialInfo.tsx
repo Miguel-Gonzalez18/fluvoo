@@ -9,6 +9,7 @@ import { Button } from "@/modules/homePage/components/ui/button";
 import { OnboardingData, ProfileType, Loan, HealthInsurance } from "../types/onboarding";
 import { InsuranceForm } from "./forms/InsuranceForm";
 import { LoanForm } from "./forms/LoanForm";
+import { TaxSummaryCard } from "./TaxSummaryCard";
 import { getLoanTypeLabel, BUSINESS_TYPES, SIPEN_CONFIG, AFP_CONFIG } from "../config/financial";
 
 interface Step2FinancialInfoProps {
@@ -153,13 +154,31 @@ interface IncomeSectionProps {
 
 function IncomeSection({ profileType, data, onUpdate }: IncomeSectionProps) {
   const fields = getIncomeFields(profileType, data, onUpdate);
-  
+
+  // Determinar si mostrar resumen fiscal (requiere ingreso > 0)
+  const showTaxSummary =
+    (profileType === "employee" && (data.monthlySalary ?? 0) > 0) ||
+    (profileType === "freelancer" && (data.averageMonthlyIncome ?? 0) > 0) ||
+    (profileType === "business_owner" && (data.businessMonthlyRevenue ?? 0) > 0);
+
   return (
-    <div>
-      <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
-        Ingresos mensuales
-      </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">{fields}</div>
+    <div className="space-y-4">
+      <div>
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+          Ingresos mensuales
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">{fields}</div>
+      </div>
+
+      {showTaxSummary && (
+        <TaxSummaryCard
+          profileType={profileType}
+          monthlySalary={data.monthlySalary}
+          averageMonthlyIncome={data.averageMonthlyIncome}
+          businessMonthlyRevenue={data.businessMonthlyRevenue}
+          gastosEstimados={30} // Default 30% para empresas
+        />
+      )}
     </div>
   );
 }

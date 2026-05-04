@@ -27,6 +27,12 @@ The app connects to your bank notifications through Gmail (read-only, with your 
 
 **Personalized savings plans.** Tell the AI assistant your savings goal and it builds a realistic, step-by-step plan based on your real numbers. The plan adapts as your situation changes.
 
+**Integrated ISR Tax Calculator.** Real-time tax calculation during onboarding following DGII 2024 regulations:
+  - **Asalariados:** Deducts TSS (5.91%) with salary caps, applies progressive ISR scale (0%-15%-20%-25%)
+  - **Freelancers:** Option for simplified deduction (RD$416,220 exemption) or itemized expenses, 10% withholding tracking
+  - **Empresas:** 27% corporate tax rate, dividend withholding, monthly advance payments
+  - Visual tax summary card shows net income after all deductions
+
 **Dominican financial calculators.** Calculate your net salary with TSS/SFS/SIPEN, estimate your ISR tax, project your SIPEN pension, calculate loan payments, and more — all aligned with current Dominican regulations.
 
 **Receipt scanning.** Take a photo of a receipt and the app reads it automatically, pulling the merchant name, amount, and date so you don't have to type anything.
