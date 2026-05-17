@@ -39,6 +39,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      freelancer_deduction_parameters: {
+        Row: {
+          created_at: string | null
+          effective_from: string
+          id: string
+          is_active: boolean | null
+          isr_exemption_threshold: number
+          notes: string | null
+          quarterly_advance_rate: number | null
+          simplified_expense_rate: number
+          source_retention_rate: number
+          year: number
+        }
+        Insert: {
+          created_at?: string | null
+          effective_from: string
+          id?: string
+          is_active?: boolean | null
+          isr_exemption_threshold?: number
+          notes?: string | null
+          quarterly_advance_rate?: number | null
+          simplified_expense_rate?: number
+          source_retention_rate?: number
+          year: number
+        }
+        Update: {
+          created_at?: string | null
+          effective_from?: string
+          id?: string
+          is_active?: boolean | null
+          isr_exemption_threshold?: number
+          notes?: string | null
+          quarterly_advance_rate?: number | null
+          simplified_expense_rate?: number
+          source_retention_rate?: number
+          year?: number
+        }
+        Relationships: []
+      }
       health_insurances: {
         Row: {
           ars_name: string
@@ -114,6 +153,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      itbis_parameters: {
+        Row: {
+          annual_threshold: number
+          created_at: string | null
+          declaration_period: string | null
+          effective_from: string
+          id: string
+          is_active: boolean | null
+          notes: string | null
+          reduced_rate: number | null
+          retention_rate: number
+          standard_rate: number
+          updated_at: string | null
+          year: number
+        }
+        Insert: {
+          annual_threshold?: number
+          created_at?: string | null
+          declaration_period?: string | null
+          effective_from: string
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          reduced_rate?: number | null
+          retention_rate?: number
+          standard_rate?: number
+          updated_at?: string | null
+          year: number
+        }
+        Update: {
+          annual_threshold?: number
+          created_at?: string | null
+          declaration_period?: string | null
+          effective_from?: string
+          id?: string
+          is_active?: boolean | null
+          notes?: string | null
+          reduced_rate?: number | null
+          retention_rate?: number
+          standard_rate?: number
+          updated_at?: string | null
+          year?: number
+        }
+        Relationships: []
       }
       loans: {
         Row: {

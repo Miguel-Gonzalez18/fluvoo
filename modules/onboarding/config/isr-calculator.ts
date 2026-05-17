@@ -40,8 +40,25 @@ export const ISR_SCALE_PF = [
   { tramo: 4, min: 867123.01, max: Infinity, base: 867123.0, rate: 0.25, fixed: 79776.0 },
 ] as const;
 
-// Exención para gasto simplificado (Personas Físicas)
-export const EXENCION_GASTO_SIMPLIFICADO = 416220;
+/** Porcentaje de gastos simplificados que la DGII permite deducir
+ *  sobre honorarios brutos (sin justificar con NCF).
+ *  Fuente: DGII, Código Tributario Art. 287 */
+export const GASTOS_SIMPLIFICADOS_RATE = 0.40; // 40%
+
+/** Umbral de exención ISR — primer tramo de la tabla ISR
+ *  Renta neta anual por debajo de este monto paga 0% de ISR.
+ *  Sin cambios desde 2017 (DGII RES-DDG-AR1-2025-00001) */
+export const ISR_EXEMPTION_THRESHOLD = 416220;
+
+/** Retención en la fuente cuando el cliente es empresa formal */
+export const RETENCION_FUENTE_FREELANCE = 0.10; // 10%
+
+/** Umbral anual de ingresos a partir del cual el freelancer
+ *  debe registrarse como contribuyente ordinario del ITBIS */
+export const ITBIS_THRESHOLD_ANNUAL = 8_695_240;
+
+/** Tasa estándar del ITBIS */
+export const ITBIS_RATE = 0.18;
 
 // Tasa corporativa para Personas Jurídicas
 export const ISR_RATE_PJ = 0.27; // 27% fijo
@@ -65,10 +82,16 @@ export interface ISRCalculation {
 }
 
 export interface ISRFreelanceCalculation extends ISRCalculation {
+  gastosSimplificados: number;
+  rentaNeta: number;
   retenciones: number;
   impuestoFinal: number;
+  reservaMensualRecomendada: number;
+  tssVoluntaria: number;
+  ingresoNetoReal: number;
+  superaUmbralITBIS: boolean;
   tipoDeduccion: 'simplificado' | 'comprobados';
-  gastosDeducibles?: number;
+  gastosDeducibles: number;
 }
 
 export interface ISREmpresaCalculation {
@@ -227,54 +250,92 @@ export function calcularISRAsalariado(
  * 2. PERFIL FREELANCE (Persona Física)
  * Entrada: Honorarios brutos
  * Retención: 10% si el cliente es empresa
- * Opciones de deducción: Gasto simplificado o gastos comprobados
+ * Opciones de deducción: Gasto simplificado (40%) o gastos comprobados
  */
 export function calcularISRFreelance(
   honorariosBrutosAnuales: number,
-  gastosComprobados: number = 0,
-  usasGastoSimplificado: boolean = true,
-  retenciones10Porciento: number = 0,
+  gastosComprobadosAnuales: number = 0,
+  usarGastoSimplificado: boolean = true,
+  retenciones10Pct: number = 0,
+  cotizaTSSVoluntaria: boolean = false,
   taxParams?: TaxParameters
 ): ISRFreelanceCalculation {
-  let baseImponible: number;
-  let detalleDeduccion: string;
 
-  if (usasGastoSimplificado) {
-    // Gasto simplificado: exención de RD$416,220
-    baseImponible = Math.max(0, honorariosBrutosAnuales - EXENCION_GASTO_SIMPLIFICADO);
-    detalleDeduccion = `Gasto simplificado: RD$${EXENCION_GASTO_SIMPLIFICADO.toLocaleString('es-DO')} exentos`;
+  // PASO 1: Calcular gastos deducibles
+  let gastosDeducibles: number;
+  let tipoDeduccion: 'simplificado' | 'comprobados';
+
+  if (usarGastoSimplificado) {
+    // Gastos simplificados: 40% de honorarios brutos (DGII Art. 287)
+    gastosDeducibles = honorariosBrutosAnuales * GASTOS_SIMPLIFICADOS_RATE;
+    tipoDeduccion = 'simplificado';
   } else {
-    // Gastos comprobados: ingresos - gastos con NCF
-    const rentaNeta = Math.max(0, honorariosBrutosAnuales - gastosComprobados);
-    baseImponible = rentaNeta;
-    detalleDeduccion = `Gastos comprobados: RD$${gastosComprobados.toLocaleString('es-DO')}`;
+    // Gastos comprobados: lo que el freelancer pueda documentar con NCF
+    gastosDeducibles = gastosComprobadosAnuales;
+    tipoDeduccion = 'comprobados';
   }
 
-  const resultadoEscala = aplicarEscalaISR(baseImponible, taxParams);
-  const impuestoFinal = Math.max(0, resultadoEscala.impuesto - retenciones10Porciento);
+  // PASO 2: Renta neta = honorarios - gastos deducibles
+  const rentaNeta = Math.max(0, honorariosBrutosAnuales - gastosDeducibles);
+
+  // PASO 3: Aplicar tabla ISR a la renta neta
+  const resultadoEscala = aplicarEscalaISR(rentaNeta, taxParams);
+  const isrCalculado = resultadoEscala.impuesto;
+
+  // PASO 4: Descontar retenciones en la fuente (crédito fiscal)
+  const impuestoFinal = Math.max(0, isrCalculado - retenciones10Pct);
+
+  // PASO 5: TSS voluntaria (si el freelancer decide cotizar)
+  const tssVoluntaria = cotizaTSSVoluntaria
+    ? honorariosBrutosAnuales * 0.0591
+    : 0;
+
+  // PASO 6: Ingreso neto real anual
+  const ingresoNetoReal = honorariosBrutosAnuales - impuestoFinal - tssVoluntaria;
+
+  // PASO 7: Reserva mensual recomendada para ISR
+  const reservaMensualRecomendada = impuestoFinal > 0
+    ? Math.ceil(impuestoFinal / 12)
+    : 0;
+
+  // PASO 8: Verificar si supera umbral de ITBIS
+  const superaUmbralITBIS = honorariosBrutosAnuales > ITBIS_THRESHOLD_ANNUAL;
 
   return {
     ingresoBrutoAnual: honorariosBrutosAnuales,
-    deduccionesTSS: 0, // Freelancers pagan seguridad social por separado
-    baseImponible,
-    impuestoCalculado: resultadoEscala.impuesto,
-    impuestoMensual: resultadoEscala.impuesto / 12,
+    deduccionesTSS: tssVoluntaria,
+    gastosSimplificados: gastosDeducibles,
+    rentaNeta,
+    baseImponible: rentaNeta,
+    impuestoCalculado: isrCalculado,
+    impuestoMensual: isrCalculado / 12,
     tramoAplicable: resultadoEscala.tramo,
-    retenciones: retenciones10Porciento,
+    retenciones: retenciones10Pct,
     impuestoFinal,
-    tipoDeduccion: usasGastoSimplificado ? 'simplificado' : 'comprobados',
-    gastosDeducibles: usasGastoSimplificado ? EXENCION_GASTO_SIMPLIFICADO : gastosComprobados,
+    reservaMensualRecomendada,
+    tssVoluntaria,
+    ingresoNetoReal,
+    superaUmbralITBIS,
+    tipoDeduccion,
+    gastosDeducibles,
     detalles: [
       `Honorarios brutos anuales: RD$${honorariosBrutosAnuales.toLocaleString('es-DO')}`,
-      detalleDeduccion,
-      `Base imponible: RD$${baseImponible.toLocaleString('es-DO')}`,
+      `Gastos ${tipoDeduccion === 'simplificado' ? 'simplificados (40%)' : 'comprobados'}: -RD$${gastosDeducibles.toLocaleString('es-DO')}`,
+      `Renta neta sujeta a ISR: RD$${rentaNeta.toLocaleString('es-DO')}`,
       resultadoEscala.detalle,
-      `Impuesto calculado: RD$${resultadoEscala.impuesto.toLocaleString('es-DO')}`,
-      retenciones10Porciento > 0
-        ? `Retenciones del 10%: RD$${retenciones10Porciento.toLocaleString('es-DO')}`
-        : 'Sin retenciones (clientes personas físicas)',
-      `Impuesto final a pagar: RD$${impuestoFinal.toLocaleString('es-DO')}`,
-      `Pago mensual estimado: RD$${(impuestoFinal / 12).toLocaleString('es-DO')}`,
+      `ISR calculado: RD$${isrCalculado.toLocaleString('es-DO')}`,
+      retenciones10Pct > 0
+        ? `Retenciones en fuente (10%): -RD$${retenciones10Pct.toLocaleString('es-DO')}`
+        : 'Sin retenciones en fuente',
+      `ISR final a pagar: RD$${impuestoFinal.toLocaleString('es-DO')}`,
+      `Reserva mensual recomendada: RD$${reservaMensualRecomendada.toLocaleString('es-DO')}`,
+      cotizaTSSVoluntaria
+        ? `TSS voluntaria (5.91%): RD$${tssVoluntaria.toLocaleString('es-DO')}`
+        : 'Sin TSS voluntaria',
+      `Ingreso neto real anual: RD$${ingresoNetoReal.toLocaleString('es-DO')}`,
+      superaUmbralITBIS
+        ? '⚠️ Supera umbral ITBIS — debe inscribirse como contribuyente ordinario'
+        : 'Bajo umbral ITBIS — no obligado a cobrar ITBIS',
     ],
   };
 }
@@ -412,7 +473,7 @@ export function generarComparativoISR(
       cargaTributaria: cargaFreelance,
       impuestoTotal: freelance.impuestoFinal,
       detalles: [
-        `Deducción: RD$${EXENCION_GASTO_SIMPLIFICADO.toLocaleString('es-DO')} (simplificada)`,
+        `Deducción: Gastos simplificados (${(GASTOS_SIMPLIFICADOS_RATE * 100).toFixed(0)}%)`,
         `ISR efectivo: ${cargaFreelance.toFixed(2)}%`,
         `Tramo: ${freelance.tramoAplicable}`,
       ],
