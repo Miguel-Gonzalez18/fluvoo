@@ -2,12 +2,8 @@
 
 import { Building2 } from "lucide-react";
 import { Button } from "@/modules/homePage/components/ui/button";
-import { SUPPORTED_BANKS, GMAIL_FEATURES } from "../config/gmail";
-
-interface Step3GmailConnectProps {
-  onConnect: () => void;
-  onSkip: () => void;
-}
+import { SUPPORTED_BANKS, GMAIL_FEATURES } from "../../config/gmail";
+import { Step3GmailConnectProps } from "../../types/step3/gmail.types";
 
 export function Step3GmailConnect({ onConnect, onSkip }: Step3GmailConnectProps) {
   return (

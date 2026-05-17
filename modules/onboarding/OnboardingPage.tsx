@@ -3,10 +3,10 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/modules/homePage/components/ui/button";
-import { ProgressBar } from "./components/ProgressBar";
-import { Step1ProfileSelection } from "./components/Step1ProfileSelection";
-import { Step2FinancialInfo } from "./components/Step2FinancialInfo";
-import { Step3GmailConnect } from "./components/Step3GmailConnect";
+import { ProgressBar } from "./components/ui/ProgressBar";
+import { Step1ProfileSelection } from "./components/step1/Step1ProfileSelection";
+import { Step2FinancialInfo } from "./components/step2/Step2FinancialInfo";
+import { Step3GmailConnect } from "./components/step3/Step3GmailConnect";
 import { useOnboarding, TOTAL_STEPS } from "./hooks/useOnboarding";
 
 export function OnboardingPage() {
