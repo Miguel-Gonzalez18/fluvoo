@@ -96,86 +96,51 @@ export interface FinancialInstitutionOption {
 }
 
 export const FINANCIAL_INSTITUTIONS: FinancialInstitutionOption[] = [
-  // Bancos múltiples
+  // Bancos Múltiples
   { value: "banco_popular", label: "Banco Popular Dominicano" },
-  { value: "bhd_leon", label: "BHD León" },
+  { value: "banco_reservas", label: "Banreservas" },
   { value: "banco_bhd", label: "Banco BHD" },
-  { value: "scotiabank", label: "Scotiabank" },
-  { value: "banco_bdi", label: "Banco BDI" },
-  { value: "banco_progresso", label: "Banco Progresso" },
+  { value: "banco_scotiabank", label: "Scotiabank" },
   { value: "banco_santa_cruz", label: "Banco Santa Cruz" },
-  { value: "banco_caroni", label: "Banco Caroní" },
-  { value: "banco_de_reservas", label: "BanReservas" },
-  { value: "banco_adopem", label: "Banco ADOPEM" },
-  { value: "banco_bellbank", label: "Banco Bellbank" },
-  { value: "banco_multiple_caribe", label: "Banco Múltiple Caribe" },
-  { value: "citibank", label: "Citibank" },
-  { value: "blh", label: "BLH (Banco López de Haro)" },
-  { value: "asociacion_nacional", label: "Asociación Nacional de Ahorros y Préstamos" },
-  { value: "apap", label: "APAP (Asociación Popular de Ahorros y Préstamos)" },
-  // Bancos adicionales
+  { value: "banco_bdi", label: "Banco BDI" },
+  { value: "banco_caribe", label: "Banco Múltiple Caribe" },
+  { value: "banco_lopez_de_haro", label: "Banco López de Haro (BLH)" },
+  { value: "banco_promerica", label: "Banco Promerica" },
+  { value: "banco_banesco", label: "Banesco" },
   { value: "banco_vimenca", label: "Banco Vimenca" },
-  { value: "banco_bancamerica", label: "Banco Bancamérica" },
   { value: "banco_lafise", label: "Banco Lafise" },
-  { value: "banco_peravia", label: "Banco Peravia" },
-  { value: "banco_oriental", label: "Banco Oriental" },
-  { value: "banco_alaver", label: "Banco Alaver" },
-  { value: "banco_transatlantico", label: "Banco Transatlántico" },
-  { value: "banco_plaza", label: "Banco Plaza" },
+  { value: "banco_ademi", label: "Banco ADEMI" },
+  { value: "banco_jmmb", label: "JMMB Bank" },
+  { value: "banco_activo", label: "Banco Activo" },
+  { value: "banco_citibank", label: "Citibank" },
+  { value: "banco_qik", label: "Qik Banco Digital" },
+  { value: "banco_alaver", label: "Banco Múltiple ALAVER" },
+
+  // Bancos de Ahorro y Crédito
+  { value: "banco_adopem", label: "Banco ADOPEM" },
+  { value: "banco_bacc", label: "Banco BACC (Ahorro y Crédito del Caribe)" },
+  { value: "banco_fihogar", label: "Banco Fihogar" },
   { value: "banco_union", label: "Banco Unión" },
-  { value: "banco_cambiario", label: "Banco Cambiario" },
-  { value: "banco_ahorros_credito_nacional", label: "Banco de Ahorros y Crédito Nacional" },
-  { value: "banco_ahorro_higuay", label: "Banco de Ahorro y Crédito Higüey" },
-  { value: "banco_ahorro_santiago", label: "Banco de Ahorro y Crédito Santiago" },
-  { value: "banco_ahorro_vega", label: "Banco de Ahorro y Crédito La Vega" },
-  { value: "banco_ahorro_adopem", label: "Banco de Ahorro y Crédito ADOPEM" },
-  // Cooperativas
-  { value: "coop_la_nacional", label: "Cooperativa La Nacional" },
-  { value: "coop_san_jose", label: "Cooperativa San José" },
-  { value: "coop_cibao", label: "Cooperativa del Cibao" },
-  { value: "coop_santiago", label: "Cooperativa Santiago" },
-  { value: "coop_mujeres", label: "Cooperativa de Mujeres" },
-  { value: "coop_rodiguez", label: "Cooperativa Coronel Francisco Rodríguez" },
-  { value: "coop_credifamilia", label: "Cooperativa Credifamilia" },
-  { value: "coop_pegasus", label: "Cooperativa Pegasus" },
-  { value: "coop_herrera", label: "Cooperativa Herrera" },
-  { value: "coop_rivas", label: "Cooperativa Rivas" },
-  { value: "coop_maimon", label: "Cooperativa Maimón" },
-  { value: "coop_espinal", label: "Cooperativa Espinal" },
-  { value: "coop_villa_hermosa", label: "Cooperativa Villa Hermosa" },
-  { value: "coop_hermanas_mirabal", label: "Cooperativa Hermanas Mirabal" },
-  { value: "coop_juan_pablo", label: "Cooperativa Juan Pablo Duarte" },
-  // Financieras (Entidades de préstamo no bancarias)
-  { value: "financiera_verde", label: "Financiera La Verde" },
-  { value: "financiera_otra", label: "Financiera Otra" },
-  { value: "financiera_ave", label: "Financiera AVE" },
-  { value: "financiera_df", label: "Financiera DF" },
-  { value: "financiera_emisora", label: "Financiera Emisora" },
-  { value: "financiera_facil", label: "Financiera Fácil" },
-  { value: "financiera_ags", label: "Financiera AGS" },
-  { value: "financiera_dom", label: "Financiera DOM" },
-  { value: "financiera_suda", label: "Financiera Suda" },
-  { value: "financiera_confia", label: "Financiera Confía" },
-  { value: "financiera_cash", label: "Financiera Cash" },
-  { value: "financiera_promerica", label: "Financiera Promerica" },
-  { value: "financiera_alternativa", label: "Financiera Alternativa" },
-  // Asociaciones de ahorros y préstamos
-  { value: "aap_bella_vista", label: "Asociación de Ahorros y Préstamos Bella Vista" },
-  { value: "aap_cibao", label: "Asociación de Ahorros y Préstamos del Cibao" },
-  { value: "aap_la_vega", label: "Asociación de Ahorros y Préstamos La Vega" },
-  { value: "aap_maimon", label: "Asociación de Ahorros y Préstamos Maimón" },
-  { value: "aap_higuey", label: "Asociación de Ahorros y Préstamos Higüey" },
-  { value: "aap_moca", label: "Asociación de Ahorros y Préstamos Moca" },
-  { value: "aap_san_juan", label: "Asociación de Ahorros y Préstamos San Juan" },
-  { value: "aap_romana", label: "Asociación de Ahorros y Préstamos La Romana" },
-  // Casas de préstamo
-  { value: "casa_prestamo_sol", label: "Casa de Préstamo Sol" },
-  { value: "casa_prestamo_confianza", label: "Casa de Préstamo Confianza" },
-  { value: "casa_prestamo_nacional", label: "Casa de Préstamo Nacional" },
-  // Prestamistas particulares / Privados
+
+  // Asociaciones de Ahorros y Préstamos
+  { value: "apap", label: "Asociación Popular de Ahorros y Préstamos (APAP)" },
+  { value: "asociacion_nacional", label: "Asociación La Nacional de Ahorros y Préstamos" },
+  { value: "asociacion_cibao", label: "Asociación Cibao de Ahorros y Préstamos (ACAP)" },
+  { value: "asociacion_duarte", label: "Asociación Duarte de Ahorros y Préstamos (ADAP)" },
+  { value: "asociacion_romana", label: "Asociación Romana de Ahorros y Préstamos" },
+  { value: "asociacion_mocana", label: "Asociación Mocana de Ahorros y Préstamos" },
+  { value: "asociacion_maguana", label: "Asociación Maguana de Ahorros y Préstamos" },
+  { value: "asociacion_peravia", label: "Asociación Peravia de Ahorros y Préstamos" },
+
+  // Cooperativas principales
+  { value: "coopmaimon", label: "Cooperativa Maimón (COOPMAIMON)" },
+  { value: "coopmedica", label: "Coopmédica" },
+  { value: "vega_real", label: "Cooperativa Vega Real" },
+  { value: "la_telefonica", label: "La Cooperativa de Servicios Múltiples la Telefónica" },
+
+  // Otras entidades
   { value: "prestamista_particular", label: "Prestamista Particular" },
-  // Otros
-  { value: "otros", label: "Otros" },
+  { value: "otros", label: "Otros" }
 ];
 
 // SIPEN/ARS Configuration - Aporte obligatorio del empleado (3.04%)

@@ -174,75 +174,186 @@ export type Database = {
           },
         ]
       }
+      tax_parameters: {
+        Row: {
+          afp_ceiling: number | null
+          afp_employee: number | null
+          afp_employer: number | null
+          created_at: string | null
+          effective_from: string
+          id: string
+          infotep_employer: number | null
+          is_active: boolean | null
+          isr_brackets: Json
+          minimum_wage: number | null
+          notes: string | null
+          sfs_ceiling: number | null
+          sfs_employee: number | null
+          sfs_employer: number | null
+          srl_ceiling: number | null
+          srl_employer: number | null
+          updated_at: string | null
+          year: number
+        }
+        Insert: {
+          afp_ceiling?: number | null
+          afp_employee?: number | null
+          afp_employer?: number | null
+          created_at?: string | null
+          effective_from: string
+          id?: string
+          infotep_employer?: number | null
+          is_active?: boolean | null
+          isr_brackets?: Json
+          minimum_wage?: number | null
+          notes?: string | null
+          sfs_ceiling?: number | null
+          sfs_employee?: number | null
+          sfs_employer?: number | null
+          srl_ceiling?: number | null
+          srl_employer?: number | null
+          updated_at?: string | null
+          year: number
+        }
+        Update: {
+          afp_ceiling?: number | null
+          afp_employee?: number | null
+          afp_employer?: number | null
+          created_at?: string | null
+          effective_from?: string
+          id?: string
+          infotep_employer?: number | null
+          is_active?: boolean | null
+          isr_brackets?: Json
+          minimum_wage?: number | null
+          notes?: string | null
+          sfs_ceiling?: number | null
+          sfs_employee?: number | null
+          sfs_employer?: number | null
+          srl_ceiling?: number | null
+          srl_employer?: number | null
+          updated_at?: string | null
+          year?: number
+        }
+        Relationships: []
+      }
       users: {
         Row: {
+          annual_deductible_costs: number | null
+          annual_deductible_expenses: number | null
+          annual_gross_revenue: number | null
+          annual_retentions_10pct: number | null
           avatar_url: string | null
           average_monthly_income: number | null
           business_monthly_revenue: number | null
           business_name: string | null
           business_rnc: string | null
           business_type: string | null
+          contributes_afp: boolean | null
+          contributes_sipen: boolean | null
           created_at: string
           document_id: string | null
+          effective_tax_rate: number | null
           email: string
           employee_count: number | null
           employer_name: string | null
           full_name: string | null
           gmail_connected: boolean | null
           id: string
+          monthly_afp_deduction: number | null
           monthly_salary: number | null
+          monthly_sfs_deduction: number | null
+          monthly_tax_advance: number | null
+          monthly_tss_deduction: number | null
           onboarding_completed: boolean
           onboarding_step: number
           phone: string | null
           profession_sector: string | null
           profile_type: Database["public"]["Enums"]["user_profile_type"] | null
+          projected_annual_tax: number | null
+          projected_monthly_tax: number | null
+          tax_bracket: number | null
           updated_at: string
+          uses_rst: boolean | null
+          uses_simplified_deduction: boolean | null
         }
         Insert: {
+          annual_deductible_costs?: number | null
+          annual_deductible_expenses?: number | null
+          annual_gross_revenue?: number | null
+          annual_retentions_10pct?: number | null
           avatar_url?: string | null
           average_monthly_income?: number | null
           business_monthly_revenue?: number | null
           business_name?: string | null
           business_rnc?: string | null
           business_type?: string | null
+          contributes_afp?: boolean | null
+          contributes_sipen?: boolean | null
           created_at?: string
           document_id?: string | null
+          effective_tax_rate?: number | null
           email: string
           employee_count?: number | null
           employer_name?: string | null
           full_name?: string | null
           gmail_connected?: boolean | null
           id: string
+          monthly_afp_deduction?: number | null
           monthly_salary?: number | null
+          monthly_sfs_deduction?: number | null
+          monthly_tax_advance?: number | null
+          monthly_tss_deduction?: number | null
           onboarding_completed?: boolean
           onboarding_step?: number
           phone?: string | null
           profession_sector?: string | null
           profile_type?: Database["public"]["Enums"]["user_profile_type"] | null
+          projected_annual_tax?: number | null
+          projected_monthly_tax?: number | null
+          tax_bracket?: number | null
           updated_at?: string
+          uses_rst?: boolean | null
+          uses_simplified_deduction?: boolean | null
         }
         Update: {
+          annual_deductible_costs?: number | null
+          annual_deductible_expenses?: number | null
+          annual_gross_revenue?: number | null
+          annual_retentions_10pct?: number | null
           avatar_url?: string | null
           average_monthly_income?: number | null
           business_monthly_revenue?: number | null
           business_name?: string | null
           business_rnc?: string | null
           business_type?: string | null
+          contributes_afp?: boolean | null
+          contributes_sipen?: boolean | null
           created_at?: string
           document_id?: string | null
+          effective_tax_rate?: number | null
           email?: string
           employee_count?: number | null
           employer_name?: string | null
           full_name?: string | null
           gmail_connected?: boolean | null
           id?: string
+          monthly_afp_deduction?: number | null
           monthly_salary?: number | null
+          monthly_sfs_deduction?: number | null
+          monthly_tax_advance?: number | null
+          monthly_tss_deduction?: number | null
           onboarding_completed?: boolean
           onboarding_step?: number
           phone?: string | null
           profession_sector?: string | null
           profile_type?: Database["public"]["Enums"]["user_profile_type"] | null
+          projected_annual_tax?: number | null
+          projected_monthly_tax?: number | null
+          tax_bracket?: number | null
           updated_at?: string
+          uses_rst?: boolean | null
+          uses_simplified_deduction?: boolean | null
         }
         Relationships: []
       }

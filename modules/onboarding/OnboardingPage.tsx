@@ -23,9 +23,6 @@ export function OnboardingPage() {
     addLoan,
     updateLoan,
     removeLoan,
-    addInsurance,
-    updateInsurance,
-    removeInsurance,
     handleGmailConnect,
     handleGmailSkip,
   } = useOnboarding();
@@ -64,9 +61,6 @@ export function OnboardingPage() {
             onAddLoan={addLoan}
             onUpdateLoan={updateLoan}
             onRemoveLoan={removeLoan}
-            onAddInsurance={addInsurance}
-            onUpdateInsurance={updateInsurance}
-            onRemoveInsurance={removeInsurance}
           />
         )}
 

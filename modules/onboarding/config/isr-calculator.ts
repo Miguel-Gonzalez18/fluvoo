@@ -1,23 +1,38 @@
+import { Tables } from "@/src/types/supabase";
+
+// Type for ISR bracket structure (isr_brackets is Json in Supabase)
+export interface ISRTaxBracket {
+  tramo: number;
+  desde_anual: number;
+  hasta_anual: number | null;
+  tasa: number;
+  monto_fijo: number;
+  descripcion: string;
+}
+
+export type TaxParameters = Tables<"tax_parameters">;
+
 // ISR (Impuesto Sobre la Renta) Calculator for Dominican Republic
 // Based on DGII regulations for fiscal year 2024
 
 // ===== CONSTANTES DGII 2024 =====
+// Nota: TSS y brackets ISR ahora se leen desde la tabla tax_parameters.
+// Las constantes siguientes se mantienen como fallback para compatibilidad.
 
-// Topes de salario para TSS
+// Topes de salario para TSS (fallback)
 export const TSS_CAPS = {
   sfs: 193815, // Tope SFS (3.04%)
   afp: 387630, // Tope AFP (2.87%)
 } as const;
 
-// Tasas TSS para empleados
+// Tasas TSS para empleados (fallback)
 export const TSS_RATES = {
   sfs: 0.0304, // 3.04% - ARS/Seguro de Salud
   afp: 0.0287, // 2.87% - Fondo de Pensiones
   total: 0.0591, // 5.91% total
 } as const;
 
-// Escala anual ISR para Personas Físicas (Asalariados y Freelancers)
-// Año fiscal 2024
+// Escala anual ISR para Personas Físicas (fallback)
 export const ISR_SCALE_PF = [
   { tramo: 1, min: 0, max: 416220.0, base: 0, rate: 0, fixed: 0 },
   { tramo: 2, min: 416220.01, max: 624329.0, base: 416220.0, rate: 0.15, fixed: 0 },
@@ -69,18 +84,26 @@ export interface ISREmpresaCalculation {
 // ===== FUNCIONES AUXILIARES =====
 
 /**
- * Calcula deducciones TSS con topes aplicados
+ * Calcula deducciones TSS con topes aplicados usando parámetros de la DB
  */
-function calcularDeduccionesTSS(salarioMensual: number): {
+function calcularDeduccionesTSS(
+  salarioMensual: number,
+  taxParams: TaxParameters
+): {
   sfs: number;
   afp: number;
   total: number;
 } {
-  const salarioParaSFS = Math.min(salarioMensual, TSS_CAPS.sfs);
-  const salarioParaAFP = Math.min(salarioMensual, TSS_CAPS.afp);
+  const sfsCeiling = taxParams.sfs_ceiling ?? 0;
+  const afpCeiling = taxParams.afp_ceiling ?? 0;
+  const sfsEmployeeRate = taxParams.sfs_employee ?? 0;
+  const afpEmployeeRate = taxParams.afp_employee ?? 0;
 
-  const sfs = salarioParaSFS * TSS_RATES.sfs;
-  const afp = salarioParaAFP * TSS_RATES.afp;
+  const salarioParaSFS = Math.min(salarioMensual, sfsCeiling);
+  const salarioParaAFP = Math.min(salarioMensual, afpCeiling);
+
+  const sfs = salarioParaSFS * sfsEmployeeRate;
+  const afp = salarioParaAFP * afpEmployeeRate;
 
   return {
     sfs,
@@ -90,39 +113,63 @@ function calcularDeduccionesTSS(salarioMensual: number): {
 }
 
 /**
- * Aplica la escala ISR a la base imponible anual
+ * Aplica la escala ISR a la base imponible anual usando parámetros de la DB
+ * Si no se proveen taxParams, usa la escala hardcodeada como fallback.
  */
-function aplicarEscalaISR(baseImponibleAnual: number): {
+function aplicarEscalaISR(
+  baseImponibleAnual: number,
+  taxParams?: TaxParameters
+): {
   impuesto: number;
   tramo: number;
   detalle: string;
 } {
-  const tramo = ISR_SCALE_PF.find(
-    (t) => baseImponibleAnual >= t.min && baseImponibleAnual <= t.max
-  );
+  const brackets: ISRTaxBracket[] =
+    (taxParams?.isr_brackets as ISRTaxBracket[] | null) ??
+    ISR_SCALE_PF.map((b) => ({
+      tramo: b.tramo,
+      desde_anual: b.min,
+      hasta_anual: b.max === Infinity ? null : b.max,
+      tasa: b.rate,
+      monto_fijo: b.fixed,
+      descripcion: "",
+    }));
 
-  if (!tramo) {
-    return { impuesto: 0, tramo: 1, detalle: 'Sin impuesto aplicable' };
+  const bracket = brackets.find((b) => {
+    const withinMin = baseImponibleAnual >= b.desde_anual;
+    const withinMax =
+      b.hasta_anual === null || baseImponibleAnual <= b.hasta_anual;
+    return withinMin && withinMax;
+  });
+
+  if (!bracket) {
+    return { impuesto: 0, tramo: 1, detalle: "Sin impuesto aplicable" };
   }
 
-  if (tramo.rate === 0) {
+  if (bracket.tasa === 0) {
+    const hastaTexto =
+      bracket.hasta_anual !== null
+        ? `hasta RD$${bracket.hasta_anual.toLocaleString("es-DO")}`
+        : "";
     return {
       impuesto: 0,
-      tramo: tramo.tramo,
-      detalle: `Tramo ${tramo.tramo}: hasta RD$${tramo.max.toLocaleString('es-DO')} exento`,
+      tramo: bracket.tramo,
+      detalle: `Tramo ${bracket.tramo}: ${hastaTexto} exento`,
     };
   }
 
-  const excedente = baseImponibleAnual - tramo.base;
-  const impuestoVariable = excedente * tramo.rate;
-  const impuestoTotal = tramo.fixed + impuestoVariable;
+  const excedente = baseImponibleAnual - bracket.desde_anual;
+  const impuestoVariable = excedente * bracket.tasa;
+  const impuestoTotal = bracket.monto_fijo + impuestoVariable;
 
   return {
     impuesto: impuestoTotal,
-    tramo: tramo.tramo,
-    detalle: `Tramo ${tramo.tramo}: RD$${tramo.fixed.toLocaleString('es-DO')} fijo + ${(
-      tramo.rate * 100
-    ).toFixed(0)}% del excedente (RD$${excedente.toLocaleString('es-DO')})`,
+    tramo: bracket.tramo,
+    detalle: `Tramo ${bracket.tramo}: RD$${bracket.monto_fijo.toLocaleString(
+      "es-DO"
+    )} fijo + ${(bracket.tasa * 100).toFixed(0)}% del excedente (RD$${excedente.toLocaleString(
+      "es-DO"
+    )})`,
   };
 }
 
@@ -135,13 +182,17 @@ n * Entrada: Sueldo Bruto Mensual
  * Base imponible: Salario neto tras TSS, anualizado
  */
 export function calcularISRAsalariado(
-  salarioBrutoMensual: number
+  salarioBrutoMensual: number,
+  taxParams: TaxParameters
 ): ISRCalculation {
-  const deducciones = calcularDeduccionesTSS(salarioBrutoMensual);
+  const deducciones = calcularDeduccionesTSS(salarioBrutoMensual, taxParams);
   const salarioNetoMensual = salarioBrutoMensual - deducciones.total;
   const salarioNetoAnual = salarioNetoMensual * 12;
 
-  const resultadoEscala = aplicarEscalaISR(salarioNetoAnual);
+  const resultadoEscala = aplicarEscalaISR(salarioNetoAnual, taxParams);
+
+  const sfsRatePct = ((taxParams.sfs_employee ?? 0) * 100).toFixed(2);
+  const afpRatePct = ((taxParams.afp_employee ?? 0) * 100).toFixed(2);
 
   return {
     ingresoBrutoAnual: salarioBrutoMensual * 12,
@@ -151,15 +202,23 @@ export function calcularISRAsalariado(
     impuestoMensual: resultadoEscala.impuesto / 12,
     tramoAplicable: resultadoEscala.tramo,
     detalles: [
-      `Salario bruto mensual: RD$${salarioBrutoMensual.toLocaleString('es-DO')}`,
-      `Deducción SFS (3.04%): RD$${deducciones.sfs.toLocaleString('es-DO')}/mes`,
-      `Deducción AFP (2.87%): RD$${deducciones.afp.toLocaleString('es-DO')}/mes`,
-      `Total deducciones TSS: RD$${deducciones.total.toLocaleString('es-DO')}/mes`,
-      `Salario neto mensual: RD$${salarioNetoMensual.toLocaleString('es-DO')}`,
-      `Base imponible anual: RD$${salarioNetoAnual.toLocaleString('es-DO')}`,
+      `Salario bruto mensual: RD$${salarioBrutoMensual.toLocaleString("es-DO")}`,
+      `Deducción SFS (${sfsRatePct}%): RD$${deducciones.sfs.toLocaleString(
+        "es-DO"
+      )}/mes`,
+      `Deducción AFP (${afpRatePct}%): RD$${deducciones.afp.toLocaleString(
+        "es-DO"
+      )}/mes`,
+      `Total deducciones TSS: RD$${deducciones.total.toLocaleString(
+        "es-DO"
+      )}/mes`,
+      `Salario neto mensual: RD$${salarioNetoMensual.toLocaleString("es-DO")}`,
+      `Base imponible anual: RD$${salarioNetoAnual.toLocaleString("es-DO")}`,
       resultadoEscala.detalle,
-      `Impuesto anual: RD$${resultadoEscala.impuesto.toLocaleString('es-DO')}`,
-      `Impuesto mensual estimado: RD$${(resultadoEscala.impuesto / 12).toLocaleString('es-DO')}`,
+      `Impuesto anual: RD$${resultadoEscala.impuesto.toLocaleString("es-DO")}`,
+      `Impuesto mensual estimado: RD$${(
+        resultadoEscala.impuesto / 12
+      ).toLocaleString("es-DO")}`,
     ],
   };
 }
@@ -174,7 +233,8 @@ export function calcularISRFreelance(
   honorariosBrutosAnuales: number,
   gastosComprobados: number = 0,
   usasGastoSimplificado: boolean = true,
-  retenciones10Porciento: number = 0
+  retenciones10Porciento: number = 0,
+  taxParams?: TaxParameters
 ): ISRFreelanceCalculation {
   let baseImponible: number;
   let detalleDeduccion: string;
@@ -190,7 +250,7 @@ export function calcularISRFreelance(
     detalleDeduccion = `Gastos comprobados: RD$${gastosComprobados.toLocaleString('es-DO')}`;
   }
 
-  const resultadoEscala = aplicarEscalaISR(baseImponible);
+  const resultadoEscala = aplicarEscalaISR(baseImponible, taxParams);
   const impuestoFinal = Math.max(0, resultadoEscala.impuesto - retenciones10Porciento);
 
   return {
@@ -270,8 +330,7 @@ export function calcularISREmpresa(
   result.anticipoMensual = impuestoISR / 12;
   detalles.push(
     `Anticipo mensual ISR: RD$${result.anticipoMensual.toLocaleString('es-DO')}`,
-    `Total obligaciones fiscales: RD$${
-      (impuestoISR + (result.retencionDividendos || 0) + (result.impuesto1PorcientoActivos || 0)).toLocaleString('es-DO')
+    `Total obligaciones fiscales: RD$${(impuestoISR + (result.retencionDividendos || 0) + (result.impuesto1PorcientoActivos || 0)).toLocaleString('es-DO')
     }`
   );
 
@@ -318,12 +377,13 @@ export interface ComparativoISR {
  * Útil para mostrar al usuario las diferencias fiscales
  */
 export function generarComparativoISR(
-  ingresoMensual: number
+  ingresoMensual: number,
+  taxParams: TaxParameters
 ): ComparativoISR[] {
   const ingresoAnual = ingresoMensual * 12;
 
   // Asalariado
-  const asalariado = calcularISRAsalariado(ingresoMensual);
+  const asalariado = calcularISRAsalariado(ingresoMensual, taxParams);
   const cargaAsalariado = (asalariado.impuestoCalculado / ingresoAnual) * 100;
 
   // Freelance (con gasto simplificado)

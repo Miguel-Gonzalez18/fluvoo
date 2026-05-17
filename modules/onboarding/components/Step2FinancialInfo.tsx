@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Briefcase, HeartPulse, Landmark, Plus, Trash2, Wallet } from "lucide-react";
+import { Briefcase, Landmark, Plus, Trash2, Wallet } from "lucide-react";
 import { Input } from "@/modules/shared/components/ui/input";
 import { Label } from "@/modules/shared/components/ui/label";
 import { Switch } from "@/modules/shared/components/ui/switch";
 import { Button } from "@/modules/homePage/components/ui/button";
-import { OnboardingData, ProfileType, Loan, HealthInsurance } from "../types/onboarding";
-import { InsuranceForm } from "./forms/InsuranceForm";
+import { OnboardingData, ProfileType, Loan } from "../types/onboarding";
 import { LoanForm } from "./forms/LoanForm";
 import { TaxSummaryCard } from "./TaxSummaryCard";
 import { getLoanTypeLabel, BUSINESS_TYPES, SIPEN_CONFIG, AFP_CONFIG } from "../config/financial";
@@ -19,9 +18,6 @@ interface Step2FinancialInfoProps {
   onAddLoan: (loan: Loan) => void;
   onUpdateLoan: (loan: Loan) => void;
   onRemoveLoan: (id: string) => void;
-  onAddInsurance: (insurance: HealthInsurance) => void;
-  onUpdateInsurance: (insurance: HealthInsurance) => void;
-  onRemoveInsurance: (id: string) => void;
 }
 
 export function Step2FinancialInfo({
@@ -31,14 +27,9 @@ export function Step2FinancialInfo({
   onAddLoan,
   onUpdateLoan,
   onRemoveLoan,
-  onAddInsurance,
-  onUpdateInsurance,
-  onRemoveInsurance,
 }: Step2FinancialInfoProps) {
   const [showLoanForm, setShowLoanForm] = useState(false);
-  const [showInsuranceForm, setShowInsuranceForm] = useState(false);
   const [editingLoan, setEditingLoan] = useState<Loan | null>(null);
-  const [editingInsurance, setEditingInsurance] = useState<HealthInsurance | null>(null);
 
   const handleSaveLoan = (loan: Loan) => {
     if (editingLoan) {
@@ -48,16 +39,6 @@ export function Step2FinancialInfo({
     }
     setShowLoanForm(false);
     setEditingLoan(null);
-  };
-
-  const handleSaveInsurance = (insurance: HealthInsurance) => {
-    if (editingInsurance) {
-      onUpdateInsurance(insurance);
-    } else {
-      onAddInsurance(insurance);
-    }
-    setShowInsuranceForm(false);
-    setEditingInsurance(null);
   };
 
   return (
@@ -73,33 +54,6 @@ export function Step2FinancialInfo({
             <AfpSection data={data} onUpdate={onUpdate} />
           </>
         )}
-
-        <InsuranceSection
-          data={data}
-          showForm={showInsuranceForm}
-          editingItem={editingInsurance}
-          onToggle={(checked) => {
-            if (!checked) {
-              onUpdate({ healthInsurances: [] });
-            } else if (data.healthInsurances.length === 0) {
-              setShowInsuranceForm(true);
-            }
-          }}
-          onEdit={(insurance) => {
-            setEditingInsurance(insurance);
-            setShowInsuranceForm(true);
-          }}
-          onDelete={onRemoveInsurance}
-          onAdd={() => {
-            setEditingInsurance(null);
-            setShowInsuranceForm(true);
-          }}
-          onSave={handleSaveInsurance}
-          onCancel={() => {
-            setShowInsuranceForm(false);
-            setEditingInsurance(null);
-          }}
-        />
 
         <LoansSection
           data={data}
@@ -183,31 +137,75 @@ function IncomeSection({ profileType, data, onUpdate }: IncomeSectionProps) {
   );
 }
 
-function getIncomeFields(
-  profileType: ProfileType,
-  data: OnboardingData,
-  onUpdate: (data: Partial<OnboardingData>) => void
-) {
-  const currencyInput = (props: {
-    id: string;
-    value: number | undefined;
-    onChange: (val: number) => void;
-    placeholder?: string;
-  }) => (
+interface CurrencyInputProps {
+  id: string;
+  value: number | undefined;
+  onChange: (val: number) => void;
+  placeholder?: string;
+}
+
+function CurrencyInput({ id, value, onChange, placeholder }: CurrencyInputProps) {
+  const [isFocused, setIsFocused] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+
+  const formatCurrency = (val: number | undefined) => {
+    if (val === undefined || val === 0) return "";
+    return val.toLocaleString("es-DO", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  };
+
+  const parseCurrency = (str: string): number => {
+    if (!str) return 0;
+    const cleaned = str.replace(/[^\d.,]/g, "");
+    if (!cleaned) return 0;
+    const normalized = cleaned.replace(/\./g, "").replace(",", ".");
+    const parsed = parseFloat(normalized);
+    return isNaN(parsed) ? 0 : parsed;
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+    const parsed = parseCurrency(e.target.value);
+    onChange(parsed);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+    setInputValue(value?.toString() || "");
+  };
+
+  const displayValue = isFocused ? inputValue : formatCurrency(value);
+
+  return (
     <div className="relative">
       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">
         RD$
       </span>
       <Input
-        id={props.id}
-        type="number"
-        placeholder={props.placeholder || "0.00"}
+        id={id}
+        type="text"
+        placeholder={placeholder || "0.00"}
         className="pl-12"
-        value={props.value || ""}
-        onChange={(e) => props.onChange(parseFloat(e.target.value) || 0)}
+        value={displayValue}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
       />
     </div>
   );
+}
+
+function getIncomeFields(
+  profileType: ProfileType,
+  data: OnboardingData,
+  onUpdate: (data: Partial<OnboardingData>) => void
+) {
 
   switch (profileType) {
     case "employee":
@@ -217,11 +215,11 @@ function getIncomeFields(
             <Label htmlFor="monthlySalary" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Sueldo bruto mensual
             </Label>
-            {currencyInput({
-              id: "monthlySalary",
-              value: data.monthlySalary,
-              onChange: (val) => onUpdate({ monthlySalary: val }),
-            })}
+            <CurrencyInput
+              id="monthlySalary"
+              value={data.monthlySalary}
+              onChange={(val) => onUpdate({ monthlySalary: val })}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="employerName" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -244,11 +242,11 @@ function getIncomeFields(
             <Label htmlFor="averageMonthlyIncome" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Ingreso promedio mensual
             </Label>
-            {currencyInput({
-              id: "averageMonthlyIncome",
-              value: data.averageMonthlyIncome,
-              onChange: (val) => onUpdate({ averageMonthlyIncome: val }),
-            })}
+            <CurrencyInput
+              id="averageMonthlyIncome"
+              value={data.averageMonthlyIncome}
+              onChange={(val) => onUpdate({ averageMonthlyIncome: val })}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="professionSector" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -300,11 +298,11 @@ function getIncomeFields(
             <Label htmlFor="businessMonthlyRevenue" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Ingreso mensual del negocio
             </Label>
-            {currencyInput({
-              id: "businessMonthlyRevenue",
-              value: data.businessMonthlyRevenue,
-              onChange: (val) => onUpdate({ businessMonthlyRevenue: val }),
-            })}
+            <CurrencyInput
+              id="businessMonthlyRevenue"
+              value={data.businessMonthlyRevenue}
+              onChange={(val) => onUpdate({ businessMonthlyRevenue: val })}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="employeeCount" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -410,72 +408,6 @@ function AfpSection({ data, onUpdate }: AfpSectionProps) {
           <span className="text-xs text-muted-foreground">{AFP_CONFIG.description}</span>
         </div>
       </div>
-    </div>
-  );
-}
-
-interface InsuranceSectionProps {
-  data: OnboardingData;
-  showForm: boolean;
-  editingItem: HealthInsurance | null;
-  onToggle: (checked: boolean) => void;
-  onEdit: (item: HealthInsurance) => void;
-  onDelete: (id: string) => void;
-  onAdd: () => void;
-  onSave: (item: HealthInsurance) => void;
-  onCancel: () => void;
-}
-
-function InsuranceSection({
-  data,
-  showForm,
-  editingItem,
-  onToggle,
-  onEdit,
-  onDelete,
-  onAdd,
-  onSave,
-  onCancel,
-}: InsuranceSectionProps) {
-  return (
-    <div className="bg-muted/50 rounded-xl p-4 space-y-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-            <HeartPulse className="w-5 h-5 text-primary" />
-          </div>
-          <div>
-            <h4 className="font-medium text-sm">¿Tienes ARS?</h4>
-            <p className="text-xs text-muted-foreground">Seguro de salud contributivo</p>
-          </div>
-        </div>
-        <Switch
-          checked={data.healthInsurances.length > 0}
-          onCheckedChange={onToggle}
-        />
-      </div>
-
-      {data.healthInsurances.length > 0 && (
-        <div className="space-y-2">
-          {data.healthInsurances.map((insurance) => (
-            <EntityCard
-              key={insurance.id}
-              title={insurance.arsName}
-              subtitle={`${insurance.planType} • RD$${insurance.monthlyPremium.toFixed(2)}/mes`}
-              onEdit={() => onEdit(insurance)}
-              onDelete={() => onDelete(insurance.id)}
-            />
-          ))}
-          <Button variant="outline" size="sm" className="w-full" onClick={onAdd}>
-            <Plus className="w-4 h-4 mr-2" />
-            Agregar otro seguro
-          </Button>
-        </div>
-      )}
-
-      {showForm && (
-        <InsuranceForm initialData={editingItem} onSave={onSave} onCancel={onCancel} />
-      )}
     </div>
   );
 }

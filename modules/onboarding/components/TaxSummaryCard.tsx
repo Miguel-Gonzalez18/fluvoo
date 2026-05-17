@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Calculator, TrendingDown, TrendingUp, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -8,9 +8,12 @@ import {
   calcularISRFreelance,
   calcularISREmpresa,
   EXENCION_GASTO_SIMPLIFICADO,
-  TSS_RATES,
   ISR_RATE_PJ,
 } from "../config/isr-calculator";
+import { getTaxParameters } from "../actions/tax-actions";
+import { Tables } from "@/src/types/supabase";
+
+type TaxParameters = Tables<"tax_parameters">;
 import { ProfileType } from "../types/onboarding";
 
 interface TaxSummaryCardProps {
@@ -34,9 +37,48 @@ export function TaxSummaryCard({
   className,
 }: TaxSummaryCardProps) {
   const [period, setPeriod] = useState<"annual" | "monthly">("monthly");
+  const [taxParams, setTaxParams] = useState<TaxParameters | null>(null);
+  const [loadingParams, setLoadingParams] = useState(true);
+  const [paramsError, setParamsError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    getTaxParameters().then((res) => {
+      if (!mounted) return;
+      if (res.success && res.data) {
+        setTaxParams(res.data);
+      } else {
+        setParamsError(res.error || "Error cargando parámetros fiscales");
+      }
+      setLoadingParams(false);
+    });
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   if (profileType === "employee" && monthlySalary && monthlySalary > 0) {
-    const calculation = calcularISRAsalariado(monthlySalary);
+    if (loadingParams) {
+      return (
+        <div className={cn("bg-muted/50 rounded-xl p-4 space-y-4 animate-pulse", className)}>
+          <div className="h-10 bg-muted rounded-lg w-3/4" />
+          <div className="h-4 bg-muted rounded w-full" />
+          <div className="h-4 bg-muted rounded w-5/6" />
+          <div className="h-4 bg-muted rounded w-4/6" />
+        </div>
+      );
+    }
+
+    if (!taxParams) {
+      return (
+        <div className={cn("bg-muted/50 rounded-xl p-4 text-sm text-destructive", className)}>
+          {paramsError ?? "No se pudieron cargar los parámetros fiscales."}
+        </div>
+      );
+    }
+
+    const calculation = calcularISRAsalariado(monthlySalary, taxParams);
+    const tssTotalRate = (taxParams.sfs_employee ?? 0) + (taxParams.afp_employee ?? 0);
 
     const isAnnual = period === "annual";
     const multiplier = isAnnual ? 1 : 1 / 12;
@@ -101,7 +143,7 @@ export function TaxSummaryCard({
           <div className="flex justify-between items-center text-sm">
             <div className="flex items-center gap-1 text-muted-foreground">
               <TrendingDown className="w-3.5 h-3.5 text-destructive" />
-              <span>TSS ({(TSS_RATES.total * 100).toFixed(2)}%)</span>
+              <span>TSS ({(tssTotalRate * 100).toFixed(2)}%)</span>
             </div>
             <span className="text-destructive">
               -RD${deduccionesTSS.toLocaleString("es-DO", { maximumFractionDigits: 0 })}
