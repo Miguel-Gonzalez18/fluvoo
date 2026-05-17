@@ -5,7 +5,7 @@ import { CurrencyInputProps } from "./currency-input.types";
 import { useCurrencyInput } from "./currency-input.hooks";
 
 export function CurrencyInput({ id, value, onChange, placeholder }: CurrencyInputProps) {
-  const { handleChange, handleFocus, handleBlur, getDisplayValue } = useCurrencyInput(value);
+  const { handleChange, handleFocus, handleBlur, getDisplayValue } = useCurrencyInput();
 
   return (
     <div className="relative">
