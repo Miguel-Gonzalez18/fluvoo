@@ -5,7 +5,7 @@ import { Tables } from "@/src/types/supabase";
 
 type TaxParameters = Tables<"tax_parameters">;
 
-interface UseTaxParametersReturn {
+export interface UseTaxParametersReturn {
   taxParams: TaxParameters | null;
   loading: boolean;
   error: string | null;
