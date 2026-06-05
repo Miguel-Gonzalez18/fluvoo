@@ -1,7 +1,7 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
-import { Button } from "@/modules/homePage/components/ui/button";
+import { Button } from "@/modules/shared/components/ui/button";
 import { EntityCardProps } from "./entity-card.types";
 
 export function EntityCard({ title, subtitle, onEdit, onDelete }: EntityCardProps) {

@@ -1,3 +1,5 @@
-export default function GoalsAndSavingsPage() {
-  return <div>Objetivos y Ahorros</div>;
+import { FreelancerGoalsPage } from "@/modules/dashboard/freelancer/pages/GoalsPage";
+
+export default function Page() {
+  return <FreelancerGoalsPage />;
 }

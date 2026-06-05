@@ -3,9 +3,9 @@
 import { Calculator, TrendingDown, TrendingUp, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TaxToggle } from "../tax-toggle.component";
-import { useFreelancerState } from "../../../hooks/tax/use-freelancer-state.hooks";
-import { useFreelancerCalculation } from "../../../hooks/tax/use-freelancer-calculation.hooks";
-import { FreelancerTaxSectionProps } from "../../../types/tax/freelancer.types";
+import { useFreelancerState } from "@/modules/onboarding/hooks/tax/use-freelancer-state.hooks";
+import { useFreelancerCalculation } from "@/modules/onboarding/hooks/tax/use-freelancer-calculation.hooks";
+import { FreelancerTaxSectionProps } from "@/modules/onboarding/types/tax/freelancer.types";
 
 export function FreelancerTaxSection({ averageMonthlyIncome }: FreelancerTaxSectionProps) {
   const { tssVoluntaria, registradoDGII, clientesRetienen, toggleTSS, toggleRegistradoDGII, toggleClientesRetienen } =

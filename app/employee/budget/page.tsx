@@ -1,3 +1,5 @@
-export default function BudgetPage() {
-  return <div>Presupuesto</div>;
+import { EmployeeBudgetPage } from "@/modules/dashboard/employee/pages/BudgetPage";
+
+export default function Page() {
+  return <EmployeeBudgetPage />;
 }

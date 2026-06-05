@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { GetStartedButton } from "./ui/get-started-button";
-import { Button } from "./ui/button";
+import { Button } from "@/modules/shared/components/ui/button";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { BankCarousel } from "./ui/BankCarousel";

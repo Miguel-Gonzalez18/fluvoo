@@ -1,7 +1,7 @@
 "use client";
 
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { Button } from "@/modules/homePage/components/ui/button";
+import { Button } from "@/modules/shared/components/ui/button";
 import { AuthInput } from "./ui/AuthInput";
 import { useLoginForm } from "../hooks/useLoginForm";
 import { usePasswordToggle } from "../hooks/usePasswordToggle";
@@ -10,7 +10,7 @@ import type { LoginSchemaOutput } from "../lib/loginSchemas";
 import { sileo } from "sileo"
 import Image from "next/image";
 import Link from "next/link";
-import { signIn } from "../../../shared/actions/authActions";
+import { signIn } from "@/modules/shared/actions/authActions";
 
 export function LoginForm() {
   const { showPassword, toggle } = usePasswordToggle();

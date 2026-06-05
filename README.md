@@ -4,46 +4,74 @@
 
 fluvoo is an AI-powered personal finance assistant built for the Dominican Republic. It helps salaried employees, freelancers, and small business owners understand where their money goes, plan their savings, and make smarter financial decisions — all in one place.
 
-![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
 ![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green?style=flat-square&logo=supabase)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38bdf8?style=flat-square&logo=tailwindcss)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?style=flat-square&logo=tailwindcss)
 
 ---
 
 ## What is fluvoo?
 
-Most personal finance apps are designed for the US or European markets. fluvoo is built from the ground up for the Dominican reality: peso-denominated accounts, TSS/SFS/SIPEN deductions, DGII tax obligations, ARS health insurance, and the mix of formal and informal income that's common across the country.
+Most personal finance apps are designed for the US or European markets. fluvoo is built from the ground up for the Dominican reality: peso-denominated accounts, TSS/SFS/SIPEN deductions, DGII tax obligations, and the mix of formal and informal income that's common across the country.
 
-The app connects to your bank notifications through Gmail (read-only, with your explicit permission), automatically detects and categorizes your transactions, and uses AI to give you a plain-language summary of your financial health every month. It also includes a suite of local financial calculators and a savings assistant that builds personalized plans based on your actual income and expenses.
+The app connects to bank notifications through Gmail (read-only, with your explicit permission), automatically detects and categorizes transactions, and uses AI to deliver plain-language financial insights. It includes local financial calculators and a savings assistant tailored to your actual income and expenses.
 
 ---
 
 ## Features
 
-**Automatic transaction detection.** Connect your Gmail and fluvoo reads the notification emails your bank already sends you — without ever accessing your bank account or storing any credentials.
+**Landing & onboarding.** Marketing site with SEO, cookie consent (GTM), and a 3-step onboarding flow with profile selection and financial setup.
 
-**AI financial analysis.** Get a monthly summary of your finances written in plain Spanish, with observations about your spending patterns and suggestions you can act on.
+**Integrated ISR tax calculator.** Real-time tax calculation during onboarding following DGII regulations:
+- **Asalariados:** TSS (5.91%) with salary caps, progressive ISR scale
+- **Freelancers:** Simplified deduction or itemized expenses, withholding tracking
+- **Empresas:** Corporate tax preview (PRO module coming soon)
 
-**Personalized savings plans.** Tell the AI assistant your savings goal and it builds a realistic, step-by-step plan based on your real numbers. The plan adapts as your situation changes.
+**Auth & profiles.** Supabase authentication with employee and freelancer dashboards (WIP pages).
 
-**Integrated ISR Tax Calculator.** Real-time tax calculation during onboarding following DGII 2024 regulations:
-  - **Asalariados:** Deducts TSS (5.91%) with salary caps, applies progressive ISR scale (0%-15%-20%-25%)
-  - **Freelancers:** Option for simplified deduction (RD$416,220 exemption) or itemized expenses, 10% withholding tracking
-  - **Empresas:** 27% corporate tax rate, dividend withholding, monthly advance payments
-  - Visual tax summary card shows net income after all deductions
+**Dominican financial calculators.** Net salary, ISR, SIPEN, AFP, loans — aligned with local regulations.
 
-**Dominican financial calculators.** Calculate your net salary with TSS/SFS/SIPEN, estimate your ISR tax, project your SIPEN pension, calculate loan payments, and more — all aligned with current Dominican regulations.
-
-**Receipt scanning.** Take a photo of a receipt and the app reads it automatically, pulling the merchant name, amount, and date so you don't have to type anything.
-
-**Three user profiles.** The app adapts its dashboard and tools depending on whether you're a salaried employee, an independent professional, or a business owner.
+**Three user profiles.** Employee, freelancer, and business owner (PRO, coming soon).
 
 ---
 
 ## Tech Stack
 
-fluvoo is built with **Next.js 14** and **TypeScript** on the frontend and backend, **Supabase** for the database and authentication, **shadcn/ui** with **Tailwind CSS** for the interface, and the **Anthropic Claude API** for all AI features. Receipt scanning uses **Google Vision API**, and bank notification parsing uses the **Gmail API** via Google OAuth.
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| Language | TypeScript 5, React 19 |
+| Styling | Tailwind CSS v4, shadcn/ui (radix-nova) |
+| Backend / Auth | Supabase (PostgreSQL + SSR auth) |
+| Forms | react-hook-form + Zod |
+| Animation | GSAP, Framer Motion, Three.js |
+| Package manager | pnpm |
+
+Planned integrations: Anthropic Claude / Google Gemini (AI), Gmail API (bank notifications), Google Vision (receipt scanning).
+
+---
+
+## Project Structure
+
+```
+app/                 ← Thin routes (metadata + guards + delegate to modules)
+modules/
+  homePage/          ← Landing page
+  onboarding/      ← Onboarding flow + tax summary
+  auth/              ← Login & register
+  dashboard/         ← Employee / freelancer / business layouts & pages
+  legal/             ← Privacy, cookies, terms
+  shared/            ← UI primitives, tax engine, auth actions
+src/lib/             ← Supabase client/server + session proxy
+lib/utils.ts         ← cn() helper
+proxy.ts             ← Session middleware (Next.js 16)
+supabase/migrations/ ← SQL migrations
+```
+
+Import convention: use `@/modules/...` when crossing module boundaries. Shared UI can be imported from `@/modules/shared/components/ui` (barrel) or individual files.
+
+See `AGENTS.md` for full contributor guidelines.
 
 ---
 
@@ -51,62 +79,63 @@ fluvoo is built with **Next.js 14** and **TypeScript** on the frontend and backe
 
 ### Prerequisites
 
-You'll need Node.js 20+, a [Supabase](https://supabase.com) project, a [Google Cloud](https://console.cloud.google.com) project with the Gmail API and Vision API enabled, and an [Anthropic](https://console.anthropic.com) API key.
+- Node.js 20+
+- [pnpm](https://pnpm.io)
+- A [Supabase](https://supabase.com) project
 
 ### Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/your-username/fluvoo.git
 cd fluvoo
 
-# Install dependencies
-npm install
+pnpm install
 
-# Set up your environment variables
 cp .env.example .env.local
+# Fill in Supabase URL and publishable key
 
-# Run database migrations
-npx prisma migrate dev
-
-# Start the development server
-npm run dev
+pnpm dev
 ```
 
-The app will be running at `http://localhost:3000`.
+The app runs at `http://localhost:3000`.
+
+### Database migrations
+
+Apply SQL migrations from `supabase/migrations/` to your Supabase project (via Supabase CLI or Dashboard SQL editor).
 
 ### Environment Variables
 
 ```bash
-# Supabase
+# Supabase (required)
 NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+```
 
-# Anthropic
-ANTHROPIC_API_KEY=
+### Scripts
 
-# Google (Gmail + Vision APIs)
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-GOOGLE_REDIRECT_URI=
-
-# App
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-CRON_SECRET=
+```bash
+pnpm dev      # Development server (Turbopack)
+pnpm build    # Production build
+pnpm start    # Production server
+pnpm lint     # ESLint
 ```
 
 ---
 
 ## Roadmap
 
-The current version covers the core personal finance experience for individual users. Planned features for future versions include a business module with cash flow tracking and payroll tools for business owners, PDF and CSV bank statement imports, a weekly financial summary delivered by email, multi-currency support for users with USD accounts, and a mobile-optimized progressive web app experience.
+- Business module (cash flow, payroll, ITBIS)
+- Gmail transaction detection
+- AI monthly summaries and savings plans
+- Receipt scanning
+- PDF/CSV bank statement imports
+- PWA mobile experience
 
 ---
 
 ## Contributing
 
-Contributions are welcome. Please open an issue before submitting a pull request so we can discuss the proposed change. Make sure your code follows the existing TypeScript and formatting conventions, and that any new calculator logic references the official Dominican regulatory source it's based on.
+Contributions are welcome. Open an issue before submitting a pull request. Follow the conventions in `AGENTS.md`. Calculator logic must reference official Dominican regulatory sources (DGII, TSS).
 
 ---
 

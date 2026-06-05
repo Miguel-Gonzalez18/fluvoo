@@ -1,3 +1,5 @@
-export default function HomePage() {
-  return <div>Inicio</div>;
+import { FreelancerHomePage } from "@/modules/dashboard/freelancer/pages/HomePage";
+
+export default function Page() {
+  return <FreelancerHomePage />;
 }

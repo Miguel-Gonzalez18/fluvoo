@@ -2,7 +2,7 @@
 
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { Button } from "@/modules/homePage/components/ui/button";
+import { Button } from "@/modules/shared/components/ui/button";
 import { ProgressBar } from "./components/ui/ProgressBar";
 import { Step1ProfileSelection } from "./components/step1/Step1ProfileSelection";
 import { Step2FinancialInfo } from "./components/step2/Step2FinancialInfo";
@@ -33,7 +33,13 @@ export function OnboardingPage() {
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <Image src="/logo.svg" alt="Fluvoo" width={100} height={100} className="w-[100px] h-auto object-contain" />
+            <Image
+              src="/logo.svg"
+              alt="Fluvoo"
+              width={100}
+              height={100}
+              className="w-[100px] h-auto object-contain"
+            />
             <span className="text-sm text-muted-foreground">
               Paso {currentStep} de {TOTAL_STEPS}
             </span>

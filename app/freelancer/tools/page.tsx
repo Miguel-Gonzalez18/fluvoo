@@ -1,3 +1,5 @@
-export default function ToolsPage() {
-  return <div>Herramientas</div>;
+import { FreelancerToolsPage } from "@/modules/dashboard/freelancer/pages/ToolsPage";
+
+export default function Page() {
+  return <FreelancerToolsPage />;
 }

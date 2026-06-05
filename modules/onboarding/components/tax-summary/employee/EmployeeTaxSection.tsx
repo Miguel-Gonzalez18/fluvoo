@@ -6,8 +6,8 @@ import { cn } from "@/lib/utils";
 import { calcularISRAsalariado } from "@/modules/shared/tax";
 import { PeriodTabs } from "../period-tabs.component";
 import { TaxRow } from "../tax-row.component";
-import { useEmployeePeriod } from "../../../hooks/tax/use-employee-period.hooks";
-import { EmployeeTaxSectionProps } from "../../../types/tax/employee.types";
+import { useEmployeePeriod } from "@/modules/onboarding/hooks/tax/use-employee-period.hooks";
+import { EmployeeTaxSectionProps } from "@/modules/onboarding/types/tax/employee.types";
 
 export function EmployeeTaxSection({ monthlySalary, taxParams }: EmployeeTaxSectionProps) {
   const { period, setPeriod, periodConfig } = useEmployeePeriod();

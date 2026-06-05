@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Input } from "@/modules/shared/components/ui/input";
 import { Label } from "@/modules/shared/components/ui/label";
-import { Button } from "@/modules/homePage/components/ui/button";
+import { Button } from "@/modules/shared/components/ui/button";
 import { SearchableSelect } from "@/modules/shared/components/ui/searchable-select";
 import { Loan } from "../../types/onboarding";
 import { LOAN_TYPES, FINANCIAL_INSTITUTIONS, createEmptyLoan } from "../../config/financial";

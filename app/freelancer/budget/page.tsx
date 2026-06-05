@@ -1,3 +1,5 @@
-export default function BudgetPage() {
-  return <div>Presupuesto</div>;
+import { FreelancerBudgetPage } from "@/modules/dashboard/freelancer/pages/BudgetPage";
+
+export default function Page() {
+  return <FreelancerBudgetPage />;
 }

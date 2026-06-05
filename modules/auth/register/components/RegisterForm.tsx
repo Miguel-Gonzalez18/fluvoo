@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { User, Mail, Lock, Eye, EyeOff, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/modules/homePage/components/ui/button";
+import { Button } from "@/modules/shared/components/ui/button";
 import { AuthInput } from "./ui/AuthInput";
 import { useRegisterForm } from "../hooks/useRegisterForm";
 import { usePasswordToggle } from "../hooks/usePasswordToggle";
@@ -13,7 +13,7 @@ import type { RegisterSchemaOutput } from "../lib/registerSchemas";
 import { sileo } from "sileo";
 import Image from "next/image";
 import Link from "next/link";
-import { signUp } from "../../../shared/actions/authActions";
+import { signUp } from "@/modules/shared/actions/authActions";
 
 export function RegisterForm() {
   const { showPassword, toggle } = usePasswordToggle();

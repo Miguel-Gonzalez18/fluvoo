@@ -1,3 +1,5 @@
-export default function GoalsAndSavingsPage() {
-  return <div>Objetivos y Ahorros</div>;
+import { EmployeeGoalsPage } from "@/modules/dashboard/employee/pages/GoalsPage";
+
+export default function Page() {
+  return <EmployeeGoalsPage />;
 }

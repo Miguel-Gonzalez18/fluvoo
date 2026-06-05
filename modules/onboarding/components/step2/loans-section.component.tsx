@@ -2,7 +2,7 @@
 
 import { Landmark, Plus } from "lucide-react";
 import { Switch } from "@/modules/shared/components/ui/switch";
-import { Button } from "@/modules/homePage/components/ui/button";
+import { Button } from "@/modules/shared/components/ui/button";
 import { EntityCard } from "@/modules/shared/components/entity-card/entity-card.component";
 import { LoansSectionProps } from "../../types/step2/financial.types";
 import { getLoanTypeLabel } from "../../config/financial";

@@ -1,9 +1,9 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { TaxSummaryCardProps } from "../../types/tax/summary.types";
+import { TaxSummaryCardProps } from "@/modules/onboarding/types/tax/summary.types";
 import { useTaxParameters } from "@/modules/shared/hooks";
-import { getTaxParameters } from "../../actions/tax-actions";
+import { getTaxParameters } from "@/modules/onboarding/actions/tax-actions";
 import { EmployeeTaxSection } from "./employee/EmployeeTaxSection";
 import { FreelancerTaxSection } from "./freelancer/FreelancerTaxSection";
 import { BusinessTaxSection } from "./business/BusinessTaxSection";

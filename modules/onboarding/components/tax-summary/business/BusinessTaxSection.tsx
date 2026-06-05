@@ -3,8 +3,8 @@
 import { Calculator, TrendingDown, TrendingUp, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ISR_RATE_PJ } from "@/modules/shared/tax";
-import { BusinessTaxSectionProps } from "../../../types/tax/business.types";
-import { useBusinessCalculation } from "../../../hooks/tax/use-business-calculation.hooks";
+import { BusinessTaxSectionProps } from "@/modules/onboarding/types/tax/business.types";
+import { useBusinessCalculation } from "@/modules/onboarding/hooks/tax/use-business-calculation.hooks";
 
 export function BusinessTaxSection({ businessMonthlyRevenue, gastosEstimados }: BusinessTaxSectionProps) {
   const calc = useBusinessCalculation({ businessMonthlyRevenue, gastosEstimados });

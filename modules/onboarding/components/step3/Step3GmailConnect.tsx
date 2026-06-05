@@ -1,7 +1,7 @@
 "use client";
 
 import { Building2 } from "lucide-react";
-import { Button } from "@/modules/homePage/components/ui/button";
+import { Button } from "@/modules/shared/components/ui/button";
 import { SUPPORTED_BANKS, GMAIL_FEATURES } from "../../config/gmail";
 import { Step3GmailConnectProps } from "../../types/step3/gmail.types";
 

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
-import { Button } from "@/modules/homePage/components/ui/button";
+import { Button } from "@/modules/shared/components/ui/button";
 import PixelBlast from "@/modules/shared/components/ui/PixelBlast";
 import { MorphingText } from "@/modules/homePage/components/ui/liquid-text";
 import { ArrowUpRight } from "lucide-react";
