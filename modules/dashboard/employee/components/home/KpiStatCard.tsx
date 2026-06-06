@@ -26,7 +26,7 @@ export function KpiStatCard({ stat, className }: KpiStatCardProps) {
   return (
     <Card
       className={cn(
-        "gap-4 rounded-2xl border-border/60 bg-white py-5 shadow-sm",
+        "gap-4 rounded-md border-border/60 py-5 shadow-sm",
         className
       )}
     >
@@ -36,9 +36,9 @@ export function KpiStatCard({ stat, className }: KpiStatCardProps) {
         </p>
       </CardHeader>
       <CardContent className="px-5">
-        <div className="flex items-end justify-between gap-3">
+        <div className="flex items-end justify-between gap-2">
           <div className="space-y-2">
-            <p className="font-heading text-3xl font-bold tracking-tight text-foreground">
+            <p className="font-heading text-md font-bold tracking-tight text-foreground sm:text-lg lg:text-xl">
               {displayValue}
             </p>
             <p className={cn("text-sm font-medium", trendClassMap[stat.trend])}>

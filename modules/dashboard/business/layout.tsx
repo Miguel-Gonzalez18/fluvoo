@@ -1,7 +1,15 @@
-export default function BusinessLayout({ children }: { children: React.ReactNode }) {
+"use client";
+
+import { DashboardThemeProvider } from "@/modules/dashboard/shared/DashboardThemeProvider";
+
+export default function BusinessLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <main className="min-h-dvh bg-neutral-50 p-6">
-      {children}
-    </main>
+    <DashboardThemeProvider>
+      <main className="flex-1 p-6">{children}</main>
+    </DashboardThemeProvider>
   );
 }

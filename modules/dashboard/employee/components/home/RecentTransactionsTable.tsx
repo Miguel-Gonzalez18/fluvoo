@@ -1,3 +1,4 @@
+import { Receipt } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/modules/shared/components/ui/badge";
@@ -14,18 +15,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/modules/shared/components/ui/table";
-import { RECENT_TRANSACTIONS } from "@/modules/dashboard/employee/config/dashboardMock";
 import { formatSignedDOP } from "@/modules/dashboard/employee/lib/formatCurrency";
+import type { RecentTransaction } from "@/modules/dashboard/employee/types/dashboard.types";
 
 interface RecentTransactionsTableProps {
+  transactions: RecentTransaction[];
+  gmailConnected: boolean;
   className?: string;
 }
 
-export function RecentTransactionsTable({ className }: RecentTransactionsTableProps) {
+export function RecentTransactionsTable({
+  transactions,
+  gmailConnected,
+  className,
+}: RecentTransactionsTableProps) {
   return (
     <Card
       className={cn(
-        "gap-4 rounded-2xl border-border/60 bg-white py-6 shadow-sm",
+        "gap-4 rounded-md border-border/60 py-6 shadow-sm",
         className
       )}
     >
@@ -42,54 +49,72 @@ export function RecentTransactionsTable({ className }: RecentTransactionsTablePr
       </CardHeader>
 
       <CardContent className="px-2 sm:px-5">
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead>Comercio</TableHead>
-              <TableHead>Fecha</TableHead>
-              <TableHead>Categoría</TableHead>
-              <TableHead className="text-right">Monto</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {RECENT_TRANSACTIONS.map((transaction) => {
-              const Icon = transaction.icon;
+        {transactions.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-3 px-4 py-12 text-center">
+            <div className="flex size-12 items-center justify-center rounded-full bg-muted">
+              <Receipt className="size-5 text-muted-foreground" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-foreground">
+                Sin transacciones todavía
+              </p>
+              <p className="max-w-md text-sm text-muted-foreground">
+                {gmailConnected
+                  ? "Tu Gmail está conectado pero aún no hay movimientos importados. Verifica que recibas notificaciones de tu banco por correo."
+                  : "Conecta Gmail en el onboarding para importar tus movimientos bancarios automáticamente."}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead>Comercio</TableHead>
+                <TableHead>Fecha</TableHead>
+                <TableHead>Categoría</TableHead>
+                <TableHead className="text-right">Monto</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {transactions.map((transaction) => {
+                const Icon = transaction.icon;
 
-              return (
-                <TableRow key={transaction.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="flex size-9 items-center justify-center rounded-full bg-muted">
-                        <Icon className="size-4 text-muted-foreground" />
+                return (
+                  <TableRow key={transaction.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="flex size-9 items-center justify-center rounded-full bg-muted">
+                          <Icon className="size-4 text-muted-foreground" />
+                        </div>
+                        <span className="font-medium text-foreground">
+                          {transaction.merchant}
+                        </span>
                       </div>
-                      <span className="font-medium text-foreground">
-                        {transaction.merchant}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">
-                    {transaction.dateLabel}
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={transaction.categoryVariant}>
-                      {transaction.category}
-                    </Badge>
-                  </TableCell>
-                  <TableCell
-                    className={cn(
-                      "text-right font-semibold tabular-nums",
-                      transaction.direction === "income"
-                        ? "text-primary-600"
-                        : "text-destructive"
-                    )}
-                  >
-                    {formatSignedDOP(transaction.amount, transaction.direction)}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {transaction.dateLabel}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={transaction.categoryVariant}>
+                        {transaction.category}
+                      </Badge>
+                    </TableCell>
+                    <TableCell
+                      className={cn(
+                        "text-right font-semibold tabular-nums",
+                        transaction.direction === "income"
+                          ? "text-primary-600"
+                          : "text-destructive"
+                      )}
+                    >
+                      {formatSignedDOP(transaction.amount, transaction.direction)}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
     </Card>
   );

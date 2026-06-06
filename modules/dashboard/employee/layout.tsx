@@ -8,6 +8,7 @@ import {
 } from "@/modules/shared/components/ui/sidebar";
 import { EmployeeSidebar } from "@/modules/dashboard/employee/components/EmployeeSidebar";
 import { DashboardHeader } from "@/modules/dashboard/employee/components/DashboardHeader";
+import { DashboardThemeProvider } from "@/modules/dashboard/shared/DashboardThemeProvider";
 
 interface EmployeeLayoutProps {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ export default function EmployeeLayout({
   displayName,
 }: Readonly<EmployeeLayoutProps>) {
   return (
+    <DashboardThemeProvider>
     <TooltipProvider>
       <SidebarProvider>
         <EmployeeSidebar />
@@ -29,9 +31,10 @@ export default function EmployeeLayout({
               <DashboardHeader name={displayName} className="min-w-0 flex-1" />
             </div>
           </header>
-          <main className="flex-1 p-4 sm:p-6">{children}</main>
+          <main className="flex-1 p-2 sm:p-4">{children}</main>
         </SidebarInset>
       </SidebarProvider>
     </TooltipProvider>
+    </DashboardThemeProvider>
   );
 }

@@ -33,7 +33,7 @@ export function EmployeeSidebar() {
 
   return (
     <Sidebar variant="floating" collapsible="icon">
-      <SidebarHeader className="border-b border-gray-500 px-4 py-3">
+      <SidebarHeader className="border-b border-gray-600 px-4 py-3">
         {open ? (
           <FluvooLogo variant="white" />
         ) : (
@@ -42,7 +42,7 @@ export function EmployeeSidebar() {
             alt="Fluvoo"
             width={24}
             height={24}
-            className="size-6"
+            className="size-6 object-contain"
           />
         )}
         {open && <span className="text-xs text-neutral-400">Empleado</span>}
@@ -72,7 +72,7 @@ export function EmployeeSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-gray-500">
+      <SidebarFooter className="border-t border-gray-600">
         <SidebarMenu>
           {bottomItems.map(({ label, href, icon: Icon }) => (
             <SidebarMenuItem key={href}>

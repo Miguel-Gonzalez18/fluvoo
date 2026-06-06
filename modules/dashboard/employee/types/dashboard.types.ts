@@ -37,3 +37,25 @@ export interface FiscalTip {
   description: string;
   icon: LucideIcon;
 }
+
+export type GmailSyncStatus = "pending" | "syncing" | "active" | "error";
+
+export interface GmailStatus {
+  connected: boolean;
+  googleEmail: string | null;
+  syncStatus: GmailSyncStatus | null;
+  lastSyncAt: string | null;
+  syncError: string | null;
+}
+
+export interface NetIncomeData {
+  value: number;
+  subtext: string;
+  hasSalary: boolean;
+}
+
+export interface HomeDashboardData {
+  netIncome: NetIncomeData;
+  recentTransactions: RecentTransaction[];
+  gmailStatus: GmailStatus;
+}

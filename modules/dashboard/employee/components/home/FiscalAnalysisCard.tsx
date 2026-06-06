@@ -14,7 +14,7 @@ export function FiscalAnalysisCard({ className }: FiscalAnalysisCardProps) {
   return (
     <Card
       className={cn(
-        "gap-5 rounded-2xl border-primary-100 bg-primary-50/70 py-6 shadow-sm",
+        "gap-5 rounded-md border-primary-100 bg-primary-50/70 py-6 shadow-sm dark:border-primary-900 dark:bg-primary-950/40",
         className
       )}
     >
@@ -39,7 +39,7 @@ export function FiscalAnalysisCard({ className }: FiscalAnalysisCardProps) {
               <button
                 key={tip.id}
                 type="button"
-                className="flex w-full items-center gap-3 rounded-xl border border-border/60 bg-white p-4 text-left transition-colors hover:bg-muted/40"
+                className="flex w-full items-center gap-3 rounded-xl border border-border/60 bg-card p-4 text-left transition-colors hover:bg-muted/40"
               >
                 <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground">
                   <Icon className="size-4" />

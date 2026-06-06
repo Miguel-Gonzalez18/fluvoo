@@ -1,6 +1,7 @@
-import { Bell, Sun } from "lucide-react";
+import { Bell } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/modules/shared/components/ui/avatar";
 import { Button } from "@/modules/shared/components/ui/button";
+import { ThemeToggle } from "@/modules/shared/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 import {
   formatLongDate,
@@ -25,16 +26,14 @@ export function DashboardHeader({ name, className }: DashboardHeaderProps) {
       )}
     >
       <div className="space-y-1">
-        <h1 className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <h1 className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">
           {greeting}, {name}
         </h1>
         <p className="text-sm text-muted-foreground">{todayLabel}</p>
       </div>
 
       <div className="flex items-center gap-1 self-end sm:self-auto">
-        <Button variant="ghost" size="icon" aria-label="Cambiar tema">
-          <Sun className="size-5" />
-        </Button>
+        <ThemeToggle />
 
         <Button
           variant="ghost"

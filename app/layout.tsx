@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Space_Grotesk, Syne } from "next/font/google";
 import { GoogleTagManager } from '@next/third-parties/google'
 import Script from "next/script";
+import { ClearGlobalDarkClass } from "@/modules/shared/components/ClearGlobalDarkClass";
 import { CookieConsentGTM } from "@/modules/shared/components/cookie-consent-gtm";
 import "./globals.css";
 import { Toaster } from "sileo";
@@ -137,6 +138,7 @@ export default function RootLayout({
     >
       <GoogleTagManager gtmId="GTM-M6N8ND86" />
       <body suppressHydrationWarning className="bg-neutral-50">
+        <ClearGlobalDarkClass />
         <Script id="gtag-consent-init" strategy="beforeInteractive">{`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}

@@ -69,7 +69,7 @@ export function ExpenseCategoryChart({ className }: ExpenseCategoryChartProps) {
   return (
     <Card
       className={cn(
-        "gap-4 rounded-2xl border-border/60 bg-white py-6 shadow-sm",
+        "gap-4 rounded-md border-border/60 py-6 shadow-sm",
         className
       )}
     >
@@ -93,7 +93,7 @@ export function ExpenseCategoryChart({ className }: ExpenseCategoryChartProps) {
       </CardHeader>
 
       <CardContent className="px-2 pb-2 sm:px-5">
-        <ChartContainer config={chartConfig} className="aspect-[4/3] min-h-[260px] w-full">
+        <ChartContainer config={chartConfig} className="aspect-4/3 min-h-[260px] w-full">
           <BarChart data={chartData} barGap={-32} barCategoryGap="20%">
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <XAxis
