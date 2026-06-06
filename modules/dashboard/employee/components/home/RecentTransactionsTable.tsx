@@ -2,11 +2,8 @@ import { Receipt } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/modules/shared/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/modules/shared/components/ui/card";
+import { DashboardCard } from "@/modules/dashboard/shared/DashboardCard";
+import { CardContent, CardHeader } from "@/modules/shared/components/ui/card";
 import {
   Table,
   TableBody,
@@ -30,13 +27,8 @@ export function RecentTransactionsTable({
   className,
 }: RecentTransactionsTableProps) {
   return (
-    <Card
-      className={cn(
-        "gap-4 rounded-md border-border/60 py-6 shadow-sm",
-        className
-      )}
-    >
-      <CardHeader className="flex-row items-center justify-between gap-4 space-y-0 px-5 pb-0">
+    <DashboardCard className={cn("gap-4 rounded-md py-6", className)}>
+      <CardHeader className="flex flex-row items-center justify-between gap-4 space-y-0 px-5 pb-0">
         <h2 className="font-label text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Últimas Transacciones
         </h2>
@@ -60,22 +52,22 @@ export function RecentTransactionsTable({
               </p>
               <p className="max-w-md text-sm text-muted-foreground">
                 {gmailConnected
-                  ? "Tu Gmail está conectado pero aún no hay movimientos importados. Verifica que recibas notificaciones de tu banco por correo."
-                  : "Conecta Gmail en el onboarding para importar tus movimientos bancarios automáticamente."}
+                  ? "Tu Gmail está conectado pero aún no hay movimientos importados. Usa el botón de sincronizar en el header o verifica las notificaciones de tu banco."
+                  : "Usa el botón Conectar en el header para vincular Gmail e importar tus movimientos bancarios."}
               </p>
             </div>
           </div>
         ) : (
           <Table>
-            <TableHeader>
-              <TableRow className="hover:bg-transparent">
+            <TableHeader className="bg-background">
+              <TableRow>
                 <TableHead>Comercio</TableHead>
                 <TableHead>Fecha</TableHead>
                 <TableHead>Categoría</TableHead>
                 <TableHead className="text-right">Monto</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody className="max-h-[32rem] overflow-y-auto">
               {transactions.map((transaction) => {
                 const Icon = transaction.icon;
 
@@ -116,6 +108,6 @@ export function RecentTransactionsTable({
           </Table>
         )}
       </CardContent>
-    </Card>
+    </DashboardCard>
   );
 }

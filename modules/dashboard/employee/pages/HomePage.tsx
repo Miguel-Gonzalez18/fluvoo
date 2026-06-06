@@ -2,7 +2,6 @@ import { TrendingUp } from "lucide-react";
 import { DashboardFab } from "@/modules/dashboard/employee/components/home/DashboardFab";
 import { ExpenseCategoryChart } from "@/modules/dashboard/employee/components/home/ExpenseCategoryChart";
 import { FiscalAnalysisCard } from "@/modules/dashboard/employee/components/home/FiscalAnalysisCard";
-import { GmailStatusBanner } from "@/modules/dashboard/employee/components/home/GmailStatusBanner";
 import { KpiStatCard } from "@/modules/dashboard/employee/components/home/KpiStatCard";
 import { RecentTransactionsTable } from "@/modules/dashboard/employee/components/home/RecentTransactionsTable";
 import { KPI_STATS } from "@/modules/dashboard/employee/config/dashboardMock";
@@ -26,8 +25,6 @@ export async function EmployeeHomePage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-8 pb-24">
-      <GmailStatusBanner status={data.gmailStatus} />
-
       <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {kpiStats.map((stat) => (
           <KpiStatCard key={stat.id} stat={stat} />

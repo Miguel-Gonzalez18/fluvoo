@@ -1,6 +1,7 @@
 import { ChevronRight, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Card, CardContent } from "@/modules/shared/components/ui/card";
+import { DashboardCard } from "@/modules/dashboard/shared/DashboardCard";
+import { CardContent } from "@/modules/shared/components/ui/card";
 import {
   FISCAL_ANALYSIS_DESCRIPTION,
   FISCAL_TIPS,
@@ -12,9 +13,9 @@ interface FiscalAnalysisCardProps {
 
 export function FiscalAnalysisCard({ className }: FiscalAnalysisCardProps) {
   return (
-    <Card
+    <DashboardCard
       className={cn(
-        "gap-5 rounded-md border-primary-100 bg-primary-50/70 py-6 shadow-sm dark:border-primary-900 dark:bg-primary-950/40",
+        "gap-5 rounded-md bg-primary-50/70 py-6 dark:bg-primary-950/40",
         className
       )}
     >
@@ -39,7 +40,7 @@ export function FiscalAnalysisCard({ className }: FiscalAnalysisCardProps) {
               <button
                 key={tip.id}
                 type="button"
-                className="flex w-full items-center gap-3 rounded-xl border border-border/60 bg-card p-4 text-left transition-colors hover:bg-muted/40"
+                className="flex w-full items-center gap-3 rounded-xl bg-card p-4 text-left transition-colors hover:bg-muted/40"
               >
                 <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground">
                   <Icon className="size-4" />
@@ -58,6 +59,6 @@ export function FiscalAnalysisCard({ className }: FiscalAnalysisCardProps) {
           })}
         </div>
       </CardContent>
-    </Card>
+    </DashboardCard>
   );
 }

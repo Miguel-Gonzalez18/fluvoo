@@ -1,20 +1,28 @@
+import { Suspense } from "react";
 import { Bell } from "lucide-react";
-import { Avatar, AvatarFallback } from "@/modules/shared/components/ui/avatar";
-import { Button } from "@/modules/shared/components/ui/button";
-import { ThemeToggle } from "@/modules/shared/components/ThemeToggle";
-import { cn } from "@/lib/utils";
+import { GmailSyncButton } from "@/modules/dashboard/employee/components/GmailSyncButton";
 import {
   formatLongDate,
   getInitials,
 } from "@/modules/dashboard/employee/lib/formatDate";
 import { getTimeGreeting } from "@/modules/dashboard/employee/lib/greeting";
+import type { GmailStatus } from "@/modules/dashboard/employee/types/dashboard.types";
+import { ThemeToggle } from "@/modules/shared/components/ThemeToggle";
+import { Avatar, AvatarFallback } from "@/modules/shared/components/ui/avatar";
+import { Button } from "@/modules/shared/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface DashboardHeaderProps {
   name: string;
+  gmailStatus: GmailStatus;
   className?: string;
 }
 
-export function DashboardHeader({ name, className }: DashboardHeaderProps) {
+export function DashboardHeader({
+  name,
+  gmailStatus,
+  className,
+}: DashboardHeaderProps) {
   const greeting = getTimeGreeting();
   const todayLabel = formatLongDate();
 
@@ -33,6 +41,10 @@ export function DashboardHeader({ name, className }: DashboardHeaderProps) {
       </div>
 
       <div className="flex items-center gap-1 self-end sm:self-auto">
+        <Suspense fallback={null}>
+          <GmailSyncButton status={gmailStatus} />
+        </Suspense>
+
         <ThemeToggle />
 
         <Button

@@ -1,5 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { handleGmailOAuthCallback } from "@/modules/onboarding/actions/gmail-callback.server";
+import { consumeGmailOAuthReturnTo } from "@/modules/shared/google/oauth-state.server";
+
+function buildGmailRedirect(
+  request: NextRequest,
+  returnTo: string,
+  params: Record<string, string>
+): NextResponse {
+  const redirectUrl = new URL(returnTo, request.url);
+
+  for (const [key, value] of Object.entries(params)) {
+    redirectUrl.searchParams.set(key, value);
+  }
+
+  return NextResponse.redirect(redirectUrl);
+}
 
 export async function GET(request: NextRequest) {
   const code = request.nextUrl.searchParams.get("code");
@@ -7,37 +22,39 @@ export async function GET(request: NextRequest) {
   const oauthError = request.nextUrl.searchParams.get("error");
 
   if (oauthError) {
-    return NextResponse.redirect(
-      new URL(`/onboarding?gmail=error&message=${encodeURIComponent(oauthError)}`, request.url)
-    );
+    const returnTo = await consumeGmailOAuthReturnTo();
+    return buildGmailRedirect(request, returnTo, {
+      gmail: "error",
+      message: oauthError,
+    });
   }
 
   if (!code || !state) {
-    return NextResponse.redirect(
-      new URL("/onboarding?gmail=error&message=missing_code", request.url)
-    );
+    const returnTo = await consumeGmailOAuthReturnTo();
+    return buildGmailRedirect(request, returnTo, {
+      gmail: "error",
+      message: "missing_code",
+    });
   }
 
+  const returnTo = await consumeGmailOAuthReturnTo();
   const result = await handleGmailOAuthCallback(code, state);
 
   if (!result.success) {
-    return NextResponse.redirect(
-      new URL(
-        `/onboarding?gmail=error&message=${encodeURIComponent(result.error || "unknown")}`,
-        request.url
-      )
-    );
+    return buildGmailRedirect(request, returnTo, {
+      gmail: "error",
+      message: result.error || "unknown",
+    });
   }
 
-  const redirectUrl = new URL("/dashboard", request.url);
-  redirectUrl.searchParams.set("gmail", "connected");
+  const params: Record<string, string> = { gmail: "connected" };
 
   if (result.sync && !result.sync.success) {
-    redirectUrl.searchParams.set("sync", "error");
-    redirectUrl.searchParams.set("syncMessage", result.sync.error || "Gmail sync failed");
+    params.sync = "error";
+    params.syncMessage = result.sync.error || "Gmail sync failed";
   } else if (result.sync?.imported) {
-    redirectUrl.searchParams.set("imported", String(result.sync.imported));
+    params.imported = String(result.sync.imported);
   }
 
-  return NextResponse.redirect(redirectUrl);
+  return buildGmailRedirect(request, returnTo, params);
 }

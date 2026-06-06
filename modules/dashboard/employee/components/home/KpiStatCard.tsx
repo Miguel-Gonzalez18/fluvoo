@@ -1,9 +1,6 @@
 import { cn } from "@/lib/utils";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/modules/shared/components/ui/card";
+import { DashboardCard } from "@/modules/dashboard/shared/DashboardCard";
+import { CardContent, CardHeader } from "@/modules/shared/components/ui/card";
 import { formatDOP } from "@/modules/dashboard/employee/lib/formatCurrency";
 import type { KpiStat } from "@/modules/dashboard/employee/types/dashboard.types";
 
@@ -24,12 +21,7 @@ export function KpiStatCard({ stat, className }: KpiStatCardProps) {
     stat.id === "next-payment" ? stat.value : formatDOP(stat.value);
 
   return (
-    <Card
-      className={cn(
-        "gap-4 rounded-md border-border/60 py-5 shadow-sm",
-        className
-      )}
-    >
+    <DashboardCard className={cn("gap-4 rounded-md py-5", className)}>
       <CardHeader className="gap-2 px-5 pb-0">
         <p className="font-label text-xs font-medium uppercase tracking-wide text-muted-foreground">
           {stat.label}
@@ -59,6 +51,6 @@ export function KpiStatCard({ stat, className }: KpiStatCardProps) {
           ) : null}
         </div>
       </CardContent>
-    </Card>
+    </DashboardCard>
   );
 }

@@ -1,20 +1,18 @@
 "use server";
 
 import { randomBytes } from "crypto";
-import { createClient } from "@/src/lib/server";
-import { OnboardingData } from "@/modules/onboarding/types/onboarding";
 import { buildGoogleAuthUrl } from "@/modules/shared/google/oauth.server";
 import { setGmailOAuthState } from "@/modules/shared/google/oauth-state.server";
-import { saveOnboardingData } from "@/modules/onboarding/actions/onboarding-actions";
+import { createClient } from "@/src/lib/server";
 
 function createOAuthState(): string {
   return randomBytes(32).toString("hex");
 }
 
-export async function connectGmail(data: OnboardingData): Promise<{
+export async function startGmailConnect(): Promise<{
   success: boolean;
-  error?: string;
   authUrl?: string;
+  error?: string;
 }> {
   try {
     const supabase = await createClient();
@@ -27,13 +25,8 @@ export async function connectGmail(data: OnboardingData): Promise<{
       return { success: false, error: "Not authenticated" };
     }
 
-    const saveResult = await saveOnboardingData(data);
-    if (!saveResult.success) {
-      return { success: false, error: saveResult.error || "Failed to save onboarding data" };
-    }
-
     const state = createOAuthState();
-    await setGmailOAuthState(state, "/onboarding");
+    await setGmailOAuthState(state, "/employee/home");
 
     return {
       success: true,

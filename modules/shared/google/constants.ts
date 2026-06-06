@@ -13,6 +13,7 @@ export const GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinf
 export const GMAIL_API_BASE = "https://gmail.googleapis.com/gmail/v1";
 
 export const GMAIL_OAUTH_STATE_COOKIE = "gmail_oauth_state";
+export const GMAIL_OAUTH_RETURN_COOKIE = "gmail_oauth_return_to";
 
 /** Max messages fetched per sync run (initial + manual). */
 export const GMAIL_SYNC_MAX_MESSAGES = 100;
