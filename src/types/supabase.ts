@@ -7,35 +7,8 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.5"
-  }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
   }
   public: {
     Tables: {
@@ -75,6 +48,48 @@ export type Database = {
           simplified_expense_rate?: number
           source_retention_rate?: number
           year?: number
+        }
+        Relationships: []
+      }
+      gmail_connections: {
+        Row: {
+          access_token: string | null
+          connected_at: string
+          google_email: string
+          last_sync_at: string | null
+          refresh_token: string
+          scopes: string[]
+          sync_error: string | null
+          sync_status: string
+          token_expires_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          connected_at?: string
+          google_email: string
+          last_sync_at?: string | null
+          refresh_token: string
+          scopes?: string[]
+          sync_error?: string | null
+          sync_status?: string
+          token_expires_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          connected_at?: string
+          google_email?: string
+          last_sync_at?: string | null
+          refresh_token?: string
+          scopes?: string[]
+          sync_error?: string | null
+          sync_status?: string
+          token_expires_at?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -321,6 +336,60 @@ export type Database = {
         }
         Relationships: []
       }
+      transactions: {
+        Row: {
+          amount: number
+          bank_name: string
+          created_at: string
+          currency: string
+          description: string | null
+          gmail_message_id: string
+          id: string
+          merchant_name: string | null
+          parse_status: Database["public"]["Enums"]["transaction_parse_status"]
+          raw_from: string | null
+          raw_subject: string | null
+          transaction_date: string
+          transaction_type: Database["public"]["Enums"]["transaction_type"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          bank_name: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          gmail_message_id: string
+          id?: string
+          merchant_name?: string | null
+          parse_status?: Database["public"]["Enums"]["transaction_parse_status"]
+          raw_from?: string | null
+          raw_subject?: string | null
+          transaction_date: string
+          transaction_type?: Database["public"]["Enums"]["transaction_type"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          bank_name?: string
+          created_at?: string
+          currency?: string
+          description?: string | null
+          gmail_message_id?: string
+          id?: string
+          merchant_name?: string | null
+          parse_status?: Database["public"]["Enums"]["transaction_parse_status"]
+          raw_from?: string | null
+          raw_subject?: string | null
+          transaction_date?: string
+          transaction_type?: Database["public"]["Enums"]["transaction_type"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           annual_deductible_costs: number | null
@@ -462,6 +531,14 @@ export type Database = {
         | "vehicle"
         | "business"
         | "credit_card"
+      transaction_parse_status: "parsed" | "partial" | "failed"
+      transaction_type:
+        | "debit"
+        | "credit"
+        | "transfer"
+        | "payment"
+        | "deposit"
+        | "unknown"
       user_profile_type: "employee" | "freelancer" | "business_owner"
     }
     CompositeTypes: {
@@ -588,9 +665,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       income_frequency: [
@@ -602,6 +676,15 @@ export const Constants = {
       ],
       loan_status: ["active", "paid_off", "refinanced"],
       loan_type: ["personal", "mortgage", "vehicle", "business", "credit_card"],
+      transaction_parse_status: ["parsed", "partial", "failed"],
+      transaction_type: [
+        "debit",
+        "credit",
+        "transfer",
+        "payment",
+        "deposit",
+        "unknown",
+      ],
       user_profile_type: ["employee", "freelancer", "business_owner"],
     },
   },

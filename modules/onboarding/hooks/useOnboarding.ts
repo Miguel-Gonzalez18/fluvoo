@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
   OnboardingData,
@@ -9,7 +9,9 @@ import {
   Loan,
   HealthInsurance,
 } from "../types/onboarding";
-import { completeOnboarding, connectGmail } from "../actions/onboarding-actions";
+import { completeOnboarding } from "../actions/onboarding-actions";
+import { connectGmail } from "../actions/gmail-actions";
+import { sileo } from "sileo";
 
 export const TOTAL_STEPS = 3;
 
@@ -44,11 +46,22 @@ export interface UseOnboardingReturn {
   handleGmailSkip: () => Promise<void>;
 }
 
-export function useOnboarding(): UseOnboardingReturn {
+interface UseOnboardingOptions {
+  initialStep?: number;
+  gmailErrorMessage?: string;
+}
+
+export function useOnboarding(options: UseOnboardingOptions = {}): UseOnboardingReturn {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(options.initialStep ?? 1);
   const [data, setData] = useState<OnboardingData>(INITIAL_ONBOARDING_DATA);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (options.gmailErrorMessage) {
+      sileo.error({ title: options.gmailErrorMessage });
+    }
+  }, [options.gmailErrorMessage]);
 
   // Calculate progress percentage
   const progress = useMemo(
@@ -165,19 +178,21 @@ export function useOnboarding(): UseOnboardingReturn {
 
   // Gmail connection
   const handleGmailConnect = useCallback(async () => {
+    setIsLoading(true);
     try {
-      const result = await connectGmail();
+      const result = await connectGmail(data);
       if (result.authUrl) {
         window.location.href = result.authUrl;
         return;
       }
-      setData((prev) => ({ ...prev, gmailConnected: true }));
-      await finishOnboarding();
+      sileo.error({ title: result.error || "No se pudo iniciar la conexión con Gmail" });
     } catch (error) {
       console.error("Error connecting Gmail:", error);
-      // TODO: Show error toast
+      sileo.error({ title: "Error al conectar Gmail" });
+    } finally {
+      setIsLoading(false);
     }
-  }, [finishOnboarding]);
+  }, [data]);
 
   // Skip Gmail
   const handleGmailSkip = useCallback(async () => {

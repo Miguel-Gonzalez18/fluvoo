@@ -61,7 +61,7 @@ export function Step3GmailConnect({ onConnect, onSkip }: Step3GmailConnectProps)
       <div className="space-y-3 max-w-sm mx-auto">
         <Button
           onClick={onConnect}
-          className="w-full h-12 bg-foreground hover:bg-foreground/90 text-background"
+          className="w-full h-12 bg-foreground hover:bg-foreground/90 text-background cursor-pointer"
         >
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
             <path

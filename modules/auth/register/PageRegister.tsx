@@ -5,7 +5,7 @@ import { AnimatedBackground } from "./components/AnimatedBackground";
 import { TrendingUp, ShieldCheck } from "lucide-react";
 import { Separator } from "@/modules/shared/components/ui/separator";
 import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount } from "./components/ui/avatar";
-import Image from "next/image";
+import { FluvooLogo } from "@/modules/shared/components/FluvooLogo";
 
 export const metadata: Metadata = {
   title: "Crear cuenta | Fluvoo",
@@ -103,7 +103,7 @@ export default function PageRegister() {
           {/* Logo */}
           <div className="space-y-2">
             <Link href="/">
-              <Image src="/logo.svg" alt="Fluvoo" width={100} height={100} className="w-[100px] h-auto object-contain" />
+              <FluvooLogo />
             </Link>
           </div>
         </div>

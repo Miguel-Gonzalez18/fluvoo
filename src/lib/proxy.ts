@@ -38,7 +38,16 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims()
   const user = data?.claims
 
-  const PUBLIC_PATHS = ['/', '/login', '/register', '/auth', '/cookies', '/privacidad', '/onboarding']
+  const PUBLIC_PATHS = [
+    '/',
+    '/login',
+    '/register',
+    '/auth',
+    '/cookies',
+    '/privacidad',
+    '/terminos',
+    '/onboarding',
+  ]
 
   const isPublic = PUBLIC_PATHS.some(path =>
     request.nextUrl.pathname === path ||

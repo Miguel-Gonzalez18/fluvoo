@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import Image from "next/image";
+import { FluvooLogo } from "@/modules/shared/components/FluvooLogo";
 import { Button } from "@/modules/shared/components/ui/button";
 import { ProgressBar } from "./components/ui/ProgressBar";
 import { Step1ProfileSelection } from "./components/step1/Step1ProfileSelection";
@@ -9,7 +9,15 @@ import { Step2FinancialInfo } from "./components/step2/Step2FinancialInfo";
 import { Step3GmailConnect } from "./components/step3/Step3GmailConnect";
 import { useOnboarding, TOTAL_STEPS } from "./hooks/useOnboarding";
 
-export function OnboardingPage() {
+interface OnboardingPageProps {
+  initialStep?: number;
+  gmailErrorMessage?: string;
+}
+
+export function OnboardingPage({
+  initialStep = 1,
+  gmailErrorMessage,
+}: OnboardingPageProps) {
   const {
     currentStep,
     data,
@@ -25,7 +33,7 @@ export function OnboardingPage() {
     removeLoan,
     handleGmailConnect,
     handleGmailSkip,
-  } = useOnboarding();
+  } = useOnboarding({ initialStep, gmailErrorMessage });
 
   return (
     <div className="min-h-screen bg-background">
@@ -33,13 +41,7 @@ export function OnboardingPage() {
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <Image
-              src="/logo.svg"
-              alt="Fluvoo"
-              width={100}
-              height={100}
-              className="w-[100px] h-auto object-contain"
-            />
+            <FluvooLogo />
             <span className="text-sm text-muted-foreground">
               Paso {currentStep} de {TOTAL_STEPS}
             </span>

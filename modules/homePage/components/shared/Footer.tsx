@@ -1,6 +1,7 @@
 "use client";
-import TextPressure from "@/modules/homePage/components/ui/TextPressure";
 import Image from "next/image";
+import TextPressure from "@/modules/homePage/components/ui/TextPressure";
+import { FluvooLogo } from "@/modules/shared/components/FluvooLogo";
 import { useFooterAnimationHome } from "../../hooks/useFooterAnimationHome";
 import { footerSocialLinks, footerNavColumns, footerLegalLinks } from "../../config/footerHome";
 import Link from "next/link";
@@ -19,7 +20,7 @@ export function Footer() {
             <div className="footer-section text-center md:text-left space-y-6">
               <div className="flex items-center justify-center md:justify-start gap-2">
                 <Link href="/">
-                  <Image src="/logo-White.svg" alt="Fluvoo" width={100} height={100} />
+                  <FluvooLogo variant="white" />
                 </Link>
               </div>
               <p className="text-neutral-400 text-sm leading-relaxed">

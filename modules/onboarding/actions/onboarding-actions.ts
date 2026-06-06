@@ -17,24 +17,29 @@ export async function saveOnboardingData(data: OnboardingData) {
     return { success: false, error: "Not authenticated" };
   }
 
-  // 1. Update users table with profile data
+  // 1. Update users table with profile data (never wipe profile_type with null from client state)
+  const userUpdate: Record<string, unknown> = {
+    monthly_salary: data.monthlySalary,
+    employer_name: data.employerName,
+    contributes_sipen: data.contributesSipen ?? true,
+    contributes_afp: data.contributesAfp ?? true,
+    average_monthly_income: data.averageMonthlyIncome,
+    profession_sector: data.professionSector,
+    business_monthly_revenue: data.businessMonthlyRevenue,
+    business_name: data.businessName,
+    business_type: data.businessType,
+    employee_count: data.employeeCount,
+    business_rnc: data.businessRnc,
+    onboarding_step: 3,
+  };
+
+  if (data.profileType) {
+    userUpdate.profile_type = data.profileType;
+  }
+
   const { error: userError } = await supabase
     .from('users')
-    .update({
-      profile_type: data.profileType,
-      monthly_salary: data.monthlySalary,
-      employer_name: data.employerName,
-      contributes_sipen: data.contributesSipen ?? true,
-      contributes_afp: data.contributesAfp ?? true,
-      average_monthly_income: data.averageMonthlyIncome,
-      profession_sector: data.professionSector,
-      business_monthly_revenue: data.businessMonthlyRevenue,
-      business_name: data.businessName,
-      business_type: data.businessType,
-      employee_count: data.employeeCount,
-      business_rnc: data.businessRnc,
-      onboarding_step: 3,
-    })
+    .update(userUpdate)
     .eq('id', user.id);
 
   if (userError) {
@@ -148,25 +153,3 @@ export async function checkOnboardingStatus() {
   return { completed: data?.onboarding_completed ?? false };
 }
 
-/**
- * Initiate Gmail OAuth connection
- * TODO: Implement this function after setting up Google OAuth
- */
-export async function connectGmail(): Promise<{
-  success: boolean;
-  error?: string;
-  authUrl?: string;
-}> {
-  // TODO: Implement Gmail OAuth flow
-  // This should:
-  // 1. Generate a state token
-  // 2. Redirect to Google's OAuth consent screen
-  // 3. Handle the callback
-  // 4. Store the tokens securely
-
-  return {
-    success: false,
-    error: "Not implemented yet",
-    // authUrl: "https://accounts.google.com/o/oauth2/v2/auth?..."
-  };
-}

@@ -1,5 +1,25 @@
 export { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./accordion";
+export { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+export { Badge, badgeVariants } from "./badge";
 export { Button, buttonVariants } from "./button";
+export {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./card";
+export {
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartStyle,
+  ChartTooltip,
+  ChartTooltipContent,
+  type ChartConfig,
+} from "./chart";
 export { Input } from "./input";
 export { Label } from "./label";
 export { default as PixelBlast } from "./PixelBlast";
@@ -43,4 +63,15 @@ export {
 } from "./sidebar";
 export { Skeleton } from "./skeleton";
 export { Switch } from "./switch";
+export { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
+export {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "./table";
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";

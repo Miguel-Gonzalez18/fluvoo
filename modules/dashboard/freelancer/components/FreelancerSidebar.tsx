@@ -19,27 +19,22 @@ import {
   useSidebar,
 } from "@/modules/shared/components/ui/sidebar";
 import Image from "next/image";
-import { signOut } from "@/modules/shared/actions/authActions";
-import { sileo } from "sileo";
+import { FluvooLogo } from "@/modules/shared/components/FluvooLogo";
+import { useSignOut } from "@/modules/shared/hooks/useSignOut";
 
 export function FreelancerSidebar() {
   const pathname = usePathname();
   const { open } = useSidebar();
 
-  const handleSignOut = () =>
-    sileo.promise(() => signOut(), {
-      loading: {title: "Cerrando sesión..."},
-      success: {title: "Sesión cerrada"},
-      error: {title: "Error al cerrar sesión"},
-    });
+  const handleSignOut = useSignOut();
 
   return (
     <Sidebar variant="floating" collapsible="icon">
       <SidebarHeader className="border-b border-gray-500 px-4 py-3">
         {open ? (
-          <Image src="/logo-White.svg" alt="Fluvoo" width={100} height={100} className="w-[100px] h-auto" />
+          <FluvooLogo variant="white" />
         ) : (
-          <Image src="/favicon.ico" alt="Fluvoo" width={24} height={24} className="w-6 h-auto" />
+          <Image src="/favicon.ico" alt="Fluvoo" width={24} height={24} className="size-6" />
         )}
         {open && <span className="text-xs text-neutral-400">Freelancer</span>}
       </SidebarHeader>

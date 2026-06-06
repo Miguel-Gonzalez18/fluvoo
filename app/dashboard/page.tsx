@@ -1,6 +1,12 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/src/lib/server'
 
+const PROFILE_HOME: Record<string, string> = {
+  employee: '/employee/home',
+  freelancer: '/freelancer/home',
+  business_owner: '/business/home',
+}
+
 export default async function DashboardPage() {
   const supabase = await createClient()
 
@@ -15,9 +21,12 @@ export default async function DashboardPage() {
 
   if (!profile?.onboarding_completed) redirect('/onboarding')
 
-  if (profile?.profile_type === 'employee') redirect('/employee/home')
-  if (profile?.profile_type === 'freelancer') redirect('/freelancer/home')
-  if (profile?.profile_type === 'business_owner') redirect('/business/home')
+  const homePath = profile.profile_type
+    ? PROFILE_HOME[profile.profile_type]
+    : undefined
 
-  redirect('/onboarding')
+  if (homePath) redirect(homePath)
+
+  // Onboarding marked complete but profile_type missing — resume setup instead of looping
+  redirect('/onboarding?resume=profile')
 }

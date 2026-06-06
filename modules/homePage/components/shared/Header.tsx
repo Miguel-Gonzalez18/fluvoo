@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { FluvooLogo } from "@/modules/shared/components/FluvooLogo";
 import { GetStartedButton } from "@/modules/homePage/components/ui/get-started-button";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
@@ -17,7 +18,7 @@ export function Header() {
       <div className="hidden md:flex mx-auto w-full max-w-5xl items-center justify-between px-2 py-3 rounded-lg bg-white shadow-sm border border-neutral-100">
         {/* logo */}
         <Link href="/">
-          <Image src="/logo.svg" alt="Fluvoo" width={100} height={100} className="w-[100px] h-auto object-contain"/>
+          <FluvooLogo />
         </Link>
 
         {/* navigation */}
