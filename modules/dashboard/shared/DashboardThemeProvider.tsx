@@ -36,6 +36,10 @@ function readTheme(): DashboardTheme {
   return localStorage.getItem(STORAGE_KEY) === "dark" ? "dark" : "light";
 }
 
+function getServerTheme(): DashboardTheme {
+  return "light";
+}
+
 function writeTheme(theme: DashboardTheme) {
   localStorage.setItem(STORAGE_KEY, theme);
   document.documentElement.classList.remove("dark");
@@ -49,7 +53,7 @@ interface DashboardThemeProviderProps {
 export function DashboardThemeProvider({
   children,
 }: DashboardThemeProviderProps) {
-  const theme = useSyncExternalStore(subscribe, readTheme, () => "light");
+  const theme = useSyncExternalStore(subscribe, readTheme, getServerTheme);
 
   const setTheme = useCallback((next: DashboardTheme) => {
     writeTheme(next);
