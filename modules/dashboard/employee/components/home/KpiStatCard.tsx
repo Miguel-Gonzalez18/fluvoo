@@ -17,8 +17,12 @@ interface KpiStatCardProps {
 
 export function KpiStatCard({ stat, className }: KpiStatCardProps) {
   const Icon = stat.icon;
-  const displayValue =
-    stat.id === "next-payment" ? stat.value : formatDOP(stat.value);
+  const isCurrency = stat.id !== "next-payment";
+  const formattedValue = isCurrency ? formatDOP(stat.value) : stat.value;
+  const currencyAmount =
+    isCurrency && formattedValue.startsWith("RD$ ")
+      ? formattedValue.slice(4)
+      : null;
 
   return (
     <DashboardCard className={cn("gap-4 rounded-md py-5", className)}>
@@ -28,27 +32,28 @@ export function KpiStatCard({ stat, className }: KpiStatCardProps) {
         </p>
       </CardHeader>
       <CardContent className="px-5">
-        <div className="flex items-end justify-between gap-2">
-          <div className="space-y-2">
+        <div className="space-y-2">
+          {currencyAmount ? (
+            <p className="font-heading font-bold tracking-tight text-foreground">
+              <span className="text-base font-normal text-muted-foreground sm:text-lg">
+                RD${" "}
+              </span>
+              <span className="text-md sm:text-lg lg:text-xl">{currencyAmount}</span>
+            </p>
+          ) : (
             <p className="font-heading text-md font-bold tracking-tight text-foreground sm:text-lg lg:text-xl">
-              {displayValue}
+              {formattedValue}
             </p>
-            <p className={cn("text-sm font-medium", trendClassMap[stat.trend])}>
-              {stat.subtext}
-            </p>
-          </div>
-          {Icon ? (
-            <div
-              className={cn(
-                "flex size-10 shrink-0 items-center justify-center rounded-xl",
-                stat.trend === "positive" && "bg-primary-50 text-primary-600",
-                stat.trend === "negative" && "bg-destructive/10 text-destructive",
-                stat.trend === "neutral" && "bg-muted text-muted-foreground"
-              )}
-            >
-              <Icon className="size-5" />
-            </div>
-          ) : null}
+          )}
+          <p
+            className={cn(
+              "flex items-center gap-1.5 text-sm font-medium",
+              trendClassMap[stat.trend]
+            )}
+          >
+            {Icon ? <Icon className="size-4 shrink-0" /> : null}
+            <span>{stat.subtext}</span>
+          </p>
         </div>
       </CardContent>
     </DashboardCard>

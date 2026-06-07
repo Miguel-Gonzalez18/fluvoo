@@ -12,56 +12,46 @@ import {
   type ChartConfig,
 } from "@/modules/shared/components/ui/chart";
 import { Tabs, TabsList, TabsTrigger } from "@/modules/shared/components/ui/tabs";
-import {
-  EXPENSE_CATEGORIES_LAST_MONTH,
-  EXPENSE_CATEGORIES_THIS_MONTH,
-  EXPENSE_CHART_CONFIG,
-} from "@/modules/dashboard/employee/config/dashboardMock";
 import type { CategoryExpense } from "@/modules/dashboard/employee/types/dashboard.types";
 import { formatDOP } from "@/modules/dashboard/employee/lib/formatCurrency";
 
 type PeriodKey = "this-month" | "last-month";
 
-const periodDataMap: Record<PeriodKey, CategoryExpense[]> = {
-  "this-month": EXPENSE_CATEGORIES_THIS_MONTH,
-  "last-month": EXPENSE_CATEGORIES_LAST_MONTH,
-};
-
 const chartConfig = {
   amount: { label: "Gasto", color: "var(--chart-1)" },
-  budget: { label: "Presupuesto", color: "var(--muted)" },
-  housing: EXPENSE_CHART_CONFIG.housing,
-  food: EXPENSE_CHART_CONFIG.food,
-  transport: EXPENSE_CHART_CONFIG.transport,
-  leisure: EXPENSE_CHART_CONFIG.leisure,
-  other: EXPENSE_CHART_CONFIG.other,
 } satisfies ChartConfig;
 
-const barFillMap: Record<CategoryExpense["colorKey"], string> = {
-  housing: "var(--color-housing)",
-  food: "var(--color-food)",
-  transport: "var(--color-transport)",
-  leisure: "var(--color-leisure)",
-  other: "var(--color-other)",
-};
+function chartFill(colorIndex: CategoryExpense["colorIndex"]): string {
+  return `var(--chart-${colorIndex})`;
+}
 
 interface ExpenseCategoryChartProps {
+  thisMonth: CategoryExpense[];
+  lastMonth: CategoryExpense[];
   className?: string;
 }
 
-export function ExpenseCategoryChart({ className }: ExpenseCategoryChartProps) {
+export function ExpenseCategoryChart({
+  thisMonth,
+  lastMonth,
+  className,
+}: ExpenseCategoryChartProps) {
   const [period, setPeriod] = useState<PeriodKey>("this-month");
+
+  const periodData = period === "this-month" ? thisMonth : lastMonth;
 
   const chartData = useMemo(
     () =>
-      periodDataMap[period].map((item) => ({
+      periodData.map((item) => ({
         category: item.category,
+        fullLabel: item.fullLabel,
         amount: item.amount,
-        budget: item.budget,
-        fill: barFillMap[item.colorKey],
+        fill: chartFill(item.colorIndex),
       })),
-    [period]
+    [periodData]
   );
+
+  const isEmpty = chartData.length === 0;
 
   return (
     <DashboardCard className={cn("gap-4 rounded-md py-6", className)}>
@@ -85,43 +75,48 @@ export function ExpenseCategoryChart({ className }: ExpenseCategoryChartProps) {
       </CardHeader>
 
       <CardContent className="px-2 pb-2 sm:px-5">
-        <ChartContainer config={chartConfig} className="aspect-4/3 min-h-[260px] w-full">
-          <BarChart data={chartData} barGap={-32} barCategoryGap="20%">
-            <CartesianGrid vertical={false} strokeDasharray="3 3" />
-            <XAxis
-              dataKey="category"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={10}
-              className="font-label text-[11px]"
-            />
-            <YAxis hide domain={[0, "dataMax + 2000"]} />
-            <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent
-                  formatter={(value, name) =>
-                    name === "budget"
-                      ? [`Presupuesto: ${formatDOP(Number(value))}`, ""]
-                      : [`Gasto: ${formatDOP(Number(value))}`, ""]
-                  }
-                />
-              }
-            />
-            <Bar
-              dataKey="budget"
-              fill="var(--color-budget)"
-              radius={[8, 8, 0, 0]}
-              maxBarSize={48}
-              opacity={0.35}
-            />
-            <Bar dataKey="amount" radius={[8, 8, 0, 0]} maxBarSize={48}>
-              {chartData.map((entry) => (
-                <Cell key={entry.category} fill={entry.fill} />
-              ))}
-            </Bar>
-          </BarChart>
-        </ChartContainer>
+        {isEmpty ? (
+          <div className="flex min-h-[260px] items-center justify-center px-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              {period === "this-month"
+                ? "Sin gastos categorizados este mes"
+                : "Sin gastos categorizados el mes pasado"}
+            </p>
+          </div>
+        ) : (
+          <ChartContainer config={chartConfig} className="aspect-4/3 min-h-[260px] w-full">
+            <BarChart data={chartData} barCategoryGap="20%">
+              <CartesianGrid vertical={false} strokeDasharray="3 3" />
+              <XAxis
+                dataKey="category"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={10}
+                className="font-label text-[11px]"
+              />
+              <YAxis hide domain={[0, "dataMax + 2000"]} />
+              <ChartTooltip
+                cursor={false}
+                content={
+                  <ChartTooltipContent
+                    labelFormatter={(_, payload) => {
+                      const item = payload?.[0]?.payload as
+                        | { fullLabel?: string }
+                        | undefined;
+                      return item?.fullLabel ?? "";
+                    }}
+                    formatter={(value) => [`Gasto: ${formatDOP(Number(value))}`, ""]}
+                  />
+                }
+              />
+              <Bar dataKey="amount" radius={[8, 8, 0, 0]} maxBarSize={48}>
+                {chartData.map((entry) => (
+                  <Cell key={entry.category} fill={entry.fill} />
+                ))}
+              </Bar>
+            </BarChart>
+          </ChartContainer>
+        )}
       </CardContent>
     </DashboardCard>
   );

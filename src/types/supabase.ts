@@ -51,12 +51,43 @@ export type Database = {
         }
         Relationships: []
       }
+      exchange_rates: {
+        Row: {
+          base_currency: string
+          fetched_at: string
+          id: string
+          provider: string
+          rate: number
+          rate_date: string
+          target_currency: string
+        }
+        Insert: {
+          base_currency?: string
+          fetched_at?: string
+          id?: string
+          provider?: string
+          rate: number
+          rate_date: string
+          target_currency?: string
+        }
+        Update: {
+          base_currency?: string
+          fetched_at?: string
+          id?: string
+          provider?: string
+          rate?: number
+          rate_date?: string
+          target_currency?: string
+        }
+        Relationships: []
+      }
       gmail_connections: {
         Row: {
           access_token: string | null
           connected_at: string
           google_email: string
           last_sync_at: string | null
+          last_sync_stats: Json | null
           refresh_token: string
           scopes: string[]
           sync_error: string | null
@@ -70,6 +101,7 @@ export type Database = {
           connected_at?: string
           google_email: string
           last_sync_at?: string | null
+          last_sync_stats?: Json | null
           refresh_token: string
           scopes?: string[]
           sync_error?: string | null
@@ -83,6 +115,7 @@ export type Database = {
           connected_at?: string
           google_email?: string
           last_sync_at?: string | null
+          last_sync_stats?: Json | null
           refresh_token?: string
           scopes?: string[]
           sync_error?: string | null
@@ -340,13 +373,19 @@ export type Database = {
         Row: {
           amount: number
           bank_name: string
+          category_source: string | null
           created_at: string
           currency: string
           description: string | null
+          exchange_rate: number | null
+          expense_category: Database["public"]["Enums"]["expense_category"] | null
           gmail_message_id: string
           id: string
           merchant_name: string | null
+          original_amount: number | null
+          original_currency: string | null
           parse_status: Database["public"]["Enums"]["transaction_parse_status"]
+          rate_source: string | null
           raw_from: string | null
           raw_subject: string | null
           transaction_date: string
@@ -357,13 +396,19 @@ export type Database = {
         Insert: {
           amount: number
           bank_name: string
+          category_source?: string | null
           created_at?: string
           currency?: string
           description?: string | null
+          exchange_rate?: number | null
+          expense_category?: Database["public"]["Enums"]["expense_category"] | null
           gmail_message_id: string
           id?: string
           merchant_name?: string | null
+          original_amount?: number | null
+          original_currency?: string | null
           parse_status?: Database["public"]["Enums"]["transaction_parse_status"]
+          rate_source?: string | null
           raw_from?: string | null
           raw_subject?: string | null
           transaction_date: string
@@ -374,13 +419,19 @@ export type Database = {
         Update: {
           amount?: number
           bank_name?: string
+          category_source?: string | null
           created_at?: string
           currency?: string
           description?: string | null
+          exchange_rate?: number | null
+          expense_category?: Database["public"]["Enums"]["expense_category"] | null
           gmail_message_id?: string
           id?: string
           merchant_name?: string | null
+          original_amount?: number | null
+          original_currency?: string | null
           parse_status?: Database["public"]["Enums"]["transaction_parse_status"]
+          rate_source?: string | null
           raw_from?: string | null
           raw_subject?: string | null
           transaction_date?: string
@@ -518,6 +569,25 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      expense_category:
+        | "supermercados_alimentacion"
+        | "restaurantes_comida_rapida"
+        | "gasolina_transporte"
+        | "salud_farmacia"
+        | "educacion"
+        | "servicios_hogar"
+        | "telecomunicaciones"
+        | "entretenimiento"
+        | "ocio_salidas"
+        | "compras_retail"
+        | "viajes_turismo"
+        | "deudas_prestamos"
+        | "servicios_profesionales_negocios"
+        | "transferencias_pagos_personas"
+        | "hogar_reparaciones"
+        | "mascotas"
+        | "ahorros_inversiones"
+        | "otros"
       income_frequency:
         | "weekly"
         | "biweekly"
@@ -667,6 +737,26 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      expense_category: [
+        "supermercados_alimentacion",
+        "restaurantes_comida_rapida",
+        "gasolina_transporte",
+        "salud_farmacia",
+        "educacion",
+        "servicios_hogar",
+        "telecomunicaciones",
+        "entretenimiento",
+        "ocio_salidas",
+        "compras_retail",
+        "viajes_turismo",
+        "deudas_prestamos",
+        "servicios_profesionales_negocios",
+        "transferencias_pagos_personas",
+        "hogar_reparaciones",
+        "mascotas",
+        "ahorros_inversiones",
+        "otros",
+      ],
       income_frequency: [
         "weekly",
         "biweekly",

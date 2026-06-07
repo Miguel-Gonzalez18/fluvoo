@@ -103,12 +103,19 @@ export function GmailSyncButton({ status }: GmailSyncButtonProps) {
       },
       {
         loading: { title: "Sincronizando transacciones..." },
-        success: (result) => ({
-          title:
-            result.imported > 0
-              ? `${result.imported} transacciones importadas`
-              : "Transacciones actualizadas",
-        }),
+        success: (result) => {
+          if (result.imported > 0) {
+            return { title: `${result.imported} transacciones importadas` };
+          }
+          if (result.processed === 0) {
+            return { title: "No se encontraron correos bancarios recientes" };
+          }
+          const noAmount = result.skippedNoAmount ?? 0;
+          const skipped = result.skipped ?? 0;
+          return {
+            title: `0 importadas · ${skipped} correos omitidos (${noAmount} sin monto legible)`,
+          };
+        },
         error: (error) => ({
           title:
             error instanceof Error

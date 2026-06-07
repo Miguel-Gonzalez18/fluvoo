@@ -4,6 +4,7 @@ import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/modules/shared/components/ui/button";
 import { AuthInput } from "./ui/AuthInput";
 import { useLoginForm } from "../hooks/useLoginForm";
+import { useRouter } from "next/navigation";
 import { usePasswordToggle } from "../hooks/usePasswordToggle";
 import { loginConfig } from "../config/loginConfig";
 import type { LoginSchemaOutput } from "../lib/loginSchemas";
@@ -13,13 +14,19 @@ import { FluvooLogo } from "@/modules/shared/components/FluvooLogo";
 import { signIn } from "@/modules/shared/actions/authActions";
 
 export function LoginForm() {
+  const router = useRouter();
   const { showPassword, toggle } = usePasswordToggle();
   const { register, handleSubmit, errors, isSubmitting } = useLoginForm();
 
   const onSubmit = async (data: LoginSchemaOutput) => {
-    const result = await signIn(data.email, data.password)
-    if (result?.error) sileo.error({ title: result.error })
-  }
+    const result = await signIn(data.email, data.password);
+    if (result?.error) {
+      sileo.error({ title: result.error });
+      return;
+    }
+    router.push("/dashboard");
+    router.refresh();
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex w-full max-w-sm flex-col gap-5" noValidate>

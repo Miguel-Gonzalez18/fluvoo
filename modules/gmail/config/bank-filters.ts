@@ -15,6 +15,8 @@ export const BANK_EMAIL_FILTERS: BankEmailFilter[] = [
   { bankName: "Qik", domains: ["qik.com.do"] },
   { bankName: "Santa Cruz", domains: ["bsc.com.do", "santacruz.com.do"] },
   { bankName: "Cibao", domains: ["asociacioncibao.com.do", "acap.com.do"] },
+  { bankName: "Caribe", domains: ["bancocaribe.com.do", "caribe.com.do"] },
+  { bankName: "Banesco", domains: ["banesco.com.do", "banesco.com"] },
 ];
 
 export function buildGmailBankSearchQuery(daysBack = GMAIL_SYNC_LOOKBACK_DAYS): string {
@@ -22,7 +24,14 @@ export function buildGmailBankSearchQuery(daysBack = GMAIL_SYNC_LOOKBACK_DAYS): 
     bank.domains.map((domain) => `from:${domain}`)
   );
 
-  return `(${domainClauses.join(" OR ")}) newer_than:${daysBack}d`;
+  const fromFilter = `(${domainClauses.join(" OR ")})`;
+  const timeFilter = `newer_than:${daysBack}d`;
+  const subjectInclude =
+    "subject:(transaccion OR compra OR debito OR cargo OR notificacion OR aprobada OR consumo)";
+  const subjectExclude =
+    '-subject:(publicidad OR promocion OR "estado de cuenta" OR newsletter OR oferta)';
+
+  return `${fromFilter} ${subjectInclude} ${subjectExclude} ${timeFilter}`;
 }
 
 export function detectBankFromEmail(fromHeader: string): SupportedBank | null {

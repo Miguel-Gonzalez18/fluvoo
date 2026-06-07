@@ -91,15 +91,22 @@ export function RecentTransactionsTable({
                         {transaction.category}
                       </Badge>
                     </TableCell>
-                    <TableCell
-                      className={cn(
-                        "text-right font-semibold tabular-nums",
-                        transaction.direction === "income"
-                          ? "text-primary-600"
-                          : "text-destructive"
-                      )}
-                    >
-                      {formatSignedDOP(transaction.amount, transaction.direction)}
+                    <TableCell className="text-right">
+                      <div
+                        className={cn(
+                          "font-semibold tabular-nums",
+                          transaction.direction === "income"
+                            ? "text-primary-600"
+                            : "text-destructive"
+                        )}
+                      >
+                        {formatSignedDOP(transaction.amount, transaction.direction)}
+                      </div>
+                      {transaction.originalAmountSubtext ? (
+                        <p className="text-xs tabular-nums text-muted-foreground">
+                          {transaction.originalAmountSubtext}
+                        </p>
+                      ) : null}
                     </TableCell>
                   </TableRow>
                 );

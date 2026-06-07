@@ -15,7 +15,7 @@ export function FiscalAnalysisCard({ className }: FiscalAnalysisCardProps) {
   return (
     <DashboardCard
       className={cn(
-        "gap-5 rounded-md bg-primary-50/70 py-6 dark:bg-primary-950/40",
+        "gap-5 rounded-md bg-primary-300/20 py-6 dark:bg-primary-800/40",
         className
       )}
     >
@@ -23,11 +23,11 @@ export function FiscalAnalysisCard({ className }: FiscalAnalysisCardProps) {
         <div className="space-y-3">
           <div className="flex items-center gap-2">
             <Sparkles className="size-4 text-primary-600" />
-            <h2 className="font-label text-xs font-semibold uppercase tracking-wide text-primary-800">
+            <h2 className="font-label text-xs font-semibold uppercase tracking-wide text-primary-800 dark:text-primary-200">
               Análisis Fiscal IA
             </h2>
           </div>
-          <p className="text-sm leading-relaxed text-foreground/80">
+          <p className="text-sm leading-relaxed text-foreground">
             {FISCAL_ANALYSIS_DESCRIPTION}
           </p>
         </div>
@@ -40,13 +40,13 @@ export function FiscalAnalysisCard({ className }: FiscalAnalysisCardProps) {
               <button
                 key={tip.id}
                 type="button"
-                className="flex w-full items-center gap-3 rounded-xl bg-card p-4 text-left transition-colors hover:bg-muted/40"
+                className="flex w-full items-center gap-3 rounded-sm bg-card p-4 text-left transition-colors hover:bg-muted/40"
               >
-                <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-foreground">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-primary-700">
                   <Icon className="size-4" />
                 </div>
                 <div className="min-w-0 flex-1 space-y-1">
-                  <p className="text-sm font-semibold text-foreground">
+                  <p className="text-sm font-semibold text-primary-700 dark:text-primary-300/80">
                     {tip.title}
                   </p>
                   <p className="text-xs leading-relaxed text-muted-foreground">

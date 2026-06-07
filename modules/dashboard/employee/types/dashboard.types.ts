@@ -11,11 +11,14 @@ export interface KpiStat {
   icon?: LucideIcon;
 }
 
+export type ExpenseCategoryColorIndex = 1 | 2 | 3 | 4 | 5;
+
 export interface CategoryExpense {
   category: string;
+  fullLabel: string;
   amount: number;
   budget: number;
-  colorKey: "housing" | "food" | "transport" | "leisure" | "other";
+  colorIndex: ExpenseCategoryColorIndex;
 }
 
 export type TransactionDirection = "income" | "expense";
@@ -27,6 +30,7 @@ export interface RecentTransaction {
   category: string;
   categoryVariant: "default" | "success" | "outline";
   amount: number;
+  originalAmountSubtext: string | null;
   direction: TransactionDirection;
   icon: LucideIcon;
 }
@@ -57,5 +61,7 @@ export interface NetIncomeData {
 export interface HomeDashboardData {
   netIncome: NetIncomeData;
   recentTransactions: RecentTransaction[];
+  expenseCategoriesThisMonth: CategoryExpense[];
+  expenseCategoriesLastMonth: CategoryExpense[];
   gmailStatus: GmailStatus;
 }

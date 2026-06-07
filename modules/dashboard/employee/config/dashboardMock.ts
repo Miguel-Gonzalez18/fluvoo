@@ -9,12 +9,7 @@ import {
   UtensilsCrossed,
   Wallet,
 } from "lucide-react";
-import type {
-  CategoryExpense,
-  FiscalTip,
-  KpiStat,
-  RecentTransaction,
-} from "@/modules/dashboard/employee/types/dashboard.types";
+import type { FiscalTip, KpiStat, RecentTransaction } from "@/modules/dashboard/employee/types/dashboard.types";
 
 export const MOCK_DISPLAY_NAME = "Carlos";
 
@@ -56,22 +51,6 @@ export const KPI_STATS: KpiStat[] = [
   },
 ];
 
-export const EXPENSE_CATEGORIES_THIS_MONTH: CategoryExpense[] = [
-  { category: "Vivienda", amount: 8500, budget: 10000, colorKey: "housing" },
-  { category: "Comida", amount: 4200, budget: 5500, colorKey: "food" },
-  { category: "Transporte", amount: 3100, budget: 4000, colorKey: "transport" },
-  { category: "Ocio", amount: 1800, budget: 2500, colorKey: "leisure" },
-  { category: "Otros", amount: 640, budget: 1500, colorKey: "other" },
-];
-
-export const EXPENSE_CATEGORIES_LAST_MONTH: CategoryExpense[] = [
-  { category: "Vivienda", amount: 8200, budget: 10000, colorKey: "housing" },
-  { category: "Comida", amount: 4800, budget: 5500, colorKey: "food" },
-  { category: "Transporte", amount: 2900, budget: 4000, colorKey: "transport" },
-  { category: "Ocio", amount: 2100, budget: 2500, colorKey: "leisure" },
-  { category: "Otros", amount: 920, budget: 1500, colorKey: "other" },
-];
-
 export const RECENT_TRANSACTIONS: RecentTransaction[] = [
   {
     id: "tx-1",
@@ -80,6 +59,7 @@ export const RECENT_TRANSACTIONS: RecentTransaction[] = [
     category: "ALIMENTACIÓN",
     categoryVariant: "outline",
     amount: 3450,
+    originalAmountSubtext: null,
     direction: "expense",
     icon: ShoppingCart,
   },
@@ -90,6 +70,7 @@ export const RECENT_TRANSACTIONS: RecentTransaction[] = [
     category: "INGRESOS",
     categoryVariant: "success",
     amount: 21250,
+    originalAmountSubtext: null,
     direction: "income",
     icon: Wallet,
   },
@@ -100,6 +81,7 @@ export const RECENT_TRANSACTIONS: RecentTransaction[] = [
     category: "TRANSPORTE",
     categoryVariant: "outline",
     amount: 2800,
+    originalAmountSubtext: null,
     direction: "expense",
     icon: TrendingDown,
   },
@@ -110,6 +92,7 @@ export const RECENT_TRANSACTIONS: RecentTransaction[] = [
     category: "OCIO",
     categoryVariant: "outline",
     amount: 4120,
+    originalAmountSubtext: null,
     direction: "expense",
     icon: UtensilsCrossed,
   },
@@ -132,11 +115,3 @@ export const FISCAL_TIPS: FiscalTip[] = [
   },
 ];
 
-export const EXPENSE_CHART_CONFIG = {
-  housing: { label: "Vivienda", color: "var(--chart-1)" },
-  food: { label: "Comida", color: "var(--chart-4)" },
-  transport: { label: "Transporte", color: "var(--chart-2)" },
-  leisure: { label: "Ocio", color: "var(--chart-5)" },
-  other: { label: "Otros", color: "var(--chart-3)" },
-  budget: { label: "Presupuesto", color: "var(--muted)" },
-} as const;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { User, Mail, Lock, Eye, EyeOff, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/modules/shared/components/ui/button";
@@ -16,15 +17,21 @@ import { FluvooLogo } from "@/modules/shared/components/FluvooLogo";
 import { signUp } from "@/modules/shared/actions/authActions";
 
 export function RegisterForm() {
+  const router = useRouter();
   const { showPassword, toggle } = usePasswordToggle();
   const { register, handleSubmit, errors, isSubmitting } = useRegisterForm();
   const [password, setPassword] = useState("");
   const { strength, feedback } = usePasswordStrength(password);
 
   const onSubmit = async (data: RegisterSchemaOutput) => {
-    const result = await signUp(data.email, data.password, data.fullName)
-    if (result?.error) sileo.error({ title: result.error })
-  }
+    const result = await signUp(data.email, data.password, data.fullName);
+    if (result?.error) {
+      sileo.error({ title: result.error });
+      return;
+    }
+    router.push("/onboarding");
+    router.refresh();
+  };
 
   const strengthColors: Record<string, string> = {
     weak: "bg-red-500",

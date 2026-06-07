@@ -9,6 +9,8 @@ export const SUPPORTED_BANKS = [
   "Qik",
   "Santa Cruz",
   "Cibao",
+  "Caribe",
+  "Banesco",
 ] as const;
 
 export type SupportedBank = (typeof SUPPORTED_BANKS)[number];

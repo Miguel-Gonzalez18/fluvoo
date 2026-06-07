@@ -33,7 +33,11 @@ export async function EmployeeHomePage() {
 
       <section className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         <FiscalAnalysisCard className="lg:col-span-5" />
-        <ExpenseCategoryChart className="lg:col-span-7" />
+        <ExpenseCategoryChart
+          className="lg:col-span-7"
+          thisMonth={data.expenseCategoriesThisMonth}
+          lastMonth={data.expenseCategoriesLastMonth}
+        />
       </section>
 
       <RecentTransactionsTable
