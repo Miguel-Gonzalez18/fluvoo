@@ -1,27 +1,54 @@
-import { TrendingUp } from "lucide-react";
+import {
+  Calendar,
+  TrendingDown,
+  TrendingUp,
+  Wallet,
+} from "lucide-react";
 import { DashboardFab } from "@/modules/dashboard/employee/components/home/DashboardFab";
 import { ExpenseCategoryChart } from "@/modules/dashboard/employee/components/home/ExpenseCategoryChart";
 import { FiscalAnalysisCard } from "@/modules/dashboard/employee/components/home/FiscalAnalysisCard";
 import { KpiStatCard } from "@/modules/dashboard/employee/components/home/KpiStatCard";
 import { RecentTransactionsTable } from "@/modules/dashboard/employee/components/home/RecentTransactionsTable";
-import { KPI_STATS } from "@/modules/dashboard/employee/config/dashboardMock";
 import { getHomeDashboardData } from "@/modules/dashboard/employee/lib/getHomeDashboardData.server";
 import type { KpiStat } from "@/modules/dashboard/employee/types/dashboard.types";
 
 export async function EmployeeHomePage() {
   const data = await getHomeDashboardData();
 
-  const netIncomeKpi: KpiStat = {
-    id: "net-income",
-    label: "Ingreso Neto",
-    value: String(data.netIncome.value),
-    subtext: data.netIncome.subtext,
-    trend: data.netIncome.hasSalary ? "positive" : "neutral",
-    icon: TrendingUp,
-  };
-
-  const otherKpis = KPI_STATS.filter((stat) => stat.id !== "net-income");
-  const kpiStats = [netIncomeKpi, ...otherKpis];
+  const kpiStats: KpiStat[] = [
+    {
+      id: "net-income",
+      label: "Ingreso Neto",
+      value: String(data.netIncome.value),
+      subtext: data.netIncome.subtext,
+      trend: data.netIncome.hasSalary ? "positive" : "neutral",
+      icon: TrendingUp,
+    },
+    {
+      id: "monthly-expenses",
+      label: "Gastos del Mes",
+      value: String(data.monthlyExpenses.value),
+      subtext: data.monthlyExpenses.subtext,
+      trend: data.monthlyExpenses.trend,
+      icon: TrendingDown,
+    },
+    {
+      id: "monthly-margin",
+      label: "Margen del Mes",
+      value: String(data.monthlyMargin.value),
+      subtext: data.monthlyMargin.subtext,
+      trend: data.monthlyMargin.trend,
+      icon: Wallet,
+    },
+    {
+      id: "next-payment",
+      label: "Próximo Pago",
+      value: data.nextPayment.value,
+      subtext: data.nextPayment.subtext,
+      trend: data.nextPayment.trend,
+      icon: Calendar,
+    },
+  ];
 
   return (
     <div className="mx-auto max-w-7xl space-y-8 pb-24">

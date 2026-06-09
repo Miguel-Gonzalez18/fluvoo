@@ -269,7 +269,27 @@ function incrementSkipReason(
 
     result.skippedDuplicate = (result.skippedDuplicate ?? 0) + 1;
 
+  } else if (reason === "declined") {
+
+    result.skippedDeclined = (result.skippedDeclined ?? 0) + 1;
+
+  } else if (reason === "internal_transfer") {
+
+    result.skippedInternal = (result.skippedInternal ?? 0) + 1;
+
   }
+
+}
+
+
+
+async function purgeUserTransactions(userId: string): Promise<void> {
+
+  const admin = createAdminClient();
+
+  const { error } = await admin.from("transactions").delete().eq("user_id", userId);
+
+  if (error) throw new Error(error.message);
 
 }
 
@@ -279,7 +299,11 @@ export async function syncGmailTransactions(
 
   userId: string,
 
-  options?: { maxMessages?: number; lookbackDays?: number }
+  options?: {
+    maxMessages?: number;
+    lookbackDays?: number;
+    purgeExisting?: boolean;
+  }
 
 ): Promise<GmailSyncResult> {
 
@@ -306,6 +330,10 @@ export async function syncGmailTransactions(
     skippedNoAmount: 0,
 
     skippedDuplicate: 0,
+
+    skippedDeclined: 0,
+
+    skippedInternal: 0,
 
   };
 
@@ -366,6 +394,14 @@ export async function syncGmailTransactions(
 
 
   try {
+
+    if (options?.purgeExisting) {
+
+      await purgeUserTransactions(userId);
+
+    }
+
+
 
     const accessToken = await ensureValidAccessToken(connection);
 
@@ -530,6 +566,10 @@ export async function syncGmailTransactions(
         skippedNoAmount: result.skippedNoAmount,
 
         skippedDuplicate: result.skippedDuplicate,
+
+        skippedDeclined: result.skippedDeclined,
+
+        skippedInternal: result.skippedInternal,
 
       },
 

@@ -12,10 +12,22 @@ export function EntityCard({ title, subtitle, onEdit, onDelete }: EntityCardProp
         <p className="text-xs text-muted-foreground">{subtitle}</p>
       </div>
       <div className="flex items-center gap-1">
-        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onEdit}>
-          <span className="text-xs text-muted-foreground">Editar</span>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          className="h-8 px-2 text-xs text-muted-foreground"
+          onClick={onEdit}
+        >
+          Editar
         </Button>
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={onDelete}>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8 text-destructive"
+          onClick={onDelete}
+        >
           <Trash2 className="w-4 h-4" />
         </Button>
       </div>

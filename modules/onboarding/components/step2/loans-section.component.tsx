@@ -34,6 +34,15 @@ export function LoansSection({
         <Switch checked={data.loans.length > 0} onCheckedChange={onToggle} />
       </div>
 
+      {showForm && (
+        <LoanForm
+          key={editingItem?.id ?? "new-loan"}
+          initialData={editingItem}
+          onSave={onSave}
+          onCancel={onCancel}
+        />
+      )}
+
       {data.loans.length > 0 && (
         <div className="space-y-2">
           {data.loans.map((loan) => (
@@ -45,14 +54,18 @@ export function LoansSection({
               onDelete={() => onDelete(loan.id)}
             />
           ))}
-          <Button variant="outline" size="sm" className="w-full" onClick={onAdd}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="w-full"
+            onClick={onAdd}
+          >
             <Plus className="w-4 h-4 mr-2" />
             Agregar otro préstamo
           </Button>
         </div>
       )}
-
-      {showForm && <LoanForm initialData={editingItem} onSave={onSave} onCancel={onCancel} />}
     </div>
   );
 }

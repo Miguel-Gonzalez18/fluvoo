@@ -1,31 +1,38 @@
+import {
+  APP_TIMEZONE,
+  getZonedYmd,
+  isSameZonedDay,
+  zonedStartOfDay,
+} from "@/modules/dashboard/employee/lib/month-bounds";
+
 const timeFormatter = new Intl.DateTimeFormat("es-DO", {
+  timeZone: APP_TIMEZONE,
   hour: "numeric",
   minute: "2-digit",
   hour12: true,
 });
 
 const shortDateFormatter = new Intl.DateTimeFormat("es-DO", {
+  timeZone: APP_TIMEZONE,
   day: "numeric",
   month: "short",
   year: "numeric",
 });
 
-function isSameDay(a: Date, b: Date): boolean {
-  return a.toDateString() === b.toDateString();
-}
-
 export function formatTransactionDate(isoDate: string): string {
   const date = new Date(isoDate);
   const now = new Date();
 
-  if (isSameDay(date, now)) {
+  if (isSameZonedDay(date, now)) {
     return `Hoy, ${timeFormatter.format(date)}`;
   }
 
-  const yesterday = new Date(now);
-  yesterday.setDate(yesterday.getDate() - 1);
+  const { year, month, day } = getZonedYmd(now);
+  const yesterdayRef = new Date(
+    zonedStartOfDay(year, month, day).getTime() - 1
+  );
 
-  if (isSameDay(date, yesterday)) {
+  if (isSameZonedDay(date, yesterdayRef)) {
     return `Ayer, ${timeFormatter.format(date)}`;
   }
 

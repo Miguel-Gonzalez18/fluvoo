@@ -9,14 +9,19 @@ import {
   getGmailMessageDate,
   type GmailMessagePayload,
 } from "@/modules/gmail/lib/decode-message.server";
+import { isInternalBankMovement } from "@/modules/gmail/lib/is-internal-bank-movement";
 import { extractRawAmounts, hasResolvableAmount } from "@/modules/gmail/lib/parse-amounts";
 import { parseMerchant } from "@/modules/gmail/lib/parse-merchant";
+import {
+  isDeclinedEmail,
+  parseByBank,
+} from "@/modules/gmail/lib/parsers/bank-email-parsers";
 import type {
   BankEmailSkipReason,
   ParsedBankEmailDraft,
+  RawParsedAmounts,
   TransactionType,
 } from "@/modules/gmail/types/sync.types";
-
 function detectTransactionType(text: string): TransactionType {
   const normalized = text.toLowerCase();
 
@@ -43,6 +48,17 @@ function detectTransactionType(text: string): TransactionType {
   return "unknown";
 }
 
+function mergeAmounts(
+  bankAmounts: RawParsedAmounts | null,
+  genericAmounts: RawParsedAmounts
+): RawParsedAmounts {
+  return {
+    dopAmount: bankAmounts?.dopAmount ?? genericAmounts.dopAmount,
+    usdAmount: bankAmounts?.usdAmount ?? genericAmounts.usdAmount,
+    rateFromEmail: bankAmounts?.rateFromEmail ?? genericAmounts.rateFromEmail,
+  };
+}
+
 export type ParseBankEmailOutcome =
   | { status: "parsed"; draft: ParsedBankEmailDraft }
   | { status: "skipped"; reason: BankEmailSkipReason };
@@ -60,6 +76,10 @@ export function parseBankEmailMessage(
     return { status: "skipped", reason: "unknown" };
   }
 
+  if (isDeclinedEmail(combinedText)) {
+    return { status: "skipped", reason: "declined" };
+  }
+
   const classification = classifyBankEmail(subject, body);
   if (shouldSkipClassification(classification)) {
     return {
@@ -68,22 +88,41 @@ export function parseBankEmailMessage(
     };
   }
 
-  if (classification === "unknown") {
-    const hasAmountHint = /(?:RD\$|RD\s?\$|US\$|USD|DOP|\$[\d,]+)/i.test(combinedText);
-    if (!hasAmountHint) {
-      return { status: "skipped", reason: "unknown" };
-    }
+  const bankParse = parseByBank(bankName, subject, body);
+
+  if (bankParse?.declined) {
+    return { status: "skipped", reason: "declined" };
   }
 
-  const rawAmounts = extractRawAmounts(combinedText);
+  if (bankParse && !bankParse.approved) {
+    return { status: "skipped", reason: "unknown" };
+  }
+
+  const genericAmounts = extractRawAmounts(combinedText);
+  const bankAmounts: RawParsedAmounts | null = bankParse
+    ? {
+        dopAmount: bankParse.dopAmount,
+        usdAmount: bankParse.usdAmount,
+        rateFromEmail: null,
+      }
+    : null;
+
+  const rawAmounts = mergeAmounts(bankAmounts, genericAmounts);
+
   if (!hasResolvableAmount(rawAmounts)) {
     return { status: "skipped", reason: "no_amount" };
+  }
+
+  const merchantName = parseMerchant(subject, body, bankName);
+
+  if (isInternalBankMovement(bankName, merchantName, combinedText)) {
+    return { status: "skipped", reason: "internal_transfer" };
   }
 
   const draft: ParsedBankEmailDraft = {
     bankName,
     transactionType: detectTransactionType(combinedText),
-    merchantName: parseMerchant(subject, body),
+    merchantName,
     description: subject || message.snippet || null,
     transactionDate: getGmailMessageDate(message),
     rawAmounts,

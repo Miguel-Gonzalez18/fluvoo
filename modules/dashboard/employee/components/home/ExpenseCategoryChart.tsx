@@ -84,7 +84,7 @@ export function ExpenseCategoryChart({
             </p>
           </div>
         ) : (
-          <ChartContainer config={chartConfig} className="aspect-4/3 min-h-[260px] w-full">
+          <ChartContainer config={chartConfig} className="h-[320px] min-w-0 w-full">
             <BarChart data={chartData} barCategoryGap="20%">
               <CartesianGrid vertical={false} strokeDasharray="3 3" />
               <XAxis

@@ -4,7 +4,13 @@ import { syncGmailTransactions } from "@/modules/gmail/lib/sync-gmail.server";
 import type { GmailSyncResult } from "@/modules/gmail/types/sync.types";
 import { createClient } from "@/src/lib/server";
 
-export async function triggerGmailSync(): Promise<GmailSyncResult & { error?: string }> {
+interface TriggerGmailSyncOptions {
+  fullResync?: boolean;
+}
+
+export async function triggerGmailSync(
+  options?: TriggerGmailSyncOptions
+): Promise<GmailSyncResult & { error?: string }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -22,5 +28,7 @@ export async function triggerGmailSync(): Promise<GmailSyncResult & { error?: st
     };
   }
 
-  return syncGmailTransactions(user.id);
+  return syncGmailTransactions(user.id, {
+    purgeExisting: options?.fullResync ?? false,
+  });
 }

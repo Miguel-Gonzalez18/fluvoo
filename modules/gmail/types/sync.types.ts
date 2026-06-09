@@ -24,7 +24,9 @@ export type BankEmailSkipReason =
   | "unknown"
   | "no_amount"
   | "usd_only_disabled"
-  | "duplicate";
+  | "duplicate"
+  | "declined"
+  | "internal_transfer";
 
 export interface ParsedBankEmailDraft {
   bankName: string;
@@ -61,6 +63,8 @@ export interface GmailSyncResult {
   skippedMarketing?: number;
   skippedNoAmount?: number;
   skippedDuplicate?: number;
+  skippedDeclined?: number;
+  skippedInternal?: number;
   error?: string;
 }
 

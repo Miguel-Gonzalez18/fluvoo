@@ -91,7 +91,7 @@ export function GmailSyncButton({ status }: GmailSyncButtonProps) {
     sileo.promise(
       async () => {
         try {
-          const result = await triggerGmailSync();
+          const result = await triggerGmailSync({ fullResync: true });
           if (result.error || !result.success) {
             throw new Error(result.error || "Error al sincronizar transacciones");
           }
@@ -102,7 +102,7 @@ export function GmailSyncButton({ status }: GmailSyncButtonProps) {
         }
       },
       {
-        loading: { title: "Sincronizando transacciones..." },
+        loading: { title: "Re-importando transacciones desde Gmail..." },
         success: (result) => {
           if (result.imported > 0) {
             return { title: `${result.imported} transacciones importadas` };

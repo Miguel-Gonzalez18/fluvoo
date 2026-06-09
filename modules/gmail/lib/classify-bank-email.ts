@@ -75,9 +75,17 @@ export function classifyBankEmail(
 
   if (
     /notificaci[oó]n/i.test(combined) &&
-    /(aprobada|rechazada|monto|comercio)/i.test(combined)
+    /(aprobada|monto|comercio|lugar de transacci)/i.test(combined)
   ) {
     return "transaction";
+  }
+
+  if (/detalle de la transacci[oó]n/i.test(combined) && /monto/i.test(combined)) {
+    return "transaction";
+  }
+
+  if (/declinada|rechazada|fondos insuficientes/i.test(combined)) {
+    return "unknown";
   }
 
   return "unknown";

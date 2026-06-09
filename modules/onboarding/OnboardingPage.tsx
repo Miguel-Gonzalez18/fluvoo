@@ -31,13 +31,18 @@ export function OnboardingPage({
     addLoan,
     updateLoan,
     removeLoan,
+    addFixedObligation,
+    updateFixedObligation,
+    removeFixedObligation,
+    addCreditCard,
+    updateCreditCard,
+    removeCreditCard,
     handleGmailConnect,
     handleGmailSkip,
   } = useOnboarding({ initialStep, gmailErrorMessage });
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm border-b">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
@@ -52,7 +57,6 @@ export function OnboardingPage({
         </div>
       </header>
 
-      {/* Main Content */}
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {currentStep === 1 && (
           <Step1ProfileSelection
@@ -66,6 +70,12 @@ export function OnboardingPage({
             profileType={data.profileType}
             data={data}
             onUpdate={updateData}
+            onAddFixedObligation={addFixedObligation}
+            onUpdateFixedObligation={updateFixedObligation}
+            onRemoveFixedObligation={removeFixedObligation}
+            onAddCreditCard={addCreditCard}
+            onUpdateCreditCard={updateCreditCard}
+            onRemoveCreditCard={removeCreditCard}
             onAddLoan={addLoan}
             onUpdateLoan={updateLoan}
             onRemoveLoan={removeLoan}
@@ -80,7 +90,6 @@ export function OnboardingPage({
         )}
       </main>
 
-      {/* Footer Navigation */}
       {currentStep < 3 && (
         <footer className="fixed bottom-0 left-0 right-0 bg-background border-t">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4">
@@ -116,7 +125,6 @@ export function OnboardingPage({
         </footer>
       )}
 
-      {/* Spacer for fixed footer */}
       {currentStep < 3 && <div className="h-20" />}
     </div>
   );

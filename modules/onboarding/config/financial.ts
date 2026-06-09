@@ -1,8 +1,17 @@
-import { Loan, HealthInsurance } from "../types/onboarding";
+import {
+  CreditCard,
+  CreditCardInstallment,
+  CreditCardCurrencyMode,
+  FixedObligation,
+  HealthInsurance,
+  Loan,
+  ObligationPaymentFrequency,
+  ObligationType,
+} from "../types/onboarding";
+import { PAYMENT_FREQUENCY_LABELS } from "../lib/compute-monthly-amount";
 
 // ARS Insurance Providers - Lista completa de aseguradoras de salud en RD
 export const ARS_PROVIDERS = [
-  // ARS principales
   "ARS Humano",
   "ARS SEMMA",
   "ARS Palic",
@@ -16,7 +25,6 @@ export const ARS_PROVIDERS = [
   "ARS Crecer",
   "ARS Constitución",
   "ARS Yuniversal",
-  // Administradoras de planes de salud
   "Plan Humano",
   "Plan SEMMA",
   "Plan Palic",
@@ -24,7 +32,6 @@ export const ARS_PROVIDERS = [
   "Plan Renacer",
   "Plan Universal",
   "Plan Monumental",
-  // Seguros de salud internacionales con presencia en RD
   "SENASA (Subsido/Contributivo)",
   "Nueva Humana",
   "La Colonial",
@@ -33,13 +40,11 @@ export const ARS_PROVIDERS = [
   "Cigna",
   "Aetna",
   "Seguro Nacional de Salud (SENASA)",
-  // Otras
   "Otra",
 ] as const;
 
 export type ArsProvider = (typeof ARS_PROVIDERS)[number];
 
-// Loan Types
 export interface LoanTypeOption {
   value: Loan["loanType"];
   label: string;
@@ -50,13 +55,52 @@ export const LOAN_TYPES: LoanTypeOption[] = [
   { value: "mortgage", label: "Hipotecario" },
   { value: "vehicle", label: "Vehicular" },
   { value: "business", label: "Empresarial" },
-  { value: "credit_card", label: "Tarjeta de crédito" },
 ];
 
 export const getLoanTypeLabel = (type: Loan["loanType"]): string =>
   LOAN_TYPES.find((t) => t.value === type)?.label ?? type;
 
-// Business Types
+export interface ObligationTypeOption {
+  value: ObligationType;
+  label: string;
+}
+
+export const OBLIGATION_TYPES: ObligationTypeOption[] = [
+  { value: "rent", label: "Alquiler" },
+  { value: "electricity", label: "Electricidad" },
+  { value: "water", label: "Agua" },
+  { value: "gas", label: "Gas" },
+  { value: "internet", label: "Internet" },
+  { value: "transport", label: "Transporte" },
+  { value: "insurance", label: "Seguro" },
+  { value: "gym", label: "Gimnasio" },
+  { value: "university", label: "Universidad" },
+  { value: "other", label: "Otro" },
+];
+
+export const getObligationTypeLabel = (type: ObligationType): string =>
+  OBLIGATION_TYPES.find((t) => t.value === type)?.label ?? type;
+
+export interface PaymentFrequencyOption {
+  value: ObligationPaymentFrequency;
+  label: string;
+}
+
+export const PAYMENT_FREQUENCY_OPTIONS: PaymentFrequencyOption[] = (
+  Object.entries(PAYMENT_FREQUENCY_LABELS) as [ObligationPaymentFrequency, string][]
+).map(([value, label]) => ({ value, label }));
+
+export interface CurrencyModeOption {
+  value: CreditCardCurrencyMode;
+  label: string;
+}
+
+export const CURRENCY_MODE_OPTIONS: CurrencyModeOption[] = [
+  { value: "dop_only", label: "Solo RD$" },
+  { value: "usd_only", label: "Solo USD" },
+  { value: "mixed", label: "Mixta (RD$ + USD)" },
+];
+
 export interface BusinessTypeOption {
   value: string;
   label: string;
@@ -70,7 +114,6 @@ export const BUSINESS_TYPES: BusinessTypeOption[] = [
   { value: "other", label: "Otro" },
 ];
 
-// Default empty entities
 export const createEmptyInsurance = (): HealthInsurance => ({
   id: crypto.randomUUID(),
   arsName: "",
@@ -86,17 +129,59 @@ export const createEmptyLoan = (): Loan => ({
   annualRate: 0,
   termMonths: 0,
   monthlyPayment: 0,
-  startDate: new Date().toISOString().split("T")[0],
+  paymentDueDay: 1,
+  startDate: "",
+  endDate: "",
 });
 
-// Dominican Financial Institutions (Banks & Cooperatives)
+export const createEmptyFixedObligation = (): FixedObligation => ({
+  id: crypto.randomUUID(),
+  obligationType: "rent",
+  name: "",
+  providerName: "",
+  paymentAmount: 0,
+  paymentFrequency: "monthly",
+  monthlyAmount: 0,
+  paymentDueDay: 1,
+});
+
+export const createEmptyCreditCard = (): CreditCard => ({
+  id: crypto.randomUUID(),
+  issuerName: "",
+  cardLabel: "",
+  currencyMode: "dop_only",
+  creditLimit: 0,
+  currentBalance: 0,
+  minimumPayment: 0,
+  creditLimitUsd: null,
+  currentBalanceUsd: null,
+  minimumPaymentUsd: null,
+  statementCloseDay: 1,
+  paymentDueDay: 1,
+  annualRate: null,
+  installments: [],
+});
+
+export const createEmptyInstallment = (creditCardId?: string): CreditCardInstallment => ({
+  id: crypto.randomUUID(),
+  creditCardId,
+  description: "",
+  originalAmount: 0,
+  monthlyPayment: 0,
+  termMonths: 0,
+  annualRate: 0,
+  statementCloseDay: 1,
+  paymentDueDay: 1,
+  startDate: "",
+  endDate: "",
+});
+
 export interface FinancialInstitutionOption {
   value: string;
   label: string;
 }
 
 export const FINANCIAL_INSTITUTIONS: FinancialInstitutionOption[] = [
-  // Bancos Múltiples
   { value: "banco_popular", label: "Banco Popular Dominicano" },
   { value: "banco_reservas", label: "Banreservas" },
   { value: "banco_bhd", label: "Banco BHD" },
@@ -115,14 +200,10 @@ export const FINANCIAL_INSTITUTIONS: FinancialInstitutionOption[] = [
   { value: "banco_citibank", label: "Citibank" },
   { value: "banco_qik", label: "Qik Banco Digital" },
   { value: "banco_alaver", label: "Banco Múltiple ALAVER" },
-
-  // Bancos de Ahorro y Crédito
   { value: "banco_adopem", label: "Banco ADOPEM" },
   { value: "banco_bacc", label: "Banco BACC (Ahorro y Crédito del Caribe)" },
   { value: "banco_fihogar", label: "Banco Fihogar" },
   { value: "banco_union", label: "Banco Unión" },
-
-  // Asociaciones de Ahorros y Préstamos
   { value: "apap", label: "Asociación Popular de Ahorros y Préstamos (APAP)" },
   { value: "asociacion_nacional", label: "Asociación La Nacional de Ahorros y Préstamos" },
   { value: "asociacion_cibao", label: "Asociación Cibao de Ahorros y Préstamos (ACAP)" },
@@ -131,30 +212,26 @@ export const FINANCIAL_INSTITUTIONS: FinancialInstitutionOption[] = [
   { value: "asociacion_mocana", label: "Asociación Mocana de Ahorros y Préstamos" },
   { value: "asociacion_maguana", label: "Asociación Maguana de Ahorros y Préstamos" },
   { value: "asociacion_peravia", label: "Asociación Peravia de Ahorros y Préstamos" },
-
-  // Cooperativas principales
   { value: "coopmaimon", label: "Cooperativa Maimón (COOPMAIMON)" },
   { value: "coopmedica", label: "Coopmédica" },
   { value: "vega_real", label: "Cooperativa Vega Real" },
   { value: "la_telefonica", label: "La Cooperativa de Servicios Múltiples la Telefónica" },
-
-  // Otras entidades
   { value: "prestamista_particular", label: "Prestamista Particular" },
-  { value: "otros", label: "Otros" }
+  { value: "otros", label: "Otros" },
 ];
 
-// SIPEN/ARS Configuration - Aporte obligatorio del empleado (3.04%)
 export const SIPEN_CONFIG = {
   rate: 3.04,
   label: "3.04%",
-  description: "Aporte obligatorio a ARS (Seguro Familiar de Salud). Empleado: 3.04% | Empleador: 7.09%",
+  description:
+    "Aporte obligatorio a ARS (Seguro Familiar de Salud). Empleado: 3.04% | Empleador: 7.09%",
   isMandatory: true,
 } as const;
 
-// AFP (Fondo de Pensiones) Configuration - Aporte obligatorio del empleado (2.87%)
 export const AFP_CONFIG = {
   rate: 2.87,
   label: "2.87%",
-  description: "Aporte obligatorio a AFP (Pensiones). Empleado: 2.87% | Empleador: 7.10%",
+  description:
+    "Aporte obligatorio a AFP (Pensiones). Empleado: 2.87% | Empleador: 7.10%",
   isMandatory: true,
 } as const;
