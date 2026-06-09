@@ -1,5 +1,5 @@
 import {
-  EXPENSE_CATEGORIES,
+  EXPENSE_CATEGORY_CATALOG,
   INCOME_TRANSACTION_TYPES,
   type ExpenseCategorySlug,
 } from "@/modules/shared/config/expense-categories";
@@ -35,10 +35,11 @@ function matchCategoryByKeywords(
   searchText: string,
   excludeSlugs: ExpenseCategorySlug[] = []
 ): ExpenseCategorySlug | null {
-  const sorted = [...EXPENSE_CATEGORIES]
+  const sorted = [...EXPENSE_CATEGORY_CATALOG]
+    .filter((category) => category.active)
     .filter((category) => category.slug !== "otros")
     .filter((category) => !excludeSlugs.includes(category.slug))
-    .sort((a, b) => a.matchPriority - b.matchPriority);
+    .sort((a, b) => a.sortOrder - b.sortOrder);
 
   for (const category of sorted) {
     const keywords = [...category.keywords].sort((a, b) => b.length - a.length);
@@ -68,13 +69,11 @@ export function classifyExpenseCategory(input: {
   const searchText = buildSearchText(input.merchantName, input.description);
 
   if (input.transactionType === "transfer") {
-    const specificMatch = matchCategoryByKeywords(searchText, [
-      "transferencias_pagos_personas",
-    ]);
+    const specificMatch = matchCategoryByKeywords(searchText, ["transferencias"]);
     if (specificMatch) {
       return { category: specificMatch, source: "rule" };
     }
-    return { category: "transferencias_pagos_personas", source: "rule" };
+    return { category: "transferencias", source: "rule" };
   }
 
   const matched = matchCategoryByKeywords(searchText);

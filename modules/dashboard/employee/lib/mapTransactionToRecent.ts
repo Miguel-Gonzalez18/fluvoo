@@ -1,25 +1,4 @@
-import {
-  ArrowLeftRight,
-  ArrowUpRight,
-  Briefcase,
-  Car,
-  CreditCard,
-  GraduationCap,
-  Hammer,
-  HelpCircle,
-  Home,
-  Landmark,
-  PawPrint,
-  PiggyBank,
-  Plane,
-  ShoppingBag,
-  ShoppingCart,
-  Smartphone,
-  Tv,
-  UtensilsCrossed,
-  Wallet,
-  Wine,
-} from "lucide-react";
+import { ArrowUpRight, HelpCircle, Landmark } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { formatOriginalAmountSubtext } from "@/modules/dashboard/employee/lib/formatCurrency";
 import { formatTransactionDate } from "@/modules/dashboard/employee/lib/formatTransactionDate";
@@ -27,6 +6,7 @@ import type {
   RecentTransaction,
   TransactionDirection,
 } from "@/modules/dashboard/employee/types/dashboard.types";
+import { getCategoryIcon } from "@/modules/shared/config/expense-category-icons";
 import {
   getCategoryBySlug,
   INCOME_TRANSACTION_TYPES,
@@ -47,29 +27,6 @@ type TransactionRow = Pick<
   | "rate_source"
   | "expense_category"
 >;
-
-type TransactionType = Tables<"transactions">["transaction_type"];
-
-const categoryIconMap: Record<ExpenseCategorySlug, LucideIcon> = {
-  supermercados_alimentacion: ShoppingCart,
-  restaurantes_comida_rapida: UtensilsCrossed,
-  gasolina_transporte: Car,
-  salud_farmacia: Wallet,
-  educacion: GraduationCap,
-  servicios_hogar: Home,
-  telecomunicaciones: Smartphone,
-  entretenimiento: Tv,
-  ocio_salidas: Wine,
-  compras_retail: ShoppingBag,
-  viajes_turismo: Plane,
-  deudas_prestamos: CreditCard,
-  servicios_profesionales_negocios: Briefcase,
-  transferencias_pagos_personas: ArrowLeftRight,
-  hogar_reparaciones: Hammer,
-  mascotas: PawPrint,
-  ahorros_inversiones: PiggyBank,
-  otros: HelpCircle,
-};
 
 function resolveMerchantName(row: TransactionRow): string {
   if (row.merchant_name?.trim()) {
@@ -108,7 +65,7 @@ function resolveTransactionMeta(row: TransactionRow): {
       category: getCategoryBySlug(slug).shortLabel.toUpperCase(),
       categoryVariant: "outline",
       direction: "expense",
-      icon: categoryIconMap[slug] ?? HelpCircle,
+      icon: getCategoryIcon(slug),
     };
   }
 

@@ -1,41 +1,36 @@
-export type ExpenseCategorySlug =
-  | "supermercados_alimentacion"
-  | "restaurantes_comida_rapida"
-  | "gasolina_transporte"
-  | "salud_farmacia"
-  | "educacion"
-  | "servicios_hogar"
-  | "telecomunicaciones"
-  | "entretenimiento"
-  | "ocio_salidas"
-  | "compras_retail"
-  | "viajes_turismo"
-  | "deudas_prestamos"
-  | "servicios_profesionales_negocios"
-  | "transferencias_pagos_personas"
-  | "hogar_reparaciones"
-  | "mascotas"
-  | "ahorros_inversiones"
-  | "otros";
+import type { ObligationType } from "@/modules/onboarding/types/onboarding";
 
 export type ExpenseCategoryColorIndex = 1 | 2 | 3 | 4 | 5;
 
-export interface ExpenseCategoryDefinition {
-  slug: ExpenseCategorySlug;
-  label: string;
-  shortLabel: string;
-  colorIndex: ExpenseCategoryColorIndex;
-  matchPriority: number;
-  keywords: string[];
-}
+export type ExpenseCategoryIconKey =
+  | "arrow-left-right"
+  | "tv"
+  | "utensils-crossed"
+  | "shopping-cart"
+  | "car"
+  | "wallet"
+  | "graduation-cap"
+  | "home"
+  | "smartphone"
+  | "wine"
+  | "shopping-bag"
+  | "plane"
+  | "credit-card"
+  | "briefcase"
+  | "hammer"
+  | "paw-print"
+  | "piggy-bank"
+  | "help-circle";
 
-export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
+export const EXPENSE_CATEGORY_CATALOG = [
   {
-    slug: "transferencias_pagos_personas",
+    slug: "transferencias",
     label: "Transferencias y Pagos Entre Personas",
     shortLabel: "Transferencias",
     colorIndex: 2,
-    matchPriority: 1,
+    sortOrder: 1,
+    active: true,
+    icon: "arrow-left-right",
     keywords: [
       "transferencia a",
       "transferencia hacia",
@@ -45,13 +40,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "enviado a",
       "recibido de",
     ],
+    obligationTypes: [],
   },
   {
     slug: "entretenimiento",
     label: "Entretenimiento",
     shortLabel: "Entretenimiento",
     colorIndex: 5,
-    matchPriority: 2,
+    sortOrder: 2,
+    active: true,
+    icon: "tv",
     keywords: [
       "netflix",
       "spotify",
@@ -74,13 +72,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "xbox",
       "steam",
     ],
+    obligationTypes: [],
   },
   {
-    slug: "restaurantes_comida_rapida",
+    slug: "restaurantes",
     label: "Restaurantes y Comida Rápida",
     shortLabel: "Restaurantes",
     colorIndex: 4,
-    matchPriority: 3,
+    sortOrder: 3,
+    active: true,
+    icon: "utensils-crossed",
     keywords: [
       "uber eats",
       "pedidos ya",
@@ -101,13 +102,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "cafetería",
       "starbucks",
     ],
+    obligationTypes: [],
   },
   {
-    slug: "supermercados_alimentacion",
+    slug: "supermercados",
     label: "Supermercados y Alimentación",
     shortLabel: "Supermercados",
     colorIndex: 1,
-    matchPriority: 4,
+    sortOrder: 4,
+    active: true,
+    icon: "shopping-cart",
     keywords: [
       "sirena",
       "bravo",
@@ -121,13 +125,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "carrefour",
       "walmart",
     ],
+    obligationTypes: [],
   },
   {
-    slug: "gasolina_transporte",
+    slug: "transporte",
     label: "Gasolina y Transporte",
     shortLabel: "Transporte",
     colorIndex: 2,
-    matchPriority: 5,
+    sortOrder: 5,
+    active: true,
+    icon: "car",
     keywords: [
       "shell",
       "texaco",
@@ -147,13 +154,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "parada",
       "peaje",
     ],
+    obligationTypes: ["transport"],
   },
   {
-    slug: "salud_farmacia",
+    slug: "salud",
     label: "Salud y Farmacia",
     shortLabel: "Salud",
     colorIndex: 3,
-    matchPriority: 6,
+    sortOrder: 6,
+    active: true,
+    icon: "wallet",
     keywords: [
       "farmacia",
       "carol",
@@ -170,13 +180,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "ars",
       "eps",
     ],
+    obligationTypes: ["insurance", "gym"],
   },
   {
     slug: "educacion",
     label: "Educación",
     shortLabel: "Educación",
     colorIndex: 1,
-    matchPriority: 7,
+    sortOrder: 7,
+    active: true,
+    icon: "graduation-cap",
     keywords: [
       "universidad",
       "colegio",
@@ -193,13 +206,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "tuicion",
       "tuición",
     ],
+    obligationTypes: ["university"],
   },
   {
-    slug: "servicios_hogar",
+    slug: "servicios",
     label: "Servicios del Hogar",
     shortLabel: "Servicios",
     colorIndex: 2,
-    matchPriority: 8,
+    sortOrder: 8,
+    active: true,
+    icon: "home",
     keywords: [
       "edeeste",
       "edenorte",
@@ -211,13 +227,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "gas propano",
       "propano",
     ],
+    obligationTypes: ["rent", "electricity", "water", "gas"],
   },
   {
-    slug: "telecomunicaciones",
+    slug: "telecom",
     label: "Telecomunicaciones",
     shortLabel: "Telecom",
     colorIndex: 5,
-    matchPriority: 9,
+    sortOrder: 9,
+    active: true,
+    icon: "smartphone",
     keywords: [
       "claro",
       "altice",
@@ -231,13 +250,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "datos moviles",
       "datos móviles",
     ],
+    obligationTypes: ["internet"],
   },
   {
-    slug: "ocio_salidas",
+    slug: "ocio",
     label: "Ocio y Salidas",
     shortLabel: "Ocio",
     colorIndex: 5,
-    matchPriority: 10,
+    sortOrder: 10,
+    active: true,
+    icon: "wine",
     keywords: [
       "bar",
       "discoteca",
@@ -248,13 +270,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "recreacion",
       "recreación",
     ],
+    obligationTypes: [],
   },
   {
-    slug: "compras_retail",
+    slug: "compras",
     label: "Compras y Retail",
     shortLabel: "Compras",
     colorIndex: 4,
-    matchPriority: 11,
+    sortOrder: 11,
+    active: true,
+    icon: "shopping-bag",
     keywords: [
       "amazon",
       "tienda",
@@ -267,13 +292,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "shein",
       "aliexpress",
     ],
+    obligationTypes: [],
   },
   {
-    slug: "viajes_turismo",
+    slug: "viajes",
     label: "Viajes y Turismo",
     shortLabel: "Viajes",
     colorIndex: 1,
-    matchPriority: 12,
+    sortOrder: 12,
+    active: true,
+    icon: "plane",
     keywords: [
       "airbnb",
       "booking",
@@ -287,13 +315,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "vuelo",
       "turismo",
     ],
+    obligationTypes: [],
   },
   {
-    slug: "deudas_prestamos",
+    slug: "deudas",
     label: "Deudas y Préstamos",
     shortLabel: "Deudas",
     colorIndex: 3,
-    matchPriority: 13,
+    sortOrder: 13,
+    active: true,
+    icon: "credit-card",
     keywords: [
       "prestamo",
       "préstamo",
@@ -308,13 +339,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "amortizacion",
       "amortización",
     ],
+    obligationTypes: [],
   },
   {
-    slug: "servicios_profesionales_negocios",
+    slug: "negocios",
     label: "Servicios Profesionales y Negocios",
     shortLabel: "Negocios",
     colorIndex: 2,
-    matchPriority: 14,
+    sortOrder: 14,
+    active: true,
+    icon: "briefcase",
     keywords: [
       "contador",
       "abogado",
@@ -329,13 +363,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "github",
       "openai",
     ],
+    obligationTypes: [],
   },
   {
-    slug: "hogar_reparaciones",
+    slug: "hogar",
     label: "Hogar y Reparaciones",
     shortLabel: "Hogar",
     colorIndex: 1,
-    matchPriority: 15,
+    sortOrder: 15,
+    active: true,
+    icon: "hammer",
     keywords: [
       "ferreteria",
       "ferretería",
@@ -348,13 +385,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "plomeria",
       "plomería",
     ],
+    obligationTypes: [],
   },
   {
     slug: "mascotas",
     label: "Mascotas",
     shortLabel: "Mascotas",
     colorIndex: 4,
-    matchPriority: 16,
+    sortOrder: 16,
+    active: true,
+    icon: "paw-print",
     keywords: [
       "veterinaria",
       "pet shop",
@@ -363,13 +403,16 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "perro",
       "gato",
     ],
+    obligationTypes: [],
   },
   {
-    slug: "ahorros_inversiones",
+    slug: "ahorros",
     label: "Ahorros e Inversiones",
     shortLabel: "Ahorros",
     colorIndex: 1,
-    matchPriority: 17,
+    sortOrder: 17,
+    active: true,
+    icon: "piggy-bank",
     keywords: [
       "ahorro",
       "inversion",
@@ -379,27 +422,83 @@ export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] = [
       "fondo mutuo",
       "certificado",
     ],
+    obligationTypes: [],
   },
   {
     slug: "otros",
     label: "Otros",
     shortLabel: "Otros",
     colorIndex: 3,
-    matchPriority: 99,
+    sortOrder: 99,
+    active: true,
+    icon: "help-circle",
     keywords: [],
+    obligationTypes: ["other"],
   },
-];
+] as const;
+
+export type ExpenseCategorySlug =
+  (typeof EXPENSE_CATEGORY_CATALOG)[number]["slug"];
+
+export interface ExpenseCategoryDefinition {
+  slug: ExpenseCategorySlug;
+  label: string;
+  shortLabel: string;
+  colorIndex: ExpenseCategoryColorIndex;
+  sortOrder: number;
+  active: boolean;
+  icon: ExpenseCategoryIconKey;
+  keywords: readonly string[];
+  obligationTypes: readonly ObligationType[];
+}
+
+/** @deprecated Use EXPENSE_CATEGORY_CATALOG */
+export const EXPENSE_CATEGORIES: ExpenseCategoryDefinition[] =
+  EXPENSE_CATEGORY_CATALOG.map((category) => ({
+    ...category,
+    keywords: [...category.keywords],
+    obligationTypes: [...category.obligationTypes],
+  }));
 
 const categoryBySlug = new Map(
-  EXPENSE_CATEGORIES.map((category) => [category.slug, category])
+  EXPENSE_CATEGORY_CATALOG.map((category) => [category.slug, category])
 );
 
+const obligationTypeToSlug = new Map<ObligationType, ExpenseCategorySlug>();
+
+for (const category of EXPENSE_CATEGORY_CATALOG) {
+  if (!category.active) continue;
+  for (const obligationType of category.obligationTypes) {
+    obligationTypeToSlug.set(obligationType, category.slug);
+  }
+}
+
+export function getActiveCategorySlugs(): ExpenseCategorySlug[] {
+  return EXPENSE_CATEGORY_CATALOG.filter((category) => category.active).map(
+    (category) => category.slug
+  );
+}
+
 export function getCategoryBySlug(slug: ExpenseCategorySlug): ExpenseCategoryDefinition {
-  return categoryBySlug.get(slug) ?? categoryBySlug.get("otros")!;
+  const category = categoryBySlug.get(slug);
+  if (category) {
+    return {
+      ...category,
+      keywords: [...category.keywords],
+      obligationTypes: [...category.obligationTypes],
+    };
+  }
+  return getCategoryBySlug("otros");
 }
 
 export function getCategoryLabel(slug: ExpenseCategorySlug): string {
   return getCategoryBySlug(slug).label;
+}
+
+export function resolveObligationCategorySlug(
+  obligationType: ObligationType
+): ExpenseCategorySlug {
+  return obligationTypeToSlug.get(obligationType) ?? "otros";
 }
 
 export const EXPENSE_TRANSACTION_TYPES = [
@@ -410,3 +509,5 @@ export const EXPENSE_TRANSACTION_TYPES = [
 ] as const;
 
 export const INCOME_TRANSACTION_TYPES = ["credit", "deposit"] as const;
+
+export const DEBT_CATEGORY_SLUG = "deudas" as const satisfies ExpenseCategorySlug;

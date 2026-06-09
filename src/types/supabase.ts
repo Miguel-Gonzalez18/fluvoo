@@ -247,6 +247,176 @@ export type Database = {
         }
         Relationships: []
       }
+      credit_card_installments: {
+        Row: {
+          annual_rate: number
+          created_at: string
+          credit_card_id: string
+          description: string | null
+          end_date: string | null
+          id: string
+          monthly_payment: number
+          original_amount: number
+          payment_due_day: number | null
+          remaining_balance: number | null
+          start_date: string | null
+          statement_close_day: number | null
+          status: Database["public"]["Enums"]["installment_status"]
+          term_months: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          annual_rate?: number
+          created_at?: string
+          credit_card_id: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          monthly_payment: number
+          original_amount: number
+          payment_due_day?: number | null
+          remaining_balance?: number | null
+          start_date?: string | null
+          statement_close_day?: number | null
+          status?: Database["public"]["Enums"]["installment_status"]
+          term_months: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          annual_rate?: number
+          created_at?: string
+          credit_card_id?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          monthly_payment?: number
+          original_amount?: number
+          payment_due_day?: number | null
+          remaining_balance?: number | null
+          start_date?: string | null
+          statement_close_day?: number | null
+          status?: Database["public"]["Enums"]["installment_status"]
+          term_months?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_card_installments_credit_card_id_fkey"
+            columns: ["credit_card_id"]
+            isOneToOne: false
+            referencedRelation: "credit_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      credit_cards: {
+        Row: {
+          annual_rate: number | null
+          card_label: string | null
+          created_at: string
+          credit_limit: number
+          credit_limit_usd: number | null
+          currency_mode: Database["public"]["Enums"]["credit_card_currency_mode"]
+          current_balance: number
+          current_balance_usd: number | null
+          id: string
+          issuer_name: string
+          minimum_payment: number
+          minimum_payment_usd: number | null
+          payment_due_day: number
+          statement_close_day: number | null
+          status: Database["public"]["Enums"]["credit_card_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          annual_rate?: number | null
+          card_label?: string | null
+          created_at?: string
+          credit_limit: number
+          credit_limit_usd?: number | null
+          currency_mode?: Database["public"]["Enums"]["credit_card_currency_mode"]
+          current_balance?: number
+          current_balance_usd?: number | null
+          id?: string
+          issuer_name: string
+          minimum_payment: number
+          minimum_payment_usd?: number | null
+          payment_due_day: number
+          statement_close_day?: number | null
+          status?: Database["public"]["Enums"]["credit_card_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          annual_rate?: number | null
+          card_label?: string | null
+          created_at?: string
+          credit_limit?: number
+          credit_limit_usd?: number | null
+          currency_mode?: Database["public"]["Enums"]["credit_card_currency_mode"]
+          current_balance?: number
+          current_balance_usd?: number | null
+          id?: string
+          issuer_name?: string
+          minimum_payment?: number
+          minimum_payment_usd?: number | null
+          payment_due_day?: number
+          statement_close_day?: number | null
+          status?: Database["public"]["Enums"]["credit_card_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fixed_obligations: {
+        Row: {
+          created_at: string
+          id: string
+          monthly_amount: number
+          name: string
+          obligation_type: Database["public"]["Enums"]["obligation_type"]
+          payment_amount: number
+          payment_due_day: number
+          payment_frequency: Database["public"]["Enums"]["obligation_payment_frequency"]
+          provider_name: string | null
+          status: Database["public"]["Enums"]["obligation_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          monthly_amount: number
+          name?: string
+          obligation_type: Database["public"]["Enums"]["obligation_type"]
+          payment_amount: number
+          payment_due_day: number
+          payment_frequency?: Database["public"]["Enums"]["obligation_payment_frequency"]
+          provider_name?: string | null
+          status?: Database["public"]["Enums"]["obligation_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          monthly_amount?: number
+          name?: string
+          obligation_type?: Database["public"]["Enums"]["obligation_type"]
+          payment_amount?: number
+          payment_due_day?: number
+          payment_frequency?: Database["public"]["Enums"]["obligation_payment_frequency"]
+          provider_name?: string | null
+          status?: Database["public"]["Enums"]["obligation_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       loans: {
         Row: {
           annual_rate: number
@@ -258,7 +428,8 @@ export type Database = {
           loan_type: Database["public"]["Enums"]["loan_type"]
           monthly_payment: number
           original_amount: number
-          start_date: string
+          payment_due_day: number | null
+          start_date: string | null
           status: Database["public"]["Enums"]["loan_status"] | null
           term_months: number
           updated_at: string
@@ -274,7 +445,8 @@ export type Database = {
           loan_type: Database["public"]["Enums"]["loan_type"]
           monthly_payment: number
           original_amount: number
-          start_date: string
+          payment_due_day?: number | null
+          start_date?: string | null
           status?: Database["public"]["Enums"]["loan_status"] | null
           term_months: number
           updated_at?: string
@@ -290,7 +462,8 @@ export type Database = {
           loan_type?: Database["public"]["Enums"]["loan_type"]
           monthly_payment?: number
           original_amount?: number
-          start_date?: string
+          payment_due_day?: number | null
+          start_date?: string | null
           status?: Database["public"]["Enums"]["loan_status"] | null
           term_months?: number
           updated_at?: string
@@ -569,24 +742,26 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
+      credit_card_currency_mode: "dop_only" | "usd_only" | "mixed"
+      credit_card_status: "active" | "closed"
       expense_category:
-        | "supermercados_alimentacion"
-        | "restaurantes_comida_rapida"
-        | "gasolina_transporte"
-        | "salud_farmacia"
-        | "educacion"
-        | "servicios_hogar"
-        | "telecomunicaciones"
+        | "transferencias"
         | "entretenimiento"
-        | "ocio_salidas"
-        | "compras_retail"
-        | "viajes_turismo"
-        | "deudas_prestamos"
-        | "servicios_profesionales_negocios"
-        | "transferencias_pagos_personas"
-        | "hogar_reparaciones"
+        | "restaurantes"
+        | "supermercados"
+        | "transporte"
+        | "salud"
+        | "educacion"
+        | "servicios"
+        | "telecom"
+        | "ocio"
+        | "compras"
+        | "viajes"
+        | "deudas"
+        | "negocios"
+        | "hogar"
         | "mascotas"
-        | "ahorros_inversiones"
+        | "ahorros"
         | "otros"
       income_frequency:
         | "weekly"
@@ -594,13 +769,22 @@ export type Database = {
         | "monthly"
         | "project_based"
         | "irregular"
+      installment_status: "active" | "paid_off"
       loan_status: "active" | "paid_off" | "refinanced"
-      loan_type:
-        | "personal"
-        | "mortgage"
-        | "vehicle"
-        | "business"
-        | "credit_card"
+      loan_type: "personal" | "mortgage" | "vehicle" | "business"
+      obligation_payment_frequency: "monthly" | "weekly" | "biweekly" | "daily"
+      obligation_status: "active" | "inactive"
+      obligation_type:
+        | "rent"
+        | "electricity"
+        | "water"
+        | "gas"
+        | "internet"
+        | "transport"
+        | "insurance"
+        | "gym"
+        | "university"
+        | "other"
       transaction_parse_status: "parsed" | "partial" | "failed"
       transaction_type:
         | "debit"
@@ -738,23 +922,23 @@ export const Constants = {
   public: {
     Enums: {
       expense_category: [
-        "supermercados_alimentacion",
-        "restaurantes_comida_rapida",
-        "gasolina_transporte",
-        "salud_farmacia",
-        "educacion",
-        "servicios_hogar",
-        "telecomunicaciones",
+        "transferencias",
         "entretenimiento",
-        "ocio_salidas",
-        "compras_retail",
-        "viajes_turismo",
-        "deudas_prestamos",
-        "servicios_profesionales_negocios",
-        "transferencias_pagos_personas",
-        "hogar_reparaciones",
+        "restaurantes",
+        "supermercados",
+        "transporte",
+        "salud",
+        "educacion",
+        "servicios",
+        "telecom",
+        "ocio",
+        "compras",
+        "viajes",
+        "deudas",
+        "negocios",
+        "hogar",
         "mascotas",
-        "ahorros_inversiones",
+        "ahorros",
         "otros",
       ],
       income_frequency: [
@@ -764,8 +948,25 @@ export const Constants = {
         "project_based",
         "irregular",
       ],
+      credit_card_currency_mode: ["dop_only", "usd_only", "mixed"],
+      credit_card_status: ["active", "closed"],
+      installment_status: ["active", "paid_off"],
       loan_status: ["active", "paid_off", "refinanced"],
-      loan_type: ["personal", "mortgage", "vehicle", "business", "credit_card"],
+      loan_type: ["personal", "mortgage", "vehicle", "business"],
+      obligation_payment_frequency: ["monthly", "weekly", "biweekly", "daily"],
+      obligation_status: ["active", "inactive"],
+      obligation_type: [
+        "rent",
+        "electricity",
+        "water",
+        "gas",
+        "internet",
+        "transport",
+        "insurance",
+        "gym",
+        "university",
+        "other",
+      ],
       transaction_parse_status: ["parsed", "partial", "failed"],
       transaction_type: [
         "debit",

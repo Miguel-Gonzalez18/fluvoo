@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import type { ExpenseCategorySlug } from "@/modules/shared/config/expense-categories";
 
 export type KpiTrend = "positive" | "negative" | "neutral";
 
@@ -14,6 +15,7 @@ export interface KpiStat {
 export type ExpenseCategoryColorIndex = 1 | 2 | 3 | 4 | 5;
 
 export interface CategoryExpense {
+  slug: ExpenseCategorySlug;
   category: string;
   fullLabel: string;
   amount: number;
@@ -58,8 +60,31 @@ export interface NetIncomeData {
   hasSalary: boolean;
 }
 
+export interface MonthlyExpensesData {
+  value: number;
+  subtext: string;
+  trend: KpiTrend;
+  transactionCount: number;
+}
+
+export interface MonthlyMarginData {
+  value: number;
+  subtext: string;
+  trend: KpiTrend;
+}
+
+export interface NextPaymentData {
+  value: string;
+  subtext: string;
+  trend: KpiTrend;
+  hasPayment: boolean;
+}
+
 export interface HomeDashboardData {
   netIncome: NetIncomeData;
+  monthlyExpenses: MonthlyExpensesData;
+  monthlyMargin: MonthlyMarginData;
+  nextPayment: NextPaymentData;
   recentTransactions: RecentTransaction[];
   expenseCategoriesThisMonth: CategoryExpense[];
   expenseCategoriesLastMonth: CategoryExpense[];
