@@ -25,7 +25,6 @@ import type { FinancialObligationsSnapshot } from "./financial-obligations.types
 import { buildFiscalAnalysisContext } from "./buildFiscalAnalysisContext.server";
 import { generateFiscalAnalysis } from "@/modules/shared/ai/generate-fiscal-analysis.server";
 import { getActiveTaxParameters } from "@/modules/onboarding/supabase/tax-parameters";
-import { Wallet } from "lucide-react";
 
 export const RECENT_TRANSACTIONS_LIMIT = 15;
 
@@ -65,7 +64,7 @@ const EMPTY_DASHBOARD_DATA: HomeDashboardData = {
         title: "Configura tu perfil",
         description:
           "Agrega salario, obligaciones y conecta Gmail para que la IA analice tu situación real.",
-        icon: Wallet,
+        iconKey: "wallet",
       },
     ],
     source: "fallback",
