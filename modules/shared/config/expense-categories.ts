@@ -84,6 +84,8 @@ export const EXPENSE_CATEGORY_CATALOG = [
     icon: "utensils-crossed",
     keywords: [
       "uber eats",
+      "uber*eats",
+      "help.uber.com",
       "pedidos ya",
       "rappi",
       "restaurante",
@@ -119,6 +121,7 @@ export const EXPENSE_CATEGORY_CATALOG = [
       "jumbo",
       "price smart",
       "supermercado",
+      "aprezio",
       "colmado",
       "la sirena",
       "plaza lama",

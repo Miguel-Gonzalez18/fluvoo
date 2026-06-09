@@ -65,6 +65,9 @@ export interface GmailSyncResult {
   skippedDuplicate?: number;
   skippedDeclined?: number;
   skippedInternal?: number;
+  aiReviewed?: number;
+  aiUpdated?: number;
+  aiFailed?: number;
   error?: string;
 }
 

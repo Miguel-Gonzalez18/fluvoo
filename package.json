@@ -10,6 +10,8 @@
     "validate:categories": "npx tsx scripts/validate-expense-categories.ts"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.80",
+    "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^5.2.2",
     "@next/third-parties": "^16.2.3",
     "@radix-ui/react-dialog": "^1.1.15",
@@ -19,6 +21,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.105.1",
+    "ai": "^6.0.197",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",

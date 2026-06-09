@@ -14,7 +14,7 @@ import { getGmailHeader } from "@/modules/gmail/lib/decode-message.server";
 
 import { parseBankEmailMessage } from "@/modules/gmail/lib/parse-transaction.server";
 
-import { backfillExpenseCategoriesForUser } from "@/modules/gmail/lib/backfill-expense-categories.server";
+import { classifyImportedTransactionsWithAi } from "@/modules/gmail/lib/classify-imported-transactions-with-ai.server";
 import { resolveDopAmount } from "@/modules/gmail/lib/resolve-dop-amount";
 import { classifyExpenseCategory } from "@/modules/shared/lib/classify-expense-category";
 
@@ -335,6 +335,12 @@ export async function syncGmailTransactions(
 
     skippedInternal: 0,
 
+    aiReviewed: 0,
+
+    aiUpdated: 0,
+
+    aiFailed: 0,
+
   };
 
 
@@ -415,6 +421,8 @@ export async function syncGmailTransactions(
 
     const admin = createAdminClient();
 
+    const importedIds: string[] = [];
+
 
 
     for (const messageId of messageIds) {
@@ -471,7 +479,9 @@ export async function syncGmailTransactions(
 
 
 
-        const { error: insertError } = await admin.from("transactions").insert({
+        const { data: insertedRows, error: insertError } = await admin
+          .from("transactions")
+          .insert({
 
           user_id: userId,
 
@@ -509,7 +519,8 @@ export async function syncGmailTransactions(
 
           category_source: parsed.categorySource,
 
-        });
+        })
+          .select("id");
 
 
 
@@ -529,6 +540,14 @@ export async function syncGmailTransactions(
 
 
 
+        const insertedId = insertedRows?.[0]?.id;
+
+        if (insertedId) {
+
+          importedIds.push(insertedId);
+
+        }
+
         result.imported += 1;
 
       } catch {
@@ -541,7 +560,13 @@ export async function syncGmailTransactions(
 
 
 
-    await backfillExpenseCategoriesForUser(userId);
+    const aiStats = await classifyImportedTransactionsWithAi(userId, importedIds);
+
+    result.aiReviewed = aiStats.aiReviewed;
+
+    result.aiUpdated = aiStats.aiUpdated;
+
+    result.aiFailed = aiStats.aiFailed;
 
     await updateGmailConnection(userId, {
 
@@ -570,6 +595,12 @@ export async function syncGmailTransactions(
         skippedDeclined: result.skippedDeclined,
 
         skippedInternal: result.skippedInternal,
+
+        aiReviewed: result.aiReviewed,
+
+        aiUpdated: result.aiUpdated,
+
+        aiFailed: result.aiFailed,
 
       },
 

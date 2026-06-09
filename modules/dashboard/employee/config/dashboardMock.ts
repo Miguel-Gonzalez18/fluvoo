@@ -1,17 +1,12 @@
 import {
-  Laptop,
-  PiggyBank,
   ShoppingCart,
   TrendingDown,
   UtensilsCrossed,
   Wallet,
 } from "lucide-react";
-import type { FiscalTip, RecentTransaction } from "@/modules/dashboard/employee/types/dashboard.types";
+import type { RecentTransaction } from "@/modules/dashboard/employee/types/dashboard.types";
 
 export const MOCK_DISPLAY_NAME = "Carlos";
-
-export const FISCAL_ANALYSIS_DESCRIPTION =
-  "Basado en tus gastos actuales, podrías aumentar tu devolución de impuestos (ISR) aplicando estas estrategias antes del cierre de mes.";
 
 export const RECENT_TRANSACTIONS: RecentTransaction[] = [
   {
@@ -57,23 +52,6 @@ export const RECENT_TRANSACTIONS: RecentTransaction[] = [
     originalAmountSubtext: null,
     direction: "expense",
     icon: UtensilsCrossed,
-  },
-];
-
-export const FISCAL_TIPS: FiscalTip[] = [
-  {
-    id: "education",
-    title: "Deducir Gastos Educativos",
-    description:
-      "Tienes RD$4,200 en facturas de idiomas sin reportar este mes.",
-    icon: Laptop,
-  },
-  {
-    id: "afp",
-    title: "Aporte Voluntario AFP",
-    description:
-      "Un aporte de RD$1,500 reduciría tu base imponible en un 2%.",
-    icon: PiggyBank,
   },
 ];
 

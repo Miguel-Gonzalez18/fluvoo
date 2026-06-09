@@ -5,7 +5,8 @@ import {
 } from "@/modules/shared/config/expense-categories";
 import type { TransactionType } from "@/modules/gmail/types/sync.types";
 
-export type CategorySource = "rule" | "manual";
+/** How expense_category was assigned: keywords, AI post-sync, or user override. */
+export type CategorySource = "rule" | "manual" | "ai";
 
 export interface ClassifyExpenseCategoryResult {
   category: ExpenseCategorySlug | null;
@@ -16,7 +17,18 @@ function normalizeText(value: string): string {
   return value
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[*_/]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function isUberEatsMerchant(searchText: string): boolean {
+  return (
+    searchText.includes("uber eats") ||
+    searchText.includes("ubereats") ||
+    /uber\s+eats/.test(searchText)
+  );
 }
 
 function buildSearchText(
@@ -67,6 +79,10 @@ export function classifyExpenseCategory(input: {
   }
 
   const searchText = buildSearchText(input.merchantName, input.description);
+
+  if (isUberEatsMerchant(searchText)) {
+    return { category: "restaurantes", source: "rule" };
+  }
 
   if (input.transactionType === "transfer") {
     const specificMatch = matchCategoryByKeywords(searchText, ["transferencias"]);

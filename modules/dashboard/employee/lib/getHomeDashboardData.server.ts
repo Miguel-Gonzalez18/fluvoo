@@ -22,6 +22,10 @@ import {
 import { daysBetween } from "@/modules/onboarding/lib/schemas/date-helpers";
 import { getUsdToDopRate } from "@/modules/gmail/lib/exchange-rate.server";
 import type { FinancialObligationsSnapshot } from "./financial-obligations.types";
+import { buildFiscalAnalysisContext } from "./buildFiscalAnalysisContext.server";
+import { generateFiscalAnalysis } from "@/modules/shared/ai/generate-fiscal-analysis.server";
+import { getActiveTaxParameters } from "@/modules/onboarding/supabase/tax-parameters";
+import { Wallet } from "lucide-react";
 
 export const RECENT_TRANSACTIONS_LIMIT = 15;
 
@@ -52,6 +56,20 @@ const EMPTY_DASHBOARD_DATA: HomeDashboardData = {
   expenseCategoriesThisMonth: [],
   expenseCategoriesLastMonth: [],
   gmailStatus: EMPTY_GMAIL_STATUS,
+  fiscalAnalysis: {
+    diagnosis:
+      "Inicia sesión y completa tu perfil para recibir un diagnóstico financiero personalizado.",
+    tips: [
+      {
+        id: "iniciar-sesion",
+        title: "Configura tu perfil",
+        description:
+          "Agrega salario, obligaciones y conecta Gmail para que la IA analice tu situación real.",
+        icon: Wallet,
+      },
+    ],
+    source: "fallback",
+  },
 };
 
 function buildExpensesSubtext(
@@ -161,6 +179,7 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
       loansResult,
       creditCardsResult,
       installmentsResult,
+      taxParams,
     ] = await Promise.all([
       supabase
         .from("transactions")
@@ -202,6 +221,7 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
         )
         .eq("user_id", user.id)
         .eq("status", "active"),
+      getActiveTaxParameters(),
     ]);
     const salary = profile?.monthly_salary ?? 0;
     const tssDeduction = profile?.monthly_tss_deduction ?? 0;
@@ -307,6 +327,26 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
       lastMonthObligationCategories
     );
 
+    const fiscalAnalysisContext = buildFiscalAnalysisContext({
+      salary,
+      tssDeduction,
+      netIncomeMonthly: netIncomeValue,
+      expensesThisMonth: thisMonthTotal,
+      expensesLastMonth: lastMonthTotal,
+      marginMonthly: marginValue,
+      marginStatus: marginMeta.subtext,
+      transactionCount: thisMonthAggregate.transactionCount,
+      categories: mergedThisMonthCategories,
+      obligationsSnapshot,
+      nextCandidate,
+      today,
+      usdToDopRate,
+      gmailConnected: resolvedGmailStatus.connected,
+      taxParams,
+    });
+
+    const fiscalAnalysis = await generateFiscalAnalysis(fiscalAnalysisContext);
+
     const baseNetIncome = {
       value: netIncomeValue,
       subtext: hasSalary
@@ -330,6 +370,7 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
           trend: marginMeta.trend,
         },
         nextPayment,
+        fiscalAnalysis,
         recentTransactions: [],
         expenseCategoriesThisMonth: mergedThisMonthCategories,
         expenseCategoriesLastMonth: mergedLastMonthCategories,
@@ -351,6 +392,7 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
         trend: marginMeta.trend,
       },
       nextPayment,
+      fiscalAnalysis,
       recentTransactions: (transactionsResult.data ?? []).map(mapTransactionToRecent),
       expenseCategoriesThisMonth: mergedThisMonthCategories,
       expenseCategoriesLastMonth: mergedLastMonthCategories,

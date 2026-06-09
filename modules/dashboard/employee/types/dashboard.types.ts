@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import type { ExpenseCategorySlug } from "@/modules/shared/config/expense-categories";
+import type { FiscalTipIconKey } from "@/modules/shared/ai/fiscal-analysis.schema";
 
 export type KpiTrend = "positive" | "negative" | "neutral";
 
@@ -41,7 +42,15 @@ export interface FiscalTip {
   id: string;
   title: string;
   description: string;
-  icon: LucideIcon;
+  iconKey: FiscalTipIconKey;
+}
+
+export type FiscalAnalysisSource = "ai" | "fallback";
+
+export interface FiscalAnalysisData {
+  diagnosis: string;
+  tips: FiscalTip[];
+  source: FiscalAnalysisSource;
 }
 
 export type GmailSyncStatus = "pending" | "syncing" | "active" | "error";
@@ -85,6 +94,7 @@ export interface HomeDashboardData {
   monthlyExpenses: MonthlyExpensesData;
   monthlyMargin: MonthlyMarginData;
   nextPayment: NextPaymentData;
+  fiscalAnalysis: FiscalAnalysisData;
   recentTransactions: RecentTransaction[];
   expenseCategoriesThisMonth: CategoryExpense[];
   expenseCategoriesLastMonth: CategoryExpense[];
