@@ -1,11 +1,6 @@
 import { redirect } from 'next/navigation'
+import { getProfileHomePath } from '@/modules/dashboard/shared/profile-routes'
 import { createClient } from '@/src/lib/server'
-
-const PROFILE_HOME: Record<string, string> = {
-  employee: '/employee/home',
-  freelancer: '/freelancer/home',
-  business_owner: '/business/home',
-}
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -21,9 +16,7 @@ export default async function DashboardPage() {
 
   if (!profile?.onboarding_completed) redirect('/onboarding')
 
-  const homePath = profile.profile_type
-    ? PROFILE_HOME[profile.profile_type]
-    : undefined
+  const homePath = getProfileHomePath(profile.profile_type)
 
   if (homePath) redirect(homePath)
 

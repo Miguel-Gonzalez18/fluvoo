@@ -26,7 +26,7 @@ export async function startGmailConnect(): Promise<{
     }
 
     const state = createOAuthState();
-    await setGmailOAuthState(state, "/employee/home");
+    await setGmailOAuthState(state, "/employee");
 
     return {
       success: true,

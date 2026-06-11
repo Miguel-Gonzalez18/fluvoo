@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, XAxis, YAxis } from "recharts";
 import { cn } from "@/lib/utils";
 import { DashboardCard } from "@/modules/dashboard/shared/DashboardCard";
@@ -31,12 +31,38 @@ interface ExpenseCategoryChartProps {
   className?: string;
 }
 
+function useChartContainerReady<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+
+    const update = () => {
+      const { width, height } = node.getBoundingClientRect();
+      setReady(width > 0 && height > 0);
+    };
+
+    update();
+
+    const observer = new ResizeObserver(update);
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, []);
+
+  return { ref, ready };
+}
+
 export function ExpenseCategoryChart({
   thisMonth,
   lastMonth,
   className,
 }: ExpenseCategoryChartProps) {
   const [period, setPeriod] = useState<PeriodKey>("this-month");
+  const { ref: chartContainerRef, ready: chartReady } =
+    useChartContainerReady<HTMLDivElement>();
 
   const periodData = period === "this-month" ? thisMonth : lastMonth;
 
@@ -84,38 +110,53 @@ export function ExpenseCategoryChart({
             </p>
           </div>
         ) : (
-          <ChartContainer config={chartConfig} className="h-[320px] min-w-0 w-full">
-            <BarChart data={chartData} barCategoryGap="20%">
-              <CartesianGrid vertical={false} strokeDasharray="3 3" />
-              <XAxis
-                dataKey="category"
-                tickLine={false}
-                axisLine={false}
-                tickMargin={10}
-                className="font-label text-[11px]"
-              />
-              <YAxis hide domain={[0, "dataMax + 2000"]} />
-              <ChartTooltip
-                cursor={false}
-                content={
-                  <ChartTooltipContent
-                    labelFormatter={(_, payload) => {
-                      const item = payload?.[0]?.payload as
-                        | { fullLabel?: string }
-                        | undefined;
-                      return item?.fullLabel ?? "";
-                    }}
-                    formatter={(value) => [`Gasto: ${formatDOP(Number(value))}`, ""]}
+          <div
+            ref={chartContainerRef}
+            className="h-[320px] min-h-[320px] min-w-0 w-full"
+          >
+            {chartReady ? (
+              <ChartContainer
+                config={chartConfig}
+                className="aspect-auto h-full min-h-[320px] min-w-0 w-full"
+              >
+                <BarChart data={chartData} barCategoryGap="20%">
+                  <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="category"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={10}
+                    className="font-label text-[11px]"
                   />
-                }
-              />
-              <Bar dataKey="amount" radius={[8, 8, 0, 0]} maxBarSize={48}>
-                {chartData.map((entry) => (
-                  <Cell key={entry.category} fill={entry.fill} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ChartContainer>
+                  <YAxis hide domain={[0, "dataMax + 2000"]} />
+                  <ChartTooltip
+                    cursor={false}
+                    content={
+                      <ChartTooltipContent
+                        labelFormatter={(_, payload) => {
+                          const item = payload?.[0]?.payload as
+                            | { fullLabel?: string }
+                            | undefined;
+                          return item?.fullLabel ?? "";
+                        }}
+                        formatter={(value) => [
+                          `Gasto: ${formatDOP(Number(value))}`,
+                          "",
+                        ]}
+                      />
+                    }
+                  />
+                  <Bar dataKey="amount" radius={[8, 8, 0, 0]} maxBarSize={48}>
+                    {chartData.map((entry) => (
+                      <Cell key={entry.category} fill={entry.fill} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ChartContainer>
+            ) : (
+              <div className="h-full w-full rounded-md bg-muted/30" aria-hidden />
+            )}
+          </div>
         )}
       </CardContent>
     </DashboardCard>

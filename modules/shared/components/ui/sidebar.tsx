@@ -22,10 +22,23 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/modules/shared/components/ui/tooltip"
-import { PanelLeftIcon } from "lucide-react"
+import { PanelLeftIcon, Pin } from "lucide-react"
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
+const SIDEBAR_PINNED_COOKIE_NAME = "sidebar_pinned"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
+
+function readSidebarPinnedCookie(): boolean {
+  if (typeof document === "undefined") return false
+
+  return document.cookie
+    .split("; ")
+    .some((entry) => entry === `${SIDEBAR_PINNED_COOKIE_NAME}=true`)
+}
+
+function writeSidebarPinnedCookie(pinned: boolean) {
+  document.cookie = `${SIDEBAR_PINNED_COOKIE_NAME}=${pinned}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+}
 const SIDEBAR_WIDTH = "16rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
@@ -38,6 +51,8 @@ type SidebarContextProps = {
   openMobile: boolean
   setOpenMobile: (open: boolean) => void
   isMobile: boolean
+  pinned: boolean
+  togglePin: () => void
   toggleSidebar: () => void
 }
 
@@ -53,7 +68,7 @@ function useSidebar() {
 }
 
 function SidebarProvider({
-  defaultOpen = true,
+  defaultOpen = false,
   open: openProp,
   onOpenChange: setOpenProp,
   className,
@@ -67,12 +82,18 @@ function SidebarProvider({
 }) {
   const isMobile = useIsMobile()
   const [openMobile, setOpenMobile] = React.useState(false)
+  const [pinned, setPinned] = React.useState(false)
 
   const [_open, _setOpen] = React.useState(defaultOpen)
   const open = openProp ?? _open
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === "function" ? value(open) : value
+
+      if (pinned && !openState) {
+        return
+      }
+
       if (setOpenProp) {
         setOpenProp(openState)
       } else {
@@ -81,12 +102,50 @@ function SidebarProvider({
 
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
     },
-    [setOpenProp, open]
+    [setOpenProp, open, pinned]
   )
 
+  const togglePin = React.useCallback(() => {
+    const nextPinned = !pinned
+    const nextOpen = nextPinned
+
+    setPinned(nextPinned)
+    writeSidebarPinnedCookie(nextPinned)
+
+    if (setOpenProp) {
+      setOpenProp(nextOpen)
+    } else {
+      _setOpen(nextOpen)
+    }
+
+    document.cookie = `${SIDEBAR_COOKIE_NAME}=${nextOpen}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+  }, [pinned, setOpenProp])
+
   const toggleSidebar = React.useCallback(() => {
-    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open)
-  }, [isMobile, setOpen, setOpenMobile])
+    if (isMobile) {
+      return setOpenMobile((currentOpen) => !currentOpen)
+    }
+
+    if (pinned) {
+      return
+    }
+
+    return setOpen((currentOpen) => !currentOpen)
+  }, [isMobile, pinned, setOpen, setOpenMobile])
+
+  React.useEffect(() => {
+    const isPinned = readSidebarPinnedCookie()
+    setPinned(isPinned)
+
+    if (isPinned) {
+      if (setOpenProp) {
+        setOpenProp(true)
+      } else {
+        _setOpen(true)
+      }
+      document.cookie = `${SIDEBAR_COOKIE_NAME}=true; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+    }
+  }, [setOpenProp])
 
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -113,9 +172,21 @@ function SidebarProvider({
       isMobile,
       openMobile,
       setOpenMobile,
+      pinned,
+      togglePin,
       toggleSidebar,
     }),
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+    [
+      state,
+      open,
+      setOpen,
+      isMobile,
+      openMobile,
+      setOpenMobile,
+      pinned,
+      togglePin,
+      toggleSidebar,
+    ]
   )
 
   return (
@@ -246,7 +317,7 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar()
+  const { pinned, toggleSidebar } = useSidebar()
 
   return (
     <Button
@@ -255,6 +326,7 @@ function SidebarTrigger({
       variant="ghost"
       size="icon-sm"
       className={cn(className)}
+      disabled={pinned}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
@@ -262,13 +334,60 @@ function SidebarTrigger({
       {...props}
     >
       <PanelLeftIcon />
-      <span className="sr-only">Toggle Sidebar</span>
+      <span className="sr-only">
+        {pinned ? "Menú fijado abierto" : "Alternar menú"}
+      </span>
     </Button>
   )
 }
 
+function SidebarPinButton({
+  className,
+  ...props
+}: React.ComponentProps<typeof Button>) {
+  const { open, pinned, togglePin } = useSidebar()
+
+  if (!open) {
+    return null
+  }
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          data-sidebar="pin"
+          data-slot="sidebar-pin"
+          type="button"
+          variant="ghost"
+          size="icon-sm"
+          aria-pressed={pinned}
+          className={cn(
+            "shrink-0 bg-transparent text-sidebar-foreground/90 ring-sidebar-ring",
+            "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+            "dark:hover:bg-sidebar-accent dark:hover:text-sidebar-accent-foreground",
+            "focus-visible:ring-2 focus-visible:ring-sidebar-ring",
+            pinned &&
+              "bg-sidebar-accent text-primary-400 hover:bg-sidebar-accent hover:text-primary-300",
+            className
+          )}
+          onClick={togglePin}
+          {...props}
+        >
+          <Pin className={cn("size-4", pinned && "fill-current")} />
+          <span className="sr-only">
+            {pinned ? "Desfijar menú" : "Fijar menú abierto"}
+          </span>
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent side="right" align="center">
+        {pinned ? "Desfijar menú" : "Fijar menú abierto"}
+      </TooltipContent>
+    </Tooltip>
+  )
+}
+
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
-  const { toggleSidebar } = useSidebar()
+  const { pinned, toggleSidebar } = useSidebar()
 
   return (
     <button
@@ -276,7 +395,9 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
       data-slot="sidebar-rail"
       aria-label="Toggle Sidebar"
       tabIndex={-1}
-      onClick={toggleSidebar}
+      onClick={() => {
+        if (!pinned) toggleSidebar()
+      }}
       title="Toggle Sidebar"
       className={cn(
         "absolute inset-y-0 z-20 hidden w-4 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:inset-s-1/2 after:w-0.5 hover:after:bg-sidebar-border sm:flex ltr:-translate-x-1/2 rtl:-translate-x-1/2",
@@ -684,6 +805,7 @@ export {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  SidebarPinButton,
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,

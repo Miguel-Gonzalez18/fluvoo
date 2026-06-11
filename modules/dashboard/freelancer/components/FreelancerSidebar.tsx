@@ -16,6 +16,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarPinButton,
   useSidebar,
 } from "@/modules/shared/components/ui/sidebar";
 import Image from "next/image";
@@ -30,13 +31,26 @@ export function FreelancerSidebar() {
 
   return (
     <Sidebar variant="floating" collapsible="icon">
-      <SidebarHeader className="border-b border-gray-500 px-4 py-3">
-        {open ? (
-          <FluvooLogo variant="white" />
-        ) : (
-          <Image src="/favicon.ico" alt="Fluvoo" width={24} height={24} className="size-6" />
-        )}
-        {open && <span className="text-xs text-neutral-400">Freelancer</span>}
+      <SidebarHeader className="border-b border-gray-500 px-3 py-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0 flex-1">
+            {open ? (
+              <FluvooLogo variant="white" />
+            ) : (
+              <Image
+                src="/favicon.ico"
+                alt="Fluvoo"
+                width={24}
+                height={24}
+                className="size-6 object-contain"
+              />
+            )}
+            {open && (
+              <span className="mt-1 block text-xs text-neutral-400">Freelancer</span>
+            )}
+          </div>
+          <SidebarPinButton />
+        </div>
       </SidebarHeader>
 
       <SidebarContent>

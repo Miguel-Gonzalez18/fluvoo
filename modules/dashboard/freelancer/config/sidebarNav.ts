@@ -15,7 +15,7 @@ export interface NavItem {
 }
 
 export const navItems: NavItem[] = [
-  { label: "Inicio", href: "/freelancer/home", icon: LayoutDashboard },
+  { label: "Inicio", href: "/freelancer", icon: LayoutDashboard },
   { label: "Presupuesto", href: "/freelancer/budget", icon: Wallet },
   { label: "Objetivos y Ahorros", href: "/freelancer/goals", icon: PiggyBank },
   { label: "Transacciones", href: "/freelancer/transactions", icon: ArrowLeftRight },

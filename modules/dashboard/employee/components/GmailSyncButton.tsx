@@ -64,7 +64,7 @@ export function GmailSyncButton({ status }: GmailSyncButtonProps) {
       });
     }
 
-    router.replace("/employee/home");
+    router.replace("/employee");
   }, [searchParams, router]);
 
   const handleConnect = useCallback(async () => {

@@ -55,6 +55,7 @@ export {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  SidebarPinButton,
   SidebarProvider,
   SidebarRail,
   SidebarSeparator,

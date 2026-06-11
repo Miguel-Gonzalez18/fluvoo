@@ -614,6 +614,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_ai_insights: {
+        Row: {
+          context_hash: string
+          diagnosis: string
+          generated_at: string
+          source: string
+          tips: Json
+          trigger_event: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          context_hash: string
+          diagnosis: string
+          generated_at?: string
+          source: string
+          tips?: Json
+          trigger_event: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          context_hash?: string
+          diagnosis?: string
+          generated_at?: string
+          source?: string
+          tips?: Json
+          trigger_event?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           annual_deductible_costs: number | null

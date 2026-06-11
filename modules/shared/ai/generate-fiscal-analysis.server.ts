@@ -11,6 +11,11 @@ import {
   type FiscalTipIconKey,
 } from "@/modules/shared/ai/fiscal-analysis.schema";
 import {
+  getDevFiscalAnalysisCache,
+  isGeminiQuotaError,
+  setDevFiscalAnalysisCache,
+} from "@/modules/shared/ai/fiscal-analysis.dev-cache.server";
+import {
   createGeminiLanguageModel,
   resolveGeminiApiKey,
 } from "@/modules/shared/ai/gemini.client.server";
@@ -42,16 +47,33 @@ function mapTipsToUi(
     }));
 }
 
+export interface GenerateFiscalAnalysisOptions {
+  /** In development, reuse the last result for this key to avoid Gemini quota spam. */
+  devCacheKey?: string;
+}
+
 export async function generateFiscalAnalysis(
-  context: FiscalAnalysisContext
+  context: FiscalAnalysisContext,
+  options?: GenerateFiscalAnalysisOptions
 ): Promise<FiscalAnalysisResult> {
+  if (options?.devCacheKey) {
+    const cached = getDevFiscalAnalysisCache(options.devCacheKey);
+    if (cached) return cached;
+  }
+
   if (!resolveGeminiApiKey()) {
     const fallback = buildFallbackFiscalAnalysis(context);
-    return {
+    const result = {
       diagnosis: fallback.diagnosis,
       tips: mapTipsToUi(fallback.tips),
-      source: "fallback",
+      source: "fallback" as const,
     };
+
+    if (options?.devCacheKey) {
+      setDevFiscalAnalysisCache(options.devCacheKey, result);
+    }
+
+    return result;
   }
 
   try {
@@ -66,21 +88,35 @@ export async function generateFiscalAnalysis(
       temperature: 0.4,
     });
 
-    return {
+    const result = {
       diagnosis: object.diagnosis,
       tips: mapTipsToUi(object.tips),
-      source: "ai",
+      source: "ai" as const,
     };
+
+    if (options?.devCacheKey) {
+      setDevFiscalAnalysisCache(options.devCacheKey, result);
+    }
+
+    return result;
   } catch (error) {
     console.error(
       "[generateFiscalAnalysis] Gemini failed:",
       error instanceof Error ? error.message : error
     );
     const fallback = buildFallbackFiscalAnalysis(context);
-    return {
+    const result = {
       diagnosis: fallback.diagnosis,
       tips: mapTipsToUi(fallback.tips),
-      source: "fallback",
+      source: "fallback" as const,
     };
+
+    if (options?.devCacheKey) {
+      setDevFiscalAnalysisCache(options.devCacheKey, result, {
+        shortLived: isGeminiQuotaError(error),
+      });
+    }
+
+    return result;
   }
 }

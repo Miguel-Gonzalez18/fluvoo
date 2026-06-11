@@ -14,6 +14,7 @@ import { getGmailHeader } from "@/modules/gmail/lib/decode-message.server";
 
 import { parseBankEmailMessage } from "@/modules/gmail/lib/parse-transaction.server";
 
+import { refreshFiscalInsightAfterDataChange } from "@/modules/dashboard/employee/lib/fiscal-insight.server";
 import { classifyImportedTransactionsWithAi } from "@/modules/gmail/lib/classify-imported-transactions-with-ai.server";
 import { resolveDopAmount } from "@/modules/gmail/lib/resolve-dop-amount";
 import { classifyExpenseCategory } from "@/modules/shared/lib/classify-expense-category";
@@ -606,7 +607,16 @@ export async function syncGmailTransactions(
 
     });
 
-
+    if (result.imported > 0 || (result.aiUpdated ?? 0) > 0) {
+      try {
+        await refreshFiscalInsightAfterDataChange(userId, "gmail_sync");
+      } catch (insightError) {
+        console.error(
+          "[syncGmailTransactions] Fiscal insight refresh failed:",
+          insightError
+        );
+      }
+    }
 
     return { ...result, success: true };
 

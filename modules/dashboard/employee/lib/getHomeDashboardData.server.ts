@@ -23,7 +23,7 @@ import { daysBetween } from "@/modules/onboarding/lib/schemas/date-helpers";
 import { getUsdToDopRate } from "@/modules/gmail/lib/exchange-rate.server";
 import type { FinancialObligationsSnapshot } from "./financial-obligations.types";
 import { buildFiscalAnalysisContext } from "./buildFiscalAnalysisContext.server";
-import { generateFiscalAnalysis } from "@/modules/shared/ai/generate-fiscal-analysis.server";
+import { ensureFiscalAnalysisStored } from "@/modules/dashboard/employee/lib/fiscal-insight.server";
 import { getActiveTaxParameters } from "@/modules/onboarding/supabase/tax-parameters";
 
 export const RECENT_TRANSACTIONS_LIMIT = 15;
@@ -344,7 +344,11 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
       taxParams,
     });
 
-    const fiscalAnalysis = await generateFiscalAnalysis(fiscalAnalysisContext);
+    const fiscalAnalysis = await ensureFiscalAnalysisStored(
+      user.id,
+      fiscalAnalysisContext,
+      { triggerEvent: "dashboard_load" }
+    );
 
     const baseNetIncome = {
       value: netIncomeValue,
