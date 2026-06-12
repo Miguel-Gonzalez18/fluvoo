@@ -25,6 +25,7 @@ export function TransactionsSummaryCards({
       value: String(summary.expenses.value),
       subtext: summary.expenses.subtext,
       trend: summary.expenses.trend,
+      breakdown: summary.expenses.breakdown,
       icon: TrendingDown,
     },
     {

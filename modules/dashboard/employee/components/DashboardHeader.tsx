@@ -1,6 +1,10 @@
+"use client";
+
 import { Suspense } from "react";
+import { usePathname } from "next/navigation";
 import { GmailSyncButton } from "@/modules/dashboard/employee/components/GmailSyncButton";
 import { NotificationBell } from "@/modules/notifications/components/NotificationBell";
+import { resolveEmployeePageTitle } from "@/modules/dashboard/employee/config/employeePageTitles";
 import {
   formatLongDate,
   getInitials,
@@ -22,8 +26,11 @@ export function DashboardHeader({
   gmailStatus,
   className,
 }: DashboardHeaderProps) {
+  const pathname = usePathname();
+  const pageTitle = resolveEmployeePageTitle(pathname);
   const greeting = getTimeGreeting();
   const todayLabel = formatLongDate();
+  const heading = pageTitle ?? `${greeting}, ${name}`;
 
   return (
     <div
@@ -34,7 +41,7 @@ export function DashboardHeader({
     >
       <div className="space-y-1">
         <h1 className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-          {greeting}, {name}
+          {heading}
         </h1>
         <p className="text-sm text-muted-foreground">{todayLabel}</p>
       </div>

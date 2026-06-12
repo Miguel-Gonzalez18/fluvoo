@@ -12,6 +12,8 @@ export interface KpiStat {
   subtext: string;
   trend: KpiTrend;
   icon?: LucideIcon;
+  /** Optional expense split shown below subtext (transactions page). */
+  breakdown?: Array<{ label: string; amount: number }>;
 }
 
 export interface CategoryExpense {

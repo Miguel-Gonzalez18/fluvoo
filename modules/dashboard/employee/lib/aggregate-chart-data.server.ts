@@ -187,9 +187,11 @@ function buildMarginBuckets(
     const bucketDays =
       Math.round((bucket.end.getTime() - bucket.start.getTime()) / 86_400_000) + 1;
     const txExpenses = sumExpensesInBucket(expenseRows, bucket);
-    const obligationExpenses = Math.round(dailyObligations * bucketDays * 100) / 100;
+    const obligationExpenses =
+      Math.round(dailyObligations * bucketDays * 100) / 100;
     const expenses = Math.round((txExpenses + obligationExpenses) * 100) / 100;
     const bucketIncome = Math.round(dailyIncome * bucketDays * 100) / 100;
+    const marginAmount = Math.round((bucketIncome - expenses) * 100) / 100;
     const marginPct =
       bucketIncome > 0
         ? Math.round(((bucketIncome - expenses) / bucketIncome) * 100)
@@ -199,6 +201,8 @@ function buildMarginBuckets(
       label: bucket.label,
       expenses,
       marginPct,
+      proratedIncome: bucketIncome,
+      marginAmount,
     };
   });
 }

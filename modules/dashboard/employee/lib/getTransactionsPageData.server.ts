@@ -40,7 +40,6 @@ import {
   EMPTY_COMMITMENTS,
 } from "@/modules/dashboard/employee/lib/build-transactions-commitments.server";
 import { getEmployeeDisplayName } from "@/modules/dashboard/employee/lib/getEmployeeDisplayName.server";
-import { formatDOP } from "@/modules/dashboard/employee/lib/formatCurrency";
 import { getMonthRange } from "./month-bounds";
 
 const EMPTY_TRANSACTIONS_PAGE: TransactionsPageData = {
@@ -320,8 +319,10 @@ export async function getTransactionsPageData(
     });
 
     if (thisMonthObligations > 0) {
-      const variableExpenses = thisMonthAggregate.total;
-      summary.expenses.subtext = `${formatDOP(thisMonthExpenses)} total · ${formatDOP(variableExpenses)} variable · ${formatDOP(thisMonthObligations)} compromisos`;
+      summary.expenses.breakdown = [
+        { label: "Transacciones", amount: thisMonthAggregate.total },
+        { label: "Compromisos", amount: thisMonthObligations },
+      ];
     }
 
     const displayName = await getEmployeeDisplayName();

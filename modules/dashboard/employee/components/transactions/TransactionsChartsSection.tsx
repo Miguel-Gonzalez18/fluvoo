@@ -54,6 +54,7 @@ export function TransactionsChartsSection({
         <ExpenseMarginBarChart
           buckets={activeData.marginBuckets}
           periodLabel={activeData.periodLabel}
+          periodName={CHART_PERIOD_LABELS[period]}
           className="lg:col-span-2"
         />
       </div>

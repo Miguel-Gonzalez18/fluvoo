@@ -54,6 +54,16 @@ export function KpiStatCard({ stat, className }: KpiStatCardProps) {
             {Icon ? <Icon className="size-4 shrink-0" /> : null}
             <span>{stat.subtext}</span>
           </p>
+          {stat.breakdown && stat.breakdown.length > 0 ? (
+            <ul className="space-y-0.5 text-xs text-muted-foreground">
+              {stat.breakdown.map((item) => (
+                <li key={item.label} className="flex items-center justify-between gap-2">
+                  <span>{item.label}</span>
+                  <span className="tabular-nums font-medium">{formatDOP(item.amount)}</span>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       </CardContent>
     </DashboardCard>

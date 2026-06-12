@@ -116,12 +116,15 @@ export interface TransactionsSummaryKpi {
   value: number;
   subtext: string;
   trend: KpiTrend;
+  breakdown?: Array<{ label: string; amount: number }>;
 }
 
 export interface ExpenseMarginBucket {
   label: string;
   expenses: number;
   marginPct: number;
+  proratedIncome: number;
+  marginAmount: number;
 }
 
 export interface ChartPeriodData {
