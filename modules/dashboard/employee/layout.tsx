@@ -10,6 +10,7 @@ import { EmployeeSidebar } from "@/modules/dashboard/employee/components/Employe
 import { DashboardHeader } from "@/modules/dashboard/employee/components/DashboardHeader";
 import type { GmailStatus } from "@/modules/dashboard/employee/types/dashboard.types";
 import { DashboardThemeProvider } from "@/modules/dashboard/shared/DashboardThemeProvider";
+import { ServiceWorkerRegister } from "@/modules/shared/components/ServiceWorkerRegister";
 
 interface EmployeeLayoutProps {
   children: React.ReactNode;
@@ -24,6 +25,7 @@ export default function EmployeeLayout({
 }: Readonly<EmployeeLayoutProps>) {
   return (
     <DashboardThemeProvider>
+      <ServiceWorkerRegister />
       <TooltipProvider>
         <SidebarProvider>
           <EmployeeSidebar />

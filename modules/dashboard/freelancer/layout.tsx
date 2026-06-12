@@ -4,10 +4,12 @@ import { TooltipProvider } from "@/modules/shared/components/ui/tooltip";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/modules/shared/components/ui/sidebar";
 import { FreelancerSidebar } from "@/modules/dashboard/freelancer/components/FreelancerSidebar";
 import { DashboardThemeProvider } from "@/modules/dashboard/shared/DashboardThemeProvider";
+import { ServiceWorkerRegister } from "@/modules/shared/components/ServiceWorkerRegister";
 
 export default function FreelanceLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <DashboardThemeProvider>
+    <ServiceWorkerRegister />
     <TooltipProvider>
       <SidebarProvider>
         <FreelancerSidebar />

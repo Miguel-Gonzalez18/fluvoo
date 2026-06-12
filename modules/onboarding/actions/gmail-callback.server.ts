@@ -68,6 +68,7 @@ export async function handleGmailOAuthCallback(
       success: false,
       processed: 0,
       imported: 0,
+      importedTransactionIds: [],
       skipped: 0,
       failed: 0,
     };

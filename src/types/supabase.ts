@@ -647,6 +647,96 @@ export type Database = {
         }
         Relationships: []
       }
+      user_notification_preferences: {
+        Row: {
+          created_at: string
+          email_enabled: boolean
+          min_amount_dop: number
+          push_enabled: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_enabled?: boolean
+          min_amount_dop?: number
+          push_enabled?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_enabled?: boolean
+          min_amount_dop?: number
+          push_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_notifications: {
+        Row: {
+          created_at: string
+          email_sent_at: string | null
+          id: string
+          payload: Json
+          push_sent_at: string | null
+          read_at: string | null
+          type: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_sent_at?: string | null
+          id?: string
+          payload?: Json
+          push_sent_at?: string | null
+          read_at?: string | null
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_sent_at?: string | null
+          id?: string
+          payload?: Json
+          push_sent_at?: string | null
+          read_at?: string | null
+          type?: Database["public"]["Enums"]["notification_type"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           annual_deductible_costs: number | null
@@ -805,6 +895,7 @@ export type Database = {
       installment_status: "active" | "paid_off"
       loan_status: "active" | "paid_off" | "refinanced"
       loan_type: "personal" | "mortgage" | "vehicle" | "business"
+      notification_type: "expense_detected"
       obligation_payment_frequency: "monthly" | "weekly" | "biweekly" | "daily"
       obligation_status: "active" | "inactive"
       obligation_type:
@@ -986,6 +1077,7 @@ export const Constants = {
       installment_status: ["active", "paid_off"],
       loan_status: ["active", "paid_off", "refinanced"],
       loan_type: ["personal", "mortgage", "vehicle", "business"],
+      notification_type: ["expense_detected"],
       obligation_payment_frequency: ["monthly", "weekly", "biweekly", "daily"],
       obligation_status: ["active", "inactive"],
       obligation_type: [

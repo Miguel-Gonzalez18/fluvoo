@@ -322,6 +322,8 @@ export async function syncGmailTransactions(
 
     imported: 0,
 
+    importedTransactionIds: [],
+
     skipped: 0,
 
     failed: 0,
@@ -546,6 +548,8 @@ export async function syncGmailTransactions(
         if (insertedId) {
 
           importedIds.push(insertedId);
+
+          result.importedTransactionIds.push(insertedId);
 
         }
 

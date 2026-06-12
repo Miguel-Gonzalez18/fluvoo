@@ -58,6 +58,7 @@ export interface GmailSyncResult {
   success: boolean;
   processed: number;
   imported: number;
+  importedTransactionIds: string[];
   skipped: number;
   failed: number;
   skippedMarketing?: number;

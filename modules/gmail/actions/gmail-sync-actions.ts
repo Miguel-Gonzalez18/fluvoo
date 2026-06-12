@@ -22,6 +22,7 @@ export async function triggerGmailSync(
       success: false,
       processed: 0,
       imported: 0,
+      importedTransactionIds: [],
       skipped: 0,
       failed: 0,
       error: "Not authenticated",
