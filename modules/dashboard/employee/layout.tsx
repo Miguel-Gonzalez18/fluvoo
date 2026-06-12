@@ -7,6 +7,7 @@ import {
   SidebarTrigger,
 } from "@/modules/shared/components/ui/sidebar";
 import { EmployeeSidebar } from "@/modules/dashboard/employee/components/EmployeeSidebar";
+import { DashboardFab } from "@/modules/dashboard/employee/components/DashboardFab";
 import { DashboardHeader } from "@/modules/dashboard/employee/components/DashboardHeader";
 import type { GmailStatus } from "@/modules/dashboard/employee/types/dashboard.types";
 import { DashboardThemeProvider } from "@/modules/dashboard/shared/DashboardThemeProvider";
@@ -41,6 +42,7 @@ export default function EmployeeLayout({
               </div>
             </header>
             <main className="flex-1 p-2 sm:p-4">{children}</main>
+            <DashboardFab />
           </SidebarInset>
         </SidebarProvider>
       </TooltipProvider>

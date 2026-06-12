@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { Bell } from "lucide-react";
 import { GmailSyncButton } from "@/modules/dashboard/employee/components/GmailSyncButton";
+import { NotificationBell } from "@/modules/notifications/components/NotificationBell";
 import {
   formatLongDate,
   getInitials,
@@ -9,7 +9,6 @@ import { getTimeGreeting } from "@/modules/dashboard/employee/lib/greeting";
 import type { GmailStatus } from "@/modules/dashboard/employee/types/dashboard.types";
 import { ThemeToggle } from "@/modules/shared/components/ThemeToggle";
 import { Avatar, AvatarFallback } from "@/modules/shared/components/ui/avatar";
-import { Button } from "@/modules/shared/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface DashboardHeaderProps {
@@ -47,15 +46,9 @@ export function DashboardHeader({
 
         <ThemeToggle />
 
-        <Button
-          variant="ghost"
-          size="icon"
-          className="relative"
-          aria-label="Notificaciones"
-        >
-          <Bell className="size-5" />
-          <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-destructive" />
-        </Button>
+        <Suspense fallback={null}>
+          <NotificationBell />
+        </Suspense>
 
         <Avatar className="size-9 border border-border">
           <AvatarFallback className="bg-primary-100 text-xs font-semibold text-primary-800">

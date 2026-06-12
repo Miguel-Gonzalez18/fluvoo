@@ -4,7 +4,6 @@ import {
   TrendingUp,
   Wallet,
 } from "lucide-react";
-import { DashboardFab } from "@/modules/dashboard/employee/components/home/DashboardFab";
 import { ExpenseCategoryChart } from "@/modules/dashboard/employee/components/home/ExpenseCategoryChart";
 import { FiscalAnalysisCard } from "@/modules/dashboard/employee/components/home/FiscalAnalysisCard";
 import { KpiStatCard } from "@/modules/dashboard/employee/components/home/KpiStatCard";
@@ -74,8 +73,6 @@ export async function EmployeeHomePage() {
         transactions={data.recentTransactions}
         gmailConnected={data.gmailStatus.connected}
       />
-
-      <DashboardFab />
     </div>
   );
 }

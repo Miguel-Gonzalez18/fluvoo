@@ -25,6 +25,10 @@ import type { FinancialObligationsSnapshot } from "./financial-obligations.types
 import { buildFiscalAnalysisContext } from "./buildFiscalAnalysisContext.server";
 import { ensureFiscalAnalysisStored } from "@/modules/dashboard/employee/lib/fiscal-insight.server";
 import { getActiveTaxParameters } from "@/modules/onboarding/supabase/tax-parameters";
+import {
+  buildExpensesSubtext,
+  buildMarginMeta,
+} from "@/modules/dashboard/employee/lib/getMonthlyFinancialSummary.server";
 
 export const RECENT_TRANSACTIONS_LIMIT = 15;
 
@@ -70,82 +74,6 @@ const EMPTY_DASHBOARD_DATA: HomeDashboardData = {
     source: "fallback",
   },
 };
-
-function buildExpensesSubtext(
-  thisMonthTotal: number,
-  lastMonthTotal: number,
-  transactionCount: number
-): { subtext: string; trend: "positive" | "negative" | "neutral" } {
-  if (transactionCount === 0) {
-    return {
-      subtext: "Obligaciones registradas este mes",
-      trend: thisMonthTotal > 0 ? "negative" : "neutral",
-    };
-  }
-
-  if (lastMonthTotal > 0) {
-    const changePct = Math.round(
-      ((thisMonthTotal - lastMonthTotal) / lastMonthTotal) * 100
-    );
-    if (changePct > 0) {
-      return {
-        subtext: `+${changePct}% vs mes pasado`,
-        trend: "negative",
-      };
-    }
-    if (changePct < 0) {
-      return {
-        subtext: `${changePct}% vs mes pasado`,
-        trend: "positive",
-      };
-    }
-  }
-
-  return {
-    subtext: `${transactionCount} transacción${transactionCount === 1 ? "" : "es"} + obligaciones`,
-    trend: "neutral",
-  };
-}
-
-function buildMarginMeta(
-  marginValue: number,
-  netIncomeValue: number
-): { subtext: string; trend: "positive" | "negative" | "neutral" } {
-  if (netIncomeValue <= 0) {
-    return {
-      subtext: "Configura tu ingreso mensual",
-      trend: "neutral",
-    };
-  }
-
-  const ratio = marginValue / netIncomeValue;
-
-  if (marginValue <= 0) {
-    return {
-      subtext: "Alerta: gastos iguales o mayores al ingreso",
-      trend: "negative",
-    };
-  }
-
-  if (ratio < 0.1) {
-    return {
-      subtext: "Alerta: margen muy corto",
-      trend: "negative",
-    };
-  }
-
-  if (ratio < 0.25) {
-    return {
-      subtext: "Margen moderado, vigila tus pagos",
-      trend: "neutral",
-    };
-  }
-
-  return {
-    subtext: "Margen amplio después de gastos",
-    trend: "positive",
-  };
-}
 
 export async function getHomeDashboardData(): Promise<HomeDashboardData> {
   try {

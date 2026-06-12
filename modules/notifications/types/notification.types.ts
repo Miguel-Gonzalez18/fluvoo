@@ -35,3 +35,16 @@ export interface NotifyNewExpensesResult {
   pushSent: boolean;
   skippedReason?: string;
 }
+
+export interface UserNotificationItem {
+  id: string;
+  type: "expense_detected";
+  payload: ExpenseNotificationPayload;
+  readAt: string | null;
+  createdAt: string;
+}
+
+export interface UserNotificationsInbox {
+  notifications: UserNotificationItem[];
+  unreadCount: number;
+}

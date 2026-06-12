@@ -39,6 +39,23 @@ export function formatTransactionDate(isoDate: string): string {
   return shortDateFormatter.format(date);
 }
 
+const dayMonthFormatter = new Intl.DateTimeFormat("es-DO", {
+  timeZone: APP_TIMEZONE,
+  day: "numeric",
+  month: "short",
+});
+
+export function formatTransactionDateParts(isoDate: string): {
+  dayMonth: string;
+  time: string;
+} {
+  const date = new Date(isoDate);
+  return {
+    dayMonth: dayMonthFormatter.format(date),
+    time: timeFormatter.format(date),
+  };
+}
+
 export function formatRelativeTime(isoDate: string | null): string {
   if (!isoDate) {
     return "Sin sincronizar aún";

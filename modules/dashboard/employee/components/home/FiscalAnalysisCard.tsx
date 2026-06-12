@@ -128,7 +128,7 @@ export function FiscalAnalysisCard({
                       visible={activeSegmentIndex === titleSegmentIndex}
                     />
                   </p>
-                  <p className="min-h-8 text-xs leading-relaxed text-black">
+                  <p className="min-h-8 text-xs leading-relaxed text-black dark:text-white">
                     {descriptionText}
                     <TypewriterCursor
                       visible={activeSegmentIndex === descriptionSegmentIndex}
