@@ -79,7 +79,7 @@ export function CreditCardsSection({
           {data.creditCards.map((card) => (
             <EntityCard
               key={card.id}
-              title={card.cardLabel || getIssuerLabel(card.issuerName)}
+              title={card.cardLabel}
               subtitle={`${getIssuerLabel(card.issuerName)} · ${getCardPaymentLabel(card)} · ${card.installments.length} cuota(s)`}
               onEdit={() => onEdit(card)}
               onDelete={() => onDelete(card.id)}

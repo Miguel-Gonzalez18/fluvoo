@@ -66,7 +66,7 @@ export function TransactionsTableToolbar({
       params.delete("page");
 
       startTransition(() => {
-        router.push(`?${params.toString()}`);
+        router.replace(`?${params.toString()}`, { scroll: false });
       });
     },
     [router, searchParams, startTransition]

@@ -1,7 +1,8 @@
+import type { TransactionListItem } from "@/modules/dashboard/employee/types/transactions.types";
 import { mapTransactionToRecent } from "@/modules/dashboard/employee/lib/mapTransactionToRecent";
 import { formatTransactionDateParts } from "@/modules/dashboard/employee/lib/formatTransactionDate";
 import { resolveAccountLabel } from "@/modules/dashboard/employee/lib/resolve-account-label";
-import type { TransactionListItem } from "@/modules/dashboard/employee/types/transactions.types";
+import type { CategoryColorMap } from "@/modules/shared/lib/expense-category-colors.types";
 import {
   INCOME_TRANSACTION_TYPES,
   type ExpenseCategorySlug,
@@ -26,19 +27,26 @@ type TransactionRow = Pick<
 
 interface MapTransactionOptions {
   cardLabelsByBank?: Map<string, string>;
+  categoryColorMap?: CategoryColorMap;
 }
 
 export function mapTransactionToListItem(
   row: TransactionRow,
   options: MapTransactionOptions = {}
 ): TransactionListItem {
-  const recent = mapTransactionToRecent(row);
+  const recent = mapTransactionToRecent(row, {
+    categoryColorMap: options.categoryColorMap,
+  });
   const bankKey = row.bank_name?.trim().toLowerCase() ?? "";
   const cardLabel = options.cardLabelsByBank?.get(bankKey) ?? null;
 
   const isIncome = INCOME_TRANSACTION_TYPES.includes(
     row.transaction_type as (typeof INCOME_TRANSACTION_TYPES)[number]
   );
+
+  const categorySlug = isIncome
+    ? null
+    : ((row.expense_category as ExpenseCategorySlug | null) ?? null);
 
   return {
     ...recent,
@@ -49,9 +57,8 @@ export function mapTransactionToListItem(
       rawSubject: row.raw_subject,
       cardLabel,
     }),
-    categorySlug: isIncome
-      ? null
-      : ((row.expense_category as ExpenseCategorySlug | null) ?? null),
+    categorySlug,
+    categoryColor: recent.categoryColor,
     transactionDate: row.transaction_date,
     dateParts: formatTransactionDateParts(row.transaction_date),
   };

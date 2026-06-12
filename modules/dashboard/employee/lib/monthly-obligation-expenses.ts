@@ -1,12 +1,11 @@
-import {
-  getCategoryBySlug,
-  type ExpenseCategorySlug,
-} from "@/modules/shared/config/expense-categories";
+import type { ExpenseCategorySlug } from "@/modules/shared/config/expense-categories";
 import { resolveExpenseCategory } from "@/modules/shared/lib/resolve-expense-category";
 import type { CategoryExpense } from "@/modules/dashboard/employee/types/dashboard.types";
 import type { FinancialObligationsSnapshot } from "./financial-obligations.types";
 import { isObligationActiveForMonth } from "./computeNextDueDate";
 import { resolveCardPaymentTotalInDop } from "./resolve-card-payment-total";
+import { buildCategoryExpense } from "@/modules/shared/lib/build-category-expense";
+import type { CategoryColorMap } from "@/modules/shared/lib/expense-category-colors.types";
 
 function addCategoryAmount(
   totals: Map<ExpenseCategorySlug, number>,
@@ -15,21 +14,6 @@ function addCategoryAmount(
 ) {
   if (amount <= 0) return;
   totals.set(slug, (totals.get(slug) ?? 0) + amount);
-}
-
-function toCategoryExpense(
-  slug: ExpenseCategorySlug,
-  amount: number
-): CategoryExpense {
-  const definition = getCategoryBySlug(slug);
-  return {
-    slug,
-    category: definition.shortLabel,
-    fullLabel: definition.label,
-    amount: Math.round(amount * 100) / 100,
-    budget: 0,
-    colorIndex: definition.colorIndex,
-  };
 }
 
 export function sumMonthlyObligationsForMonth(
@@ -77,6 +61,7 @@ export function sumMonthlyObligationsForMonth(
 
 export function buildMonthlyObligationCategoryExpenses(
   snapshot: FinancialObligationsSnapshot,
+  colorMap: CategoryColorMap,
   referenceDate: Date = new Date(),
   usdToDopRate: number = 1
 ): CategoryExpense[] {
@@ -127,11 +112,12 @@ export function buildMonthlyObligationCategoryExpenses(
   }
 
   return Array.from(totals.entries()).map(([slug, amount]) =>
-    toCategoryExpense(slug, amount)
+    buildCategoryExpense(slug, amount, colorMap)
   );
 }
 
 export function mergeCategoryExpenses(
+  colorMap: CategoryColorMap,
   ...groups: CategoryExpense[][]
 ): CategoryExpense[] {
   const totals = new Map<ExpenseCategorySlug, number>();
@@ -145,5 +131,5 @@ export function mergeCategoryExpenses(
   return Array.from(totals.entries())
     .filter(([, amount]) => amount > 0)
     .sort((a, b) => b[1] - a[1])
-    .map(([slug, amount]) => toCategoryExpense(slug, amount));
+    .map(([slug, amount]) => buildCategoryExpense(slug, amount, colorMap));
 }

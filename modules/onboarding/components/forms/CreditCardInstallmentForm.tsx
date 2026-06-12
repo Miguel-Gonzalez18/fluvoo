@@ -102,6 +102,23 @@ export function CreditCardInstallmentForm({
           <FormFieldError message={errors.originalAmount?.message} />
         </div>
         <div className="space-y-2">
+          <Label className="text-xs">Monto adeudado (RD$)</Label>
+          <Input
+            type="number"
+            step="0.01"
+            min={0}
+            placeholder="0"
+            {...register("amountOwed", {
+              setValueAs: (value) => {
+                if (value === "" || value === null || value === undefined) return Number.NaN;
+                const num = typeof value === "number" ? value : Number(value);
+                return Number.isNaN(num) ? Number.NaN : num;
+              },
+            })}
+          />
+          <FormFieldError message={errors.amountOwed?.message} />
+        </div>
+        <div className="space-y-2">
           <Label className="text-xs">Cuota mensual (RD$)</Label>
           <Input
             type="number"

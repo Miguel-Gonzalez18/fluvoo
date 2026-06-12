@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import { Manrope, Space_Grotesk, Syne } from "next/font/google";
-import { GoogleTagManager } from '@next/third-parties/google'
+import { GoogleTagManager } from "@next/third-parties/google";
 import Script from "next/script";
 import { ClearGlobalDarkClass } from "@/modules/shared/components/ClearGlobalDarkClass";
 import { CookieConsentGTM } from "@/modules/shared/components/cookie-consent-gtm";
 import "./globals.css";
 import { Toaster } from "sileo";
-
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -29,18 +28,19 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: {
     default: "Fluvoo | Claridad financiera para cada Dominicano",
-    template: "%s | Fluvoo"
+    template: "%s | Fluvoo",
   },
-  description: "Fluvoo te ayuda a entender y gestionar tu dinero con claridad y control. La mejor herramienta financiera para dominicanos.",
+  description:
+    "Fluvoo te ayuda a entender y gestionar tu dinero con claridad y control. La mejor herramienta financiera para dominicanos.",
   keywords: [
     "finanzas personales",
-    "gestión de dinero", 
+    "gestión de dinero",
     "finanzas República Dominicana",
     "control de gastos",
     "ahorro",
     "inversión",
     "presupuesto",
-    "app financiera"
+    "app financiera",
   ],
   authors: [{ name: "Fluvoo Team" }],
   creator: "Fluvoo",
@@ -50,31 +50,33 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://fluvoo.com'),
+  metadataBase: new URL("https://fluvoo.com"),
   alternates: {
-    canonical: '/',
+    canonical: "/",
   },
   openGraph: {
-    type: 'website',
-    locale: 'es_DO',
-    url: 'https://fluvoo.com',
-    title: 'Fluvoo | Claridad financiera para cada Dominicano',
-    description: 'Fluvoo te ayuda a entender y gestionar tu dinero con claridad y control. La mejor herramienta financiera para dominicanos.',
-    siteName: 'Fluvoo',
+    type: "website",
+    locale: "es_DO",
+    url: "https://fluvoo.com",
+    title: "Fluvoo | Claridad financiera para cada Dominicano",
+    description:
+      "Fluvoo te ayuda a entender y gestionar tu dinero con claridad y control. La mejor herramienta financiera para dominicanos.",
+    siteName: "Fluvoo",
     images: [
       {
-        url: '/og-image.png',
+        url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: 'Fluvoo - Claridad financiera para cada Dominicano',
+        alt: "Fluvoo - Claridad financiera para cada Dominicano",
       },
     ],
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'Fluvoo | Claridad financiera para cada Dominicano',
-    description: 'Fluvoo te ayuda a entender y gestionar tu dinero con claridad y control. La mejor herramienta financiera para dominicanos.',
-    images: ['/og-image.png'],
+    card: "summary_large_image",
+    title: "Fluvoo | Claridad financiera para cada Dominicano",
+    description:
+      "Fluvoo te ayuda a entender y gestionar tu dinero con claridad y control. La mejor herramienta financiera para dominicanos.",
+    images: ["/og-image.png"],
   },
   robots: {
     index: true,
@@ -82,22 +84,22 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
   icons: {
     icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon.ico', sizes: '48x48', type: 'image/x-icon' },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
     ],
-    shortcut: '/favicon.ico',
+    shortcut: "/favicon.ico",
     apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
   },
-  manifest: '/site.webmanifest',
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
@@ -108,26 +110,26 @@ export default function RootLayout({
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "Fluvoo",
-    "url": "https://fluvoo.com",
-    "logo": "https://fluvoo.com/logo.svg",
-    "sameAs": [
+    name: "Fluvoo",
+    url: "https://fluvoo.com",
+    logo: "https://fluvoo.com/logo.svg",
+    sameAs: [
       "https://www.instagram.com/fluvoo",
-      "https://www.linkedin.com/company/fluvoo"
+      "https://www.linkedin.com/company/fluvoo",
     ],
-    "contactPoint": {
+    contactPoint: {
       "@type": "ContactPoint",
-      "email": "hola@fluvoo.com",
-      "contactType": "customer support",
-      "availableLanguage": "Spanish"
-    }
+      email: "hola@fluvoo.com",
+      contactType: "customer support",
+      availableLanguage: "Spanish",
+    },
   };
 
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "name": "Fluvoo",
-    "url": "https://fluvoo.com"
+    name: "Fluvoo",
+    url: "https://fluvoo.com",
   };
 
   return (
@@ -152,7 +154,9 @@ export default function RootLayout({
         `}</Script>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
         />
         <script
           type="application/ld+json"

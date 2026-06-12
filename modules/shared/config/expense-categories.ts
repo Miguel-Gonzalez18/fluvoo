@@ -1,7 +1,5 @@
 import type { ObligationType } from "@/modules/onboarding/types/onboarding";
 
-export type ExpenseCategoryColorIndex = 1 | 2 | 3 | 4 | 5;
-
 export type ExpenseCategoryIconKey =
   | "arrow-left-right"
   | "tv"
@@ -27,7 +25,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "transferencias",
     label: "Transferencias y Pagos Entre Personas",
     shortLabel: "Transferencias",
-    colorIndex: 2,
     sortOrder: 1,
     active: true,
     icon: "arrow-left-right",
@@ -46,7 +43,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "entretenimiento",
     label: "Entretenimiento",
     shortLabel: "Entretenimiento",
-    colorIndex: 5,
     sortOrder: 2,
     active: true,
     icon: "tv",
@@ -78,7 +74,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "restaurantes",
     label: "Restaurantes y Comida Rápida",
     shortLabel: "Restaurantes",
-    colorIndex: 4,
     sortOrder: 3,
     active: true,
     icon: "utensils-crossed",
@@ -110,7 +105,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "supermercados",
     label: "Supermercados y Alimentación",
     shortLabel: "Supermercados",
-    colorIndex: 1,
     sortOrder: 4,
     active: true,
     icon: "shopping-cart",
@@ -134,7 +128,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "transporte",
     label: "Gasolina y Transporte",
     shortLabel: "Transporte",
-    colorIndex: 2,
     sortOrder: 5,
     active: true,
     icon: "car",
@@ -163,7 +156,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "salud",
     label: "Salud y Farmacia",
     shortLabel: "Salud",
-    colorIndex: 3,
     sortOrder: 6,
     active: true,
     icon: "wallet",
@@ -189,7 +181,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "educacion",
     label: "Educación",
     shortLabel: "Educación",
-    colorIndex: 1,
     sortOrder: 7,
     active: true,
     icon: "graduation-cap",
@@ -215,7 +206,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "servicios",
     label: "Servicios del Hogar",
     shortLabel: "Servicios",
-    colorIndex: 2,
     sortOrder: 8,
     active: true,
     icon: "home",
@@ -236,7 +226,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "telecom",
     label: "Telecomunicaciones",
     shortLabel: "Telecom",
-    colorIndex: 5,
     sortOrder: 9,
     active: true,
     icon: "smartphone",
@@ -259,7 +248,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "ocio",
     label: "Ocio y Salidas",
     shortLabel: "Ocio",
-    colorIndex: 5,
     sortOrder: 10,
     active: true,
     icon: "wine",
@@ -279,7 +267,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "compras",
     label: "Compras y Retail",
     shortLabel: "Compras",
-    colorIndex: 4,
     sortOrder: 11,
     active: true,
     icon: "shopping-bag",
@@ -301,7 +288,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "viajes",
     label: "Viajes y Turismo",
     shortLabel: "Viajes",
-    colorIndex: 1,
     sortOrder: 12,
     active: true,
     icon: "plane",
@@ -324,7 +310,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "deudas",
     label: "Deudas y Préstamos",
     shortLabel: "Deudas",
-    colorIndex: 3,
     sortOrder: 13,
     active: true,
     icon: "credit-card",
@@ -348,7 +333,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "negocios",
     label: "Servicios Profesionales y Negocios",
     shortLabel: "Negocios",
-    colorIndex: 2,
     sortOrder: 14,
     active: true,
     icon: "briefcase",
@@ -372,7 +356,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "hogar",
     label: "Hogar y Reparaciones",
     shortLabel: "Hogar",
-    colorIndex: 1,
     sortOrder: 15,
     active: true,
     icon: "hammer",
@@ -394,7 +377,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "mascotas",
     label: "Mascotas",
     shortLabel: "Mascotas",
-    colorIndex: 4,
     sortOrder: 16,
     active: true,
     icon: "paw-print",
@@ -412,7 +394,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "ahorros",
     label: "Ahorros e Inversiones",
     shortLabel: "Ahorros",
-    colorIndex: 1,
     sortOrder: 17,
     active: true,
     icon: "piggy-bank",
@@ -431,7 +412,6 @@ export const EXPENSE_CATEGORY_CATALOG = [
     slug: "otros",
     label: "Otros",
     shortLabel: "Otros",
-    colorIndex: 3,
     sortOrder: 99,
     active: true,
     icon: "help-circle",
@@ -447,7 +427,6 @@ export interface ExpenseCategoryDefinition {
   slug: ExpenseCategorySlug;
   label: string;
   shortLabel: string;
-  colorIndex: ExpenseCategoryColorIndex;
   sortOrder: number;
   active: boolean;
   icon: ExpenseCategoryIconKey;

@@ -1,5 +1,4 @@
 import {
-  FINANCIAL_INSTITUTIONS,
   getLoanTypeLabel,
   getObligationTypeLabel,
 } from "@/modules/onboarding/config/financial";
@@ -10,46 +9,17 @@ import {
   isObligationActiveForMonth,
 } from "./computeNextDueDate";
 import {
+  buildCardAmountSubtext,
+  getCreditCardShortLabel,
+  getInstitutionShortLabel,
+} from "@/modules/dashboard/employee/lib/format-card-payment-subtext";
+import {
   resolveCardPaymentTotalInDop,
   sumActiveInstallmentsForCard,
 } from "./resolve-card-payment-total";
 import type { FinancialObligationsSnapshot, PaymentCandidate } from "./financial-obligations.types";
 
-function getInstitutionShortLabel(value: string): string {
-  const full =
-    FINANCIAL_INSTITUTIONS.find((item) => item.value === value)?.label ?? value;
-  const acronym = full.match(/\(([^)]+)\)\s*$/)?.[1]?.trim();
-  return acronym ?? full;
-}
-
-function getCreditCardShortLabel(
-  cardLabel: string | null,
-  issuerName: string
-): string {
-  if (cardLabel?.trim()) return cardLabel.trim();
-  return getInstitutionShortLabel(issuerName);
-}
-
-function formatUsdSubtext(
-  card: FinancialObligationsSnapshot["creditCards"][number],
-  usdToDopRate: number
-): string | undefined {
-  const mode = card.currency_mode ?? "dop_only";
-  if (mode === "dop_only") return undefined;
-
-  const usdPart = card.minimum_payment_usd ?? 0;
-  if (usdPart <= 0) return undefined;
-
-  const dopEquivalent = Math.round(usdPart * usdToDopRate * 100) / 100;
-  return `~RD$ ${dopEquivalent.toLocaleString("es-DO", { minimumFractionDigits: 2 })} (USD ${usdPart.toFixed(2)} @ ${usdToDopRate.toFixed(2)})`;
-}
-
-function formatInstallmentsSubtext(
-  installmentsTotal: number
-): string | undefined {
-  if (installmentsTotal <= 0) return undefined;
-  return `incl. RD$ ${installmentsTotal.toLocaleString("es-DO", { minimumFractionDigits: 2 })} en cuotas`;
-}
+export { getInstitutionShortLabel, getCreditCardShortLabel } from "@/modules/dashboard/employee/lib/format-card-payment-subtext";
 
 export function buildPaymentCandidates(
   snapshot: FinancialObligationsSnapshot,
@@ -116,11 +86,11 @@ export function buildPaymentCandidates(
       month
     );
 
-    const usdSubtext = formatUsdSubtext(card, usdToDopRate);
-    const installmentsSubtext = formatInstallmentsSubtext(installmentsTotal);
-    const amountSubtext = [usdSubtext, installmentsSubtext]
-      .filter(Boolean)
-      .join(" · ");
+    const amountSubtext = buildCardAmountSubtext(
+      card,
+      installmentsTotal,
+      usdToDopRate
+    );
 
     const shortLabel = getCreditCardShortLabel(card.card_label, card.issuer_name);
 
@@ -134,7 +104,6 @@ export function buildPaymentCandidates(
     });
   }
 
-  // Orphan installments (card deleted or inactive) still surface separately
   for (const installment of snapshot.creditCardInstallments) {
     if (installment.status !== "active") continue;
     if (consolidatedCardIds.has(installment.credit_card_id)) continue;

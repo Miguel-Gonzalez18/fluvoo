@@ -81,6 +81,42 @@ export type Database = {
         }
         Relationships: []
       }
+      expense_categories: {
+        Row: {
+          active: boolean
+          badge_bg_hex: string | null
+          badge_border_hex: string | null
+          badge_text_hex: string | null
+          color_hex: string
+          created_at: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          badge_bg_hex?: string | null
+          badge_border_hex?: string | null
+          badge_text_hex?: string | null
+          color_hex: string
+          created_at?: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          badge_bg_hex?: string | null
+          badge_border_hex?: string | null
+          badge_text_hex?: string | null
+          color_hex?: string
+          created_at?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       gmail_connections: {
         Row: {
           access_token: string | null
@@ -258,7 +294,7 @@ export type Database = {
           monthly_payment: number
           original_amount: number
           payment_due_day: number | null
-          remaining_balance: number | null
+          remaining_balance: number
           start_date: string | null
           statement_close_day: number | null
           status: Database["public"]["Enums"]["installment_status"]
@@ -276,7 +312,7 @@ export type Database = {
           monthly_payment: number
           original_amount: number
           payment_due_day?: number | null
-          remaining_balance?: number | null
+          remaining_balance?: number
           start_date?: string | null
           statement_close_day?: number | null
           status?: Database["public"]["Enums"]["installment_status"]
@@ -294,7 +330,7 @@ export type Database = {
           monthly_payment?: number
           original_amount?: number
           payment_due_day?: number | null
-          remaining_balance?: number | null
+          remaining_balance?: number
           start_date?: string | null
           statement_close_day?: number | null
           status?: Database["public"]["Enums"]["installment_status"]
@@ -327,6 +363,8 @@ export type Database = {
           minimum_payment: number
           minimum_payment_usd: number | null
           payment_due_day: number
+          statement_balance: number
+          statement_balance_usd: number
           statement_close_day: number | null
           status: Database["public"]["Enums"]["credit_card_status"]
           updated_at: string
@@ -346,6 +384,8 @@ export type Database = {
           minimum_payment: number
           minimum_payment_usd?: number | null
           payment_due_day: number
+          statement_balance?: number
+          statement_balance_usd?: number
           statement_close_day?: number | null
           status?: Database["public"]["Enums"]["credit_card_status"]
           updated_at?: string
@@ -365,6 +405,8 @@ export type Database = {
           minimum_payment?: number
           minimum_payment_usd?: number | null
           payment_due_day?: number
+          statement_balance?: number
+          statement_balance_usd?: number
           statement_close_day?: number | null
           status?: Database["public"]["Enums"]["credit_card_status"]
           updated_at?: string
@@ -736,6 +778,54 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_category_colors: {
+        Row: {
+          badge_bg_hex: string | null
+          badge_border_hex: string | null
+          badge_text_hex: string | null
+          category_slug: string
+          color_hex: string
+          created_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          badge_bg_hex?: string | null
+          badge_border_hex?: string | null
+          badge_text_hex?: string | null
+          category_slug: string
+          color_hex: string
+          created_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          badge_bg_hex?: string | null
+          badge_border_hex?: string | null
+          badge_text_hex?: string | null
+          category_slug?: string
+          color_hex?: string
+          created_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_category_colors_category_slug_fkey"
+            columns: ["category_slug"]
+            isOneToOne: false
+            referencedRelation: "expense_categories"
+            referencedColumns: ["slug"]
+          },
+          {
+            foreignKeyName: "user_category_colors_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       users: {
         Row: {

@@ -28,12 +28,19 @@ import {
   getGmailStatus,
 } from "@/modules/gmail/lib/get-gmail-status.server";
 import { backfillExpenseCategoriesIfNeeded } from "@/modules/gmail/lib/backfill-expense-categories.server";
+import { getExpenseCategoryColorMap } from "@/modules/shared/supabase/get-expense-category-colors.server";
 import { createClient } from "@/src/lib/server";
 import {
   sumMonthlyObligationsForMonth,
 } from "./monthly-obligation-expenses";
 import { getUsdToDopRate } from "@/modules/gmail/lib/exchange-rate.server";
 import type { FinancialObligationsSnapshot } from "./financial-obligations.types";
+import {
+  buildTransactionsCommitments,
+  EMPTY_COMMITMENTS,
+} from "@/modules/dashboard/employee/lib/build-transactions-commitments.server";
+import { getEmployeeDisplayName } from "@/modules/dashboard/employee/lib/getEmployeeDisplayName.server";
+import { formatDOP } from "@/modules/dashboard/employee/lib/formatCurrency";
 import { getMonthRange } from "./month-bounds";
 
 const EMPTY_TRANSACTIONS_PAGE: TransactionsPageData = {
@@ -69,6 +76,7 @@ const EMPTY_TRANSACTIONS_PAGE: TransactionsPageData = {
     page: 1,
     pageSize: TRANSACTIONS_PAGE_SIZE,
   },
+  commitments: EMPTY_COMMITMENTS,
   gmailStatus: EMPTY_GMAIL_STATUS,
 };
 
@@ -151,21 +159,21 @@ async function loadObligationsSnapshot(
       supabase
         .from("loans")
         .select(
-          "lender_name, loan_type, monthly_payment, payment_due_day, end_date, status"
+          "id, lender_name, loan_type, monthly_payment, payment_due_day, end_date, start_date, status, original_amount, current_balance, term_months, annual_rate"
         )
         .eq("user_id", userId)
         .eq("status", "active"),
       supabase
         .from("credit_cards")
         .select(
-          "id, issuer_name, card_label, currency_mode, minimum_payment, minimum_payment_usd, payment_due_day, status"
+          "id, issuer_name, card_label, currency_mode, minimum_payment, minimum_payment_usd, payment_due_day, status, current_balance, current_balance_usd, statement_balance, statement_balance_usd, credit_limit, credit_limit_usd, statement_close_day, annual_rate"
         )
         .eq("user_id", userId)
         .eq("status", "active"),
       supabase
         .from("credit_card_installments")
         .select(
-          "description, monthly_payment, payment_due_day, statement_close_day, end_date, status, credit_card_id, credit_cards(issuer_name, card_label, payment_due_day, statement_close_day)"
+          "id, description, monthly_payment, remaining_balance, original_amount, term_months, payment_due_day, statement_close_day, end_date, status, credit_card_id, credit_cards(issuer_name, card_label, payment_due_day, statement_close_day)"
         )
         .eq("user_id", userId)
         .eq("status", "active"),
@@ -219,7 +227,14 @@ export async function getTransactionsPageData(
       .maybeSingle();
 
     await syncGmailIfStale(user.id, profile?.gmail_connected);
-    await backfillExpenseCategoriesIfNeeded(user.id);
+
+    try {
+      await backfillExpenseCategoriesIfNeeded(user.id);
+    } catch (error) {
+      console.error("[getTransactionsPageData] backfillExpenseCategories failed:", error);
+    }
+
+    const categoryColorMap = await getExpenseCategoryColorMap(user.id);
 
     const lookback = getTransactionsLookbackRange();
     const thisMonthRange = getMonthRange("this-month");
@@ -304,6 +319,19 @@ export async function getTransactionsPageData(
       lastMonthIncomeTx: sumIncomeTransactions(lastMonthIncomeResult.data ?? []),
     });
 
+    if (thisMonthObligations > 0) {
+      const variableExpenses = thisMonthAggregate.total;
+      summary.expenses.subtext = `${formatDOP(thisMonthExpenses)} total · ${formatDOP(variableExpenses)} variable · ${formatDOP(thisMonthObligations)} compromisos`;
+    }
+
+    const displayName = await getEmployeeDisplayName();
+    const commitments = buildTransactionsCommitments(
+      obligationsSnapshot,
+      displayName,
+      usdToDopRate,
+      today
+    );
+
     const expenseRows = (lookbackTransactionsResult.data ??
       []) as ExpenseTransactionRow[];
 
@@ -314,7 +342,8 @@ export async function getTransactionsPageData(
           expenseRows,
           obligationsSnapshot,
           netIncomeValue,
-          usdToDopRate
+          usdToDopRate,
+          categoryColorMap
         );
         return acc;
       },
@@ -322,7 +351,7 @@ export async function getTransactionsPageData(
     );
 
     const allItems = (lookbackTransactionsResult.data ?? []).map((row) =>
-      mapTransactionToListItem(row, { cardLabelsByBank })
+      mapTransactionToListItem(row, { cardLabelsByBank, categoryColorMap })
     );
 
     const sort = parseSort(searchParams.sort);
@@ -355,6 +384,7 @@ export async function getTransactionsPageData(
     return {
       summary,
       chartData,
+      commitments,
       table: {
         items,
         totalCount,
@@ -363,7 +393,8 @@ export async function getTransactionsPageData(
       },
       gmailStatus,
     };
-  } catch {
+  } catch (error) {
+    console.error("[getTransactionsPageData] failed:", error);
     return EMPTY_TRANSACTIONS_PAGE;
   }
 }

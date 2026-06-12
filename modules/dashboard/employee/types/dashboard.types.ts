@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import type { CategoryColorTokens } from "@/modules/shared/lib/expense-category-colors.types";
 import type { ExpenseCategorySlug } from "@/modules/shared/config/expense-categories";
 import type { FiscalTipIconKey } from "@/modules/shared/ai/fiscal-analysis.schema";
 
@@ -13,15 +14,13 @@ export interface KpiStat {
   icon?: LucideIcon;
 }
 
-export type ExpenseCategoryColorIndex = 1 | 2 | 3 | 4 | 5;
-
 export interface CategoryExpense {
   slug: ExpenseCategorySlug;
   category: string;
   fullLabel: string;
   amount: number;
   budget: number;
-  colorIndex: ExpenseCategoryColorIndex;
+  color: CategoryColorTokens;
 }
 
 export type TransactionDirection = "income" | "expense";
@@ -32,6 +31,7 @@ export interface RecentTransaction {
   dateLabel: string;
   category: string;
   categoryVariant: "default" | "success" | "outline";
+  categoryColor: CategoryColorTokens;
   amount: number;
   originalAmountSubtext: string | null;
   direction: TransactionDirection;

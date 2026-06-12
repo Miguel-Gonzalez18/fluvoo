@@ -74,6 +74,47 @@ if (!migrationSql.includes("CREATE TYPE public.expense_category")) {
   errors.push("Original expense_category migration file is missing or changed");
 }
 
+const colorsMigrationPath = resolve(
+  process.cwd(),
+  "supabase/migrations/20250614_expense_category_colors.sql"
+);
+const colorsMigrationSql = readFileSync(colorsMigrationPath, "utf8");
+
+const seedColorRegex =
+  /\('([a-z_]+)',\s*'(#[0-9A-Fa-f]{6})',\s*\d+\)/g;
+const seededColors = new Map<string, string>();
+
+for (const match of colorsMigrationSql.matchAll(seedColorRegex)) {
+  const [, slug, colorHex] = match;
+  seededColors.set(slug, colorHex.toUpperCase());
+}
+
+const missingColorSlugs = catalogSlugs.filter((slug) => !seededColors.has(slug));
+if (missingColorSlugs.length) {
+  errors.push(
+    `Slugs missing from expense_categories seed: ${missingColorSlugs.join(", ")}`
+  );
+}
+
+const extraColorSlugs = [...seededColors.keys()].filter(
+  (slug) => !catalogSlugs.includes(slug as (typeof catalogSlugs)[number])
+);
+if (extraColorSlugs.length) {
+  errors.push(
+    `Slugs in expense_categories seed but not in active catalog: ${extraColorSlugs.join(", ")}`
+  );
+}
+
+const colorValues = [...seededColors.values()];
+const duplicateColors = colorValues.filter(
+  (color, index) => colorValues.indexOf(color) !== index
+);
+if (duplicateColors.length) {
+  errors.push(
+    `Duplicate color_hex values in seed: ${[...new Set(duplicateColors)].join(", ")}`
+  );
+}
+
 if (errors.length) {
   console.error("Expense category validation failed:\n");
   for (const error of errors) {
@@ -83,5 +124,5 @@ if (errors.length) {
 }
 
 console.log(
-  `Expense categories OK (${catalogSlugs.length} slugs synced between catalog and DB enum).`
+  `Expense categories OK (${catalogSlugs.length} slugs synced between catalog, DB enum, and color seed).`
 );

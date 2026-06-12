@@ -4,9 +4,13 @@ import {
   UtensilsCrossed,
   Wallet,
 } from "lucide-react";
+import { INCOME_CATEGORY_COLOR } from "@/modules/dashboard/employee/lib/category-badge-styles";
 import type { RecentTransaction } from "@/modules/dashboard/employee/types/dashboard.types";
+import { buildDefaultCategoryColorMap } from "@/modules/shared/lib/resolve-category-color";
 
 export const MOCK_DISPLAY_NAME = "Carlos";
+
+const defaultColors = buildDefaultCategoryColorMap();
 
 export const RECENT_TRANSACTIONS: RecentTransaction[] = [
   {
@@ -15,6 +19,7 @@ export const RECENT_TRANSACTIONS: RecentTransaction[] = [
     dateLabel: "Hoy, 10:24 AM",
     category: "ALIMENTACIÓN",
     categoryVariant: "outline",
+    categoryColor: defaultColors.get("supermercados")!,
     amount: 3450,
     originalAmountSubtext: null,
     direction: "expense",
@@ -26,6 +31,7 @@ export const RECENT_TRANSACTIONS: RecentTransaction[] = [
     dateLabel: "15 Jul, 2024",
     category: "INGRESOS",
     categoryVariant: "success",
+    categoryColor: INCOME_CATEGORY_COLOR,
     amount: 21250,
     originalAmountSubtext: null,
     direction: "income",
@@ -37,6 +43,7 @@ export const RECENT_TRANSACTIONS: RecentTransaction[] = [
     dateLabel: "14 Jul, 2024",
     category: "TRANSPORTE",
     categoryVariant: "outline",
+    categoryColor: defaultColors.get("transporte")!,
     amount: 2800,
     originalAmountSubtext: null,
     direction: "expense",
@@ -48,6 +55,7 @@ export const RECENT_TRANSACTIONS: RecentTransaction[] = [
     dateLabel: "12 Jul, 2024",
     category: "OCIO",
     categoryVariant: "outline",
+    categoryColor: defaultColors.get("ocio")!,
     amount: 4120,
     originalAmountSubtext: null,
     direction: "expense",

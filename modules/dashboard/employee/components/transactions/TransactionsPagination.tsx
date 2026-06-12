@@ -69,7 +69,7 @@ export function TransactionsPagination({
     }
 
     startTransition(() => {
-      router.push(`?${params.toString()}`);
+      router.push(`?${params.toString()}`, { scroll: false });
     });
   };
 

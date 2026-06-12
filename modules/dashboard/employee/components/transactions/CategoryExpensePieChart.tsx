@@ -14,10 +14,6 @@ import {
 import { formatDOP } from "@/modules/dashboard/employee/lib/formatCurrency";
 import type { CategoryExpense } from "@/modules/dashboard/employee/types/dashboard.types";
 
-function chartFill(colorIndex: CategoryExpense["colorIndex"]): string {
-  return `var(--chart-${colorIndex})`;
-}
-
 function useChartContainerReady<T extends HTMLElement>() {
   const ref = useRef<T>(null);
   const [ready, setReady] = useState(false);
@@ -99,7 +95,7 @@ export function CategoryExpensePieChart({
         category: item.category,
         fullLabel: item.fullLabel,
         amount: item.amount,
-        fill: chartFill(item.colorIndex),
+        fill: item.color.colorHex,
       })),
     [categories]
   );
@@ -109,7 +105,7 @@ export function CategoryExpensePieChart({
       categories.reduce<ChartConfig>((acc, item) => {
         acc[item.category] = {
           label: item.category,
-          color: chartFill(item.colorIndex),
+          color: item.color.colorHex,
         };
         return acc;
       }, {}),

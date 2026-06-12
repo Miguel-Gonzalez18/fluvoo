@@ -12,7 +12,8 @@ import { Footer } from "./components/shared/Footer";
 
 export const metadata: Metadata = {
   title: "Fluvoo | Claridad financiera para cada Dominicano",
-  description: "Descubre Fluvoo, la app financiera diseñada para dominicanos. Controla tus gastos, ahorra mejor y toma decisiones inteligentes con tu dinero.",
+  description:
+    "Descubre Fluvoo, la app financiera diseñada para dominicanos. Controla tus gastos, ahorra mejor y toma decisiones inteligentes con tu dinero.",
 };
 
 export default function HomePage() {
@@ -27,7 +28,7 @@ export default function HomePage() {
 
       {/* Por qué Fluvoo */}
       <WhyFluvoo />
-      
+
       {/* Beneficios Reales */}
       <Benefits />
 

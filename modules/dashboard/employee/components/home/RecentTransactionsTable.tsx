@@ -1,7 +1,7 @@
 import { Receipt } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/modules/shared/components/ui/badge";
+import { CategoryColorBadge } from "@/modules/dashboard/employee/components/CategoryColorBadge";
 import { DashboardCard } from "@/modules/dashboard/shared/DashboardCard";
 import { CardContent, CardHeader } from "@/modules/shared/components/ui/card";
 import {
@@ -87,9 +87,10 @@ export function RecentTransactionsTable({
                       {transaction.dateLabel}
                     </TableCell>
                     <TableCell>
-                      <Badge variant={transaction.categoryVariant}>
-                        {transaction.category}
-                      </Badge>
+                      <CategoryColorBadge
+                        label={transaction.category}
+                        color={transaction.categoryColor}
+                      />
                     </TableCell>
                     <TableCell className="text-right">
                       <div

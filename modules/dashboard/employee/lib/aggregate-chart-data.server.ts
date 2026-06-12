@@ -14,8 +14,9 @@ import type {
   ChartPeriodData,
   ExpenseMarginBucket,
 } from "@/modules/dashboard/employee/types/transactions.types";
+import { buildCategoryExpense } from "@/modules/shared/lib/build-category-expense";
+import type { CategoryColorMap } from "@/modules/shared/lib/expense-category-colors.types";
 import {
-  getCategoryBySlug,
   EXPENSE_TRANSACTION_TYPES,
   INCOME_TRANSACTION_TYPES,
   type ExpenseCategorySlug,
@@ -59,10 +60,12 @@ function prorateMonthlyAmount(monthlyAmount: number, periodDays: number): number
 function buildProratedObligationCategories(
   snapshot: FinancialObligationsSnapshot,
   periodDays: number,
-  usdToDopRate: number
+  usdToDopRate: number,
+  colorMap: CategoryColorMap
 ): CategoryExpense[] {
   const monthlyCategories = buildMonthlyObligationCategoryExpenses(
     snapshot,
+    colorMap,
     new Date(),
     usdToDopRate
   );
@@ -74,7 +77,8 @@ function buildProratedObligationCategories(
 }
 
 function aggregateTransactionCategories(
-  rows: ExpenseTransactionRow[]
+  rows: ExpenseTransactionRow[],
+  colorMap: CategoryColorMap
 ): CategoryExpense[] {
   const totals = new Map<ExpenseCategorySlug, number>();
 
@@ -87,17 +91,7 @@ function aggregateTransactionCategories(
   return Array.from(totals.entries())
     .filter(([, amount]) => amount > 0)
     .sort((a, b) => b[1] - a[1])
-    .map(([slug, amount]) => {
-      const definition = getCategoryBySlug(slug);
-      return {
-        slug,
-        category: definition.shortLabel,
-        fullLabel: definition.label,
-        amount: Math.round(amount * 100) / 100,
-        budget: 0,
-        colorIndex: definition.colorIndex,
-      };
-    });
+    .map(([slug, amount]) => buildCategoryExpense(slug, amount, colorMap));
 }
 
 interface TimeBucket {
@@ -214,7 +208,8 @@ export function aggregateChartPeriodData(
   allRows: ExpenseTransactionRow[],
   obligationsSnapshot: FinancialObligationsSnapshot,
   netIncomeMonthly: number,
-  usdToDopRate: number
+  usdToDopRate: number,
+  colorMap: CategoryColorMap
 ): ChartPeriodData {
   const { start, end, days } = getChartPeriodRange(period);
   const rangeStart = new Date(start);
@@ -227,15 +222,16 @@ export function aggregateChartPeriodData(
     })
   );
 
-  const txCategories = aggregateTransactionCategories(periodRows);
+  const txCategories = aggregateTransactionCategories(periodRows, colorMap);
   const obligationCategories = buildProratedObligationCategories(
     obligationsSnapshot,
     days,
-    usdToDopRate
+    usdToDopRate,
+    colorMap
   );
 
   return {
-    categories: mergeCategoryExpenses(txCategories, obligationCategories),
+    categories: mergeCategoryExpenses(colorMap, txCategories, obligationCategories),
     marginBuckets: buildMarginBuckets(
       period,
       periodRows,

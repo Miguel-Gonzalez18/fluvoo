@@ -51,6 +51,7 @@ export interface CreditCardInstallment {
   creditCardId?: string;
   description?: string;
   originalAmount: number;
+  amountOwed: number;
   monthlyPayment: number;
   termMonths: number;
   annualRate: number;
@@ -63,14 +64,16 @@ export interface CreditCardInstallment {
 export interface CreditCard {
   id: string;
   issuerName: string;
-  cardLabel?: string;
+  cardLabel: string;
   currencyMode: CreditCardCurrencyMode;
   creditLimit: number;
   currentBalance: number;
   minimumPayment: number;
+  statementBalance: number;
   creditLimitUsd?: number | null;
   currentBalanceUsd?: number | null;
   minimumPaymentUsd?: number | null;
+  statementBalanceUsd: number;
   statementCloseDay: number;
   paymentDueDay: number;
   annualRate?: number | null;

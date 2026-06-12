@@ -12,6 +12,8 @@ import {
   INCOME_TRANSACTION_TYPES,
   type ExpenseCategorySlug,
 } from "@/modules/shared/config/expense-categories";
+import { resolveTransactionCategoryColor } from "@/modules/dashboard/employee/lib/category-badge-styles";
+import type { CategoryColorMap } from "@/modules/shared/lib/expense-category-colors.types";
 import type { Tables } from "@/src/types/supabase";
 
 type TransactionRow = Pick<
@@ -77,8 +79,16 @@ function resolveTransactionMeta(row: TransactionRow): {
   };
 }
 
-export function mapTransactionToRecent(row: TransactionRow): RecentTransaction {
+export function mapTransactionToRecent(
+  row: TransactionRow,
+  options: { categoryColorMap?: CategoryColorMap } = {}
+): RecentTransaction {
   const meta = resolveTransactionMeta(row);
+  const colorMap = options.categoryColorMap ?? new Map();
+  const categorySlug =
+    meta.direction === "expense" && row.expense_category
+      ? (row.expense_category as ExpenseCategorySlug)
+      : null;
 
   return {
     id: row.id,
@@ -86,6 +96,11 @@ export function mapTransactionToRecent(row: TransactionRow): RecentTransaction {
     dateLabel: formatTransactionDate(row.transaction_date),
     category: meta.category,
     categoryVariant: meta.categoryVariant,
+    categoryColor: resolveTransactionCategoryColor(
+      categorySlug,
+      meta.direction,
+      colorMap
+    ),
     amount: row.amount,
     originalAmountSubtext: formatOriginalAmountSubtext(
       row.original_amount,

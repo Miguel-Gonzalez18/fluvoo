@@ -3,6 +3,7 @@ import {
   optionalDateField,
   paymentDueDayField,
   positiveAmountField,
+  requiredNonNegativeAmountField,
 } from "./shared-fields";
 
 export const creditCardInstallmentSchema = z.object({
@@ -10,6 +11,7 @@ export const creditCardInstallmentSchema = z.object({
   creditCardId: z.string().uuid().optional(),
   description: z.string().optional(),
   originalAmount: positiveAmountField("El monto original"),
+  amountOwed: requiredNonNegativeAmountField("El monto adeudado"),
   monthlyPayment: positiveAmountField("La cuota mensual"),
   termMonths: z
     .number({ invalid_type_error: "El plazo es requerido" })

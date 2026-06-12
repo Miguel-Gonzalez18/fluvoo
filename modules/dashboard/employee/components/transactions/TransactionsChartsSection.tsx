@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { CategoryExpensePieChart } from "@/modules/dashboard/employee/components/transactions/CategoryExpensePieChart";
 import { ExpenseMarginBarChart } from "@/modules/dashboard/employee/components/transactions/ExpenseMarginBarChart";
-import { Tabs, TabsList, TabsTrigger } from "@/modules/shared/components/ui/tabs";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+} from "@/modules/shared/components/ui/tabs";
 import {
   CHART_PERIOD_LABELS,
   CHART_PERIODS,
@@ -41,14 +45,16 @@ export function TransactionsChartsSection({
         </Tabs>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         <CategoryExpensePieChart
           categories={activeData.categories}
           periodLabel={activeData.periodLabel}
+          className="lg:col-span-1"
         />
         <ExpenseMarginBarChart
           buckets={activeData.marginBuckets}
           periodLabel={activeData.periodLabel}
+          className="lg:col-span-2"
         />
       </div>
     </section>

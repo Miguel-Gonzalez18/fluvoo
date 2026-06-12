@@ -14,6 +14,7 @@ import { getUsdToDopRate } from "@/modules/gmail/lib/exchange-rate.server";
 import { getActiveTaxParameters } from "@/modules/onboarding/supabase/tax-parameters";
 import type { FiscalAnalysisContext } from "@/modules/shared/ai/fiscal-analysis.schema";
 import { createAdminClient } from "@/src/lib/admin";
+import { getExpenseCategoryColorMap } from "@/modules/shared/supabase/get-expense-category-colors.server";
 
 function buildMarginStatus(
   marginValue: number,
@@ -41,6 +42,8 @@ export async function loadFiscalAnalysisContextForUser(
 
   if (!profile) return null;
 
+  const categoryColorMap = await getExpenseCategoryColorMap(userId);
+
   const [
     thisMonthCategories,
     lastMonthCategories,
@@ -52,8 +55,8 @@ export async function loadFiscalAnalysisContextForUser(
     installmentsResult,
     taxParams,
   ] = await Promise.all([
-    getCategoryExpenses(admin, userId, "this-month"),
-    getCategoryExpenses(admin, userId, "last-month"),
+    getCategoryExpenses(admin, userId, "this-month", categoryColorMap),
+    getCategoryExpenses(admin, userId, "last-month", categoryColorMap),
     getMonthlyExpenseAggregate(admin, userId, "this-month"),
     getMonthlyExpenseAggregate(admin, userId, "last-month"),
     admin
@@ -66,21 +69,21 @@ export async function loadFiscalAnalysisContextForUser(
     admin
       .from("loans")
       .select(
-        "lender_name, loan_type, monthly_payment, payment_due_day, end_date, status"
+        "id, lender_name, loan_type, monthly_payment, payment_due_day, end_date, start_date, status, original_amount, current_balance, term_months, annual_rate"
       )
       .eq("user_id", userId)
       .eq("status", "active"),
     admin
       .from("credit_cards")
       .select(
-        "id, issuer_name, card_label, currency_mode, minimum_payment, minimum_payment_usd, payment_due_day, status"
+        "id, issuer_name, card_label, currency_mode, minimum_payment, minimum_payment_usd, payment_due_day, status, current_balance, current_balance_usd, statement_balance, statement_balance_usd, credit_limit, credit_limit_usd, statement_close_day, annual_rate"
       )
       .eq("user_id", userId)
       .eq("status", "active"),
     admin
       .from("credit_card_installments")
       .select(
-        "description, monthly_payment, payment_due_day, statement_close_day, end_date, status, credit_card_id, credit_cards(issuer_name, card_label, payment_due_day, statement_close_day)"
+        "id, description, monthly_payment, remaining_balance, original_amount, term_months, payment_due_day, statement_close_day, end_date, status, credit_card_id, credit_cards(issuer_name, card_label, payment_due_day, statement_close_day)"
       )
       .eq("user_id", userId)
       .eq("status", "active"),
@@ -134,9 +137,11 @@ export async function loadFiscalAnalysisContextForUser(
   const marginMonthly = netIncomeValue - expensesThisMonth;
 
   const mergedThisMonthCategories = mergeCategoryExpenses(
+    categoryColorMap,
     thisMonthCategories,
     buildMonthlyObligationCategoryExpenses(
       obligationsSnapshot,
+      categoryColorMap,
       today,
       usdToDopRate
     )

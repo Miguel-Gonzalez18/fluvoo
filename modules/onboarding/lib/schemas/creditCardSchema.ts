@@ -2,7 +2,6 @@ import { z } from "zod";
 import { creditCardInstallmentSchema } from "./creditCardInstallmentSchema";
 import {
   paymentDueDayField,
-  positiveAmountField,
   requiredNonNegativeAmountField,
 } from "./shared-fields";
 
@@ -10,16 +9,18 @@ export const creditCardSchema = z
   .object({
     id: z.string().uuid(),
     issuerName: z.string().min(1, "Selecciona el banco emisor"),
-    cardLabel: z.string().optional(),
+    cardLabel: z.string().min(1, "El alias de la tarjeta es requerido"),
     currencyMode: z.enum(["dop_only", "usd_only", "mixed"], {
       required_error: "Selecciona la moneda de la tarjeta",
     }),
     creditLimit: requiredNonNegativeAmountField("El límite de crédito"),
     currentBalance: requiredNonNegativeAmountField("El saldo actual"),
     minimumPayment: requiredNonNegativeAmountField("El pago mínimo"),
+    statementBalance: requiredNonNegativeAmountField("El saldo al corte"),
     creditLimitUsd: z.number().min(0).optional().nullable(),
     currentBalanceUsd: z.number().min(0).optional().nullable(),
     minimumPaymentUsd: z.number().min(0).optional().nullable(),
+    statementBalanceUsd: requiredNonNegativeAmountField("El saldo al corte en USD"),
     statementCloseDay: paymentDueDayField,
     paymentDueDay: paymentDueDayField,
     annualRate: z
@@ -45,6 +46,13 @@ export const creditCardSchema = z
           path: ["currentBalance"],
         });
       }
+      if (data.statementBalance > data.creditLimit) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "El saldo al corte en RD$ no puede superar el límite",
+          path: ["statementBalance"],
+        });
+      }
     }
 
     if (data.currencyMode === "usd_only" || data.currencyMode === "mixed") {
@@ -64,6 +72,15 @@ export const creditCardSchema = z
           code: z.ZodIssueCode.custom,
           message: "El saldo en USD no puede superar el límite",
           path: ["currentBalanceUsd"],
+        });
+      }
+      if (
+        data.statementBalanceUsd > (data.creditLimitUsd ?? 0)
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "El saldo al corte en USD no puede superar el límite",
+          path: ["statementBalanceUsd"],
         });
       }
     }

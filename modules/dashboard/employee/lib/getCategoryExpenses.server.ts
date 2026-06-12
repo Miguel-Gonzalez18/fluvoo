@@ -1,8 +1,5 @@
 import { isBankMerchantName } from "@/modules/gmail/lib/is-internal-bank-movement";
-import {
-  getCategoryBySlug,
-  type ExpenseCategorySlug,
-} from "@/modules/shared/config/expense-categories";
+import type { ExpenseCategorySlug } from "@/modules/shared/config/expense-categories";
 import { EXPENSE_TRANSACTION_TYPES } from "@/modules/shared/config/expense-categories";
 import type { SupportedBank } from "@/modules/onboarding/config/gmail";
 import type { CategoryExpense } from "@/modules/dashboard/employee/types/dashboard.types";
@@ -10,6 +7,8 @@ import {
   getMonthRange,
   type ExpensePeriod,
 } from "@/modules/dashboard/employee/lib/month-bounds";
+import { buildCategoryExpense } from "@/modules/shared/lib/build-category-expense";
+import type { CategoryColorMap } from "@/modules/shared/lib/expense-category-colors.types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/src/types/supabase";
 
@@ -71,7 +70,8 @@ export async function getMonthlyExpenseAggregate(
 export async function getCategoryExpenses(
   supabase: SupabaseClient<Database>,
   userId: string,
-  period: ExpensePeriod
+  period: ExpensePeriod,
+  colorMap: CategoryColorMap
 ): Promise<CategoryExpense[]> {
   const rows = await fetchMonthExpenseRows(supabase, userId, period);
   const totals = new Map<ExpenseCategorySlug, number>();
@@ -84,15 +84,5 @@ export async function getCategoryExpenses(
   return Array.from(totals.entries())
     .filter(([, amount]) => amount > 0)
     .sort((a, b) => b[1] - a[1])
-    .map(([slug, amount]) => {
-      const definition = getCategoryBySlug(slug);
-      return {
-        slug,
-        category: definition.shortLabel,
-        fullLabel: definition.label,
-        amount,
-        budget: 0,
-        colorIndex: definition.colorIndex,
-      };
-    });
+    .map(([slug, amount]) => buildCategoryExpense(slug, amount, colorMap));
 }

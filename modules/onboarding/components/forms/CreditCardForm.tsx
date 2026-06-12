@@ -70,6 +70,8 @@ export function CreditCardForm({
       creditLimitUsd: defaults.creditLimitUsd ?? null,
       currentBalanceUsd: defaults.currentBalanceUsd ?? null,
       minimumPaymentUsd: defaults.minimumPaymentUsd ?? null,
+      statementBalance: defaults.statementBalance,
+      statementBalanceUsd: defaults.statementBalanceUsd,
     },
   });
 
@@ -94,6 +96,8 @@ export function CreditCardForm({
       creditLimitUsd: nextDefaults.creditLimitUsd ?? null,
       currentBalanceUsd: nextDefaults.currentBalanceUsd ?? null,
       minimumPaymentUsd: nextDefaults.minimumPaymentUsd ?? null,
+      statementBalance: nextDefaults.statementBalance,
+      statementBalanceUsd: nextDefaults.statementBalanceUsd,
     });
     setInstallments(nextDefaults.installments);
     setShowInstallmentForm(false);
@@ -153,8 +157,9 @@ export function CreditCardForm({
           <FormFieldError message={errors.issuerName?.message} />
         </div>
         <div className="space-y-2">
-          <Label className="text-xs">Alias de tarjeta (opcional)</Label>
+          <Label className="text-xs">Alias de tarjeta</Label>
           <Input placeholder="Ej: Visa Oro" {...register("cardLabel")} />
+          <FormFieldError message={errors.cardLabel?.message} />
         </div>
         <div className="space-y-2 sm:col-span-2">
           <Label className="text-xs">Moneda de la tarjeta</Label>
@@ -204,6 +209,17 @@ export function CreditCardForm({
               />
               <FormFieldError message={errors.minimumPayment?.message} />
             </div>
+            <div className="space-y-2">
+              <Label className="text-xs">Saldo al corte (RD$)</Label>
+              <Input
+                type="number"
+                step="0.01"
+                min={0}
+                placeholder="0"
+                {...register("statementBalance", { setValueAs: parseRequiredAmount })}
+              />
+              <FormFieldError message={errors.statementBalance?.message} />
+            </div>
           </>
         )}
         {showUsdFields && (
@@ -239,6 +255,17 @@ export function CreditCardForm({
                 {...register("minimumPaymentUsd", { setValueAs: parseOptionalAmount })}
               />
               <FormFieldError message={errors.minimumPaymentUsd?.message} />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs">Saldo al corte (USD)</Label>
+              <Input
+                type="number"
+                step="0.01"
+                min={0}
+                placeholder="0"
+                {...register("statementBalanceUsd", { setValueAs: parseRequiredAmount })}
+              />
+              <FormFieldError message={errors.statementBalanceUsd?.message} />
             </div>
           </>
         )}

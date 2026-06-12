@@ -21,10 +21,6 @@ const chartConfig = {
   amount: { label: "Gasto", color: "var(--chart-1)" },
 } satisfies ChartConfig;
 
-function chartFill(colorIndex: CategoryExpense["colorIndex"]): string {
-  return `var(--chart-${colorIndex})`;
-}
-
 interface ExpenseCategoryChartProps {
   thisMonth: CategoryExpense[];
   lastMonth: CategoryExpense[];
@@ -72,7 +68,7 @@ export function ExpenseCategoryChart({
         category: item.category,
         fullLabel: item.fullLabel,
         amount: item.amount,
-        fill: chartFill(item.colorIndex),
+        fill: item.color.colorHex,
       })),
     [periodData]
   );

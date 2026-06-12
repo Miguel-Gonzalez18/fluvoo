@@ -25,6 +25,7 @@ import type { FinancialObligationsSnapshot } from "./financial-obligations.types
 import { buildFiscalAnalysisContext } from "./buildFiscalAnalysisContext.server";
 import { ensureFiscalAnalysisStored } from "@/modules/dashboard/employee/lib/fiscal-insight.server";
 import { getActiveTaxParameters } from "@/modules/onboarding/supabase/tax-parameters";
+import { getExpenseCategoryColorMap } from "@/modules/shared/supabase/get-expense-category-colors.server";
 import {
   buildExpensesSubtext,
   buildMarginMeta,
@@ -94,7 +95,14 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
       .maybeSingle();
 
     await syncGmailIfStale(user.id, profile?.gmail_connected);
-    await backfillExpenseCategoriesIfNeeded(user.id);
+
+    try {
+      await backfillExpenseCategoriesIfNeeded(user.id);
+    } catch (error) {
+      console.error("[getHomeDashboardData] backfillExpenseCategories failed:", error);
+    }
+
+    const categoryColorMap = await getExpenseCategoryColorMap(user.id);
 
     const [
       transactionsResult,
@@ -116,8 +124,8 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
         .eq("user_id", user.id)
         .order("transaction_date", { ascending: false })
         .limit(RECENT_TRANSACTIONS_LIMIT),
-      getCategoryExpenses(supabase, user.id, "this-month"),
-      getCategoryExpenses(supabase, user.id, "last-month"),
+      getCategoryExpenses(supabase, user.id, "this-month", categoryColorMap),
+      getCategoryExpenses(supabase, user.id, "last-month", categoryColorMap),
       getMonthlyExpenseAggregate(supabase, user.id, "this-month"),
       getMonthlyExpenseAggregate(supabase, user.id, "last-month"),
       supabase
@@ -130,21 +138,21 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
       supabase
         .from("loans")
         .select(
-          "lender_name, loan_type, monthly_payment, payment_due_day, end_date, status"
+          "id, lender_name, loan_type, monthly_payment, payment_due_day, end_date, start_date, status, original_amount, current_balance, term_months, annual_rate"
         )
         .eq("user_id", user.id)
         .eq("status", "active"),
       supabase
         .from("credit_cards")
         .select(
-          "id, issuer_name, card_label, currency_mode, minimum_payment, minimum_payment_usd, payment_due_day, status"
+          "id, issuer_name, card_label, currency_mode, minimum_payment, minimum_payment_usd, payment_due_day, status, current_balance, current_balance_usd, statement_balance, statement_balance_usd, credit_limit, credit_limit_usd, statement_close_day, annual_rate"
         )
         .eq("user_id", user.id)
         .eq("status", "active"),
       supabase
         .from("credit_card_installments")
         .select(
-          "description, monthly_payment, payment_due_day, statement_close_day, end_date, status, credit_card_id, credit_cards(issuer_name, card_label, payment_due_day, statement_close_day)"
+          "id, description, monthly_payment, remaining_balance, original_amount, term_months, payment_due_day, statement_close_day, end_date, status, credit_card_id, credit_cards(issuer_name, card_label, payment_due_day, statement_close_day)"
         )
         .eq("user_id", user.id)
         .eq("status", "active"),
@@ -237,19 +245,23 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
     const marginMeta = buildMarginMeta(marginValue, netIncomeValue);
     const thisMonthObligationCategories = buildMonthlyObligationCategoryExpenses(
       obligationsSnapshot,
+      categoryColorMap,
       today,
       usdToDopRate
     );
     const lastMonthObligationCategories = buildMonthlyObligationCategoryExpenses(
       obligationsSnapshot,
+      categoryColorMap,
       lastMonthReference,
       usdToDopRate
     );
     const mergedThisMonthCategories = mergeCategoryExpenses(
+      categoryColorMap,
       thisMonthCategories,
       thisMonthObligationCategories
     );
     const mergedLastMonthCategories = mergeCategoryExpenses(
+      categoryColorMap,
       lastMonthCategories,
       lastMonthObligationCategories
     );
@@ -324,12 +336,15 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
       },
       nextPayment,
       fiscalAnalysis,
-      recentTransactions: (transactionsResult.data ?? []).map(mapTransactionToRecent),
+      recentTransactions: (transactionsResult.data ?? []).map((row) =>
+        mapTransactionToRecent(row, { categoryColorMap })
+      ),
       expenseCategoriesThisMonth: mergedThisMonthCategories,
       expenseCategoriesLastMonth: mergedLastMonthCategories,
       gmailStatus: resolvedGmailStatus,
     };
-  } catch {
+  } catch (error) {
+    console.error("[getHomeDashboardData] failed:", error);
     return EMPTY_DASHBOARD_DATA;
   }
 }
