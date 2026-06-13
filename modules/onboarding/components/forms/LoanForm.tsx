@@ -23,6 +23,17 @@ interface LoanFormProps {
   onCancel: () => void;
 }
 
+function toFormDefaults(data: Loan): LoanSchemaInput {
+  return {
+    ...data,
+    startDate: data.startDate || "",
+    currentBalance:
+      data.currentBalance > 0 && data.currentBalance !== data.originalAmount
+        ? data.currentBalance
+        : undefined,
+  };
+}
+
 export function LoanForm({ initialData, onSave, onCancel }: LoanFormProps) {
   const defaults = initialData ?? createEmptyLoan();
 
@@ -35,21 +46,16 @@ export function LoanForm({ initialData, onSave, onCancel }: LoanFormProps) {
     formState: { errors },
   } = useForm<LoanSchemaInput>({
     resolver: zodResolver(loanSchema),
-    defaultValues: {
-      ...defaults,
-      startDate: defaults.startDate || "",
-    },
+    defaultValues: toFormDefaults(defaults),
   });
 
   useEffect(() => {
     const nextDefaults = initialData ?? createEmptyLoan();
-    reset({
-      ...nextDefaults,
-      startDate: nextDefaults.startDate || "",
-    });
+    reset(toFormDefaults(nextDefaults));
   }, [initialData, reset]);
 
   const lenderName = watch("lenderName");
+  const loanType = watch("loanType");
 
   const onSubmit = handleSubmit((data) => {
     onSave(data as Loan);
@@ -61,6 +67,14 @@ export function LoanForm({ initialData, onSave, onCancel }: LoanFormProps) {
       className="bg-background rounded-lg p-4 space-y-3 border"
     >
       <input type="hidden" {...register("id")} />
+      <div className="space-y-2">
+        <Label className="text-xs">Alias del préstamo</Label>
+        <Input
+          placeholder="Ej. Préstamo carro, Hipoteca casa"
+          {...register("loanAlias")}
+        />
+        <FormFieldError message={errors.loanAlias?.message} />
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-2">
           <Label className="text-xs">Tipo de préstamo</Label>
@@ -113,6 +127,7 @@ export function LoanForm({ initialData, onSave, onCancel }: LoanFormProps) {
           <AnnualRateAiHint
             institutionName={lenderName}
             productType="loan"
+            loanType={loanType}
             onRateFound={(rate) =>
               setValue("annualRate", rate, { shouldValidate: true })
             }
@@ -148,21 +163,34 @@ export function LoanForm({ initialData, onSave, onCancel }: LoanFormProps) {
           />
           <FormFieldError message={errors.paymentDueDay?.message} />
         </div>
-        <div className="space-y-2">
-          <Label className="text-xs">Fecha final</Label>
-          <Input type="date" {...register("endDate")} />
-          <FormFieldError message={errors.endDate?.message} />
-        </div>
-        <div className="space-y-2 sm:col-span-2">
-          <Label className="text-xs">Fecha inicio (opcional)</Label>
-          <Input type="date" {...register("startDate")} />
+      </div>
+
+      <div className="rounded-md border border-dashed border-border/80 bg-muted/30 p-3 space-y-3">
+        <div>
+          <p className="text-xs font-medium text-foreground">¿Ya llevas pagos?</p>
           <p className="text-xs text-muted-foreground">
-            Si no la recuerdas, la calculamos con la fecha final y el plazo en
-            meses.
+            Opcional. Déjalo en blanco si el préstamo es nuevo.
           </p>
-          <FormFieldError message={errors.startDate?.message} />
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="space-y-2">
+            <Label className="text-xs">Fecha de inicio</Label>
+            <Input type="date" {...register("startDate")} />
+            <FormFieldError message={errors.startDate?.message} />
+          </div>
+          <div className="space-y-2">
+            <Label className="text-xs">Saldo actual (RD$)</Label>
+            <Input
+              type="number"
+              step="0.01"
+              placeholder="Igual al original si es nuevo"
+              {...register("currentBalance", { valueAsNumber: true })}
+            />
+            <FormFieldError message={errors.currentBalance?.message} />
+          </div>
         </div>
       </div>
+
       <div className="flex gap-2 justify-end">
         <Button type="button" variant="outline" size="sm" onClick={onCancel}>
           Cancelar

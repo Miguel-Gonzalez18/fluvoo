@@ -1,4 +1,4 @@
-import { Database, Eye, Globe, UserCheck, type LucideIcon } from "lucide-react";
+import { CreditCard, Database, Eye, Globe, UserCheck, type LucideIcon } from "lucide-react";
 
 export interface PrivacyDataRow {
   category: string;
@@ -36,6 +36,13 @@ export const privacyDataRows: PrivacyDataRow[] = [
     purpose: "Seguridad, prevención de fraude y soporte técnico",
     retention: "90 días",
     icon: Globe,
+  },
+  {
+    category: "Seguimiento de tarjetas",
+    examples: "Últimos 4 dígitos del plástico (opcional), PDFs de estado de cuenta subidos por ti",
+    purpose: "Conciliar consumos y saldos de tarjetas de crédito cuando activas el seguimiento",
+    retention: "Mientras la cuenta esté activa; PDFs eliminables desde Transacciones",
+    icon: CreditCard,
   },
 ];
 

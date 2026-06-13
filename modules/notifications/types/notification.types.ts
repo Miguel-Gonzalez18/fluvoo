@@ -23,6 +23,21 @@ export interface ExpenseNotificationPayload {
   recipientName: string | null;
 }
 
+export interface GenericNotificationPayload {
+  title: string;
+  body: string;
+  deepLink: string;
+  referenceKey?: string;
+}
+
+export type ObligationNotificationType =
+  | "loan_payment_due"
+  | "credit_card_payment_due"
+  | "credit_card_payment_upcoming"
+  | "credit_card_close_reminder"
+  | "credit_card_statement_reminder"
+  | "gmail_connected_enable_tracking";
+
 export interface NotificationPreferences {
   emailEnabled: boolean;
   pushEnabled: boolean;
@@ -36,13 +51,25 @@ export interface NotifyNewExpensesResult {
   skippedReason?: string;
 }
 
-export interface UserNotificationItem {
+export interface ExpenseUserNotificationItem {
   id: string;
   type: "expense_detected";
   payload: ExpenseNotificationPayload;
   readAt: string | null;
   createdAt: string;
 }
+
+export interface GenericUserNotificationItem {
+  id: string;
+  type: ObligationNotificationType;
+  payload: GenericNotificationPayload;
+  readAt: string | null;
+  createdAt: string;
+}
+
+export type UserNotificationItem =
+  | ExpenseUserNotificationItem
+  | GenericUserNotificationItem;
 
 export interface UserNotificationsInbox {
   notifications: UserNotificationItem[];

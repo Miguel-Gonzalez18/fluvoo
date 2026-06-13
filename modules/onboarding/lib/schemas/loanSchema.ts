@@ -1,15 +1,27 @@
 import { z } from "zod";
-import { monthsBetweenDates, resolveStartDate } from "./date-helpers";
+import {
+  deriveEndDate,
+  getTodayYmdInSantoDomingo,
+} from "./date-helpers";
 import {
   optionalDateField,
   paymentDueDayField,
   positiveAmountField,
-  requiredDateField,
 } from "./shared-fields";
+
+const optionalCurrentBalanceField = z.preprocess(
+  (val) => {
+    if (val === "" || val === null || val === undefined) return undefined;
+    const num = typeof val === "number" ? val : Number(val);
+    return Number.isNaN(num) ? undefined : num;
+  },
+  z.number().min(0, "El saldo actual no puede ser negativo").optional()
+);
 
 export const loanSchema = z
   .object({
     id: z.string().uuid(),
+    loanAlias: z.string().min(1, "El alias del préstamo es requerido"),
     loanType: z.enum(["personal", "mortgage", "vehicle", "business"], {
       required_error: "Selecciona el tipo de préstamo",
     }),
@@ -25,39 +37,23 @@ export const loanSchema = z
     monthlyPayment: positiveAmountField("La cuota mensual"),
     paymentDueDay: paymentDueDayField,
     startDate: optionalDateField,
-    endDate: requiredDateField,
+    currentBalance: optionalCurrentBalanceField,
   })
-  .superRefine((data, ctx) => {
-    const start = data.startDate?.trim();
-    if (start && start.length > 0) {
-      if (data.endDate <= start) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "La fecha final debe ser posterior a la fecha de inicio",
-          path: ["endDate"],
-        });
-        return;
-      }
+  .transform((data) => {
+    const startDate =
+      data.startDate?.trim() && data.startDate.length > 0
+        ? data.startDate.trim()
+        : getTodayYmdInSantoDomingo();
+    const endDate = deriveEndDate(startDate, data.termMonths);
+    const currentBalance = data.currentBalance ?? data.originalAmount;
 
-      const diffMonths = monthsBetweenDates(start, data.endDate);
-      if (Math.abs(diffMonths - data.termMonths) > 1) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message:
-            "El plazo en meses no coincide con las fechas de inicio y fin",
-          path: ["termMonths"],
-        });
-      }
-    }
-  })
-  .transform((data) => ({
-    ...data,
-    startDate: resolveStartDate(
-      data.startDate?.trim() || undefined,
-      data.endDate,
-      data.termMonths
-    ),
-  }));
+    return {
+      ...data,
+      startDate,
+      endDate,
+      currentBalance,
+    };
+  });
 
 export type LoanSchemaInput = z.input<typeof loanSchema>;
 export type LoanSchemaOutput = z.output<typeof loanSchema>;

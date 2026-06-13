@@ -23,16 +23,42 @@ import {
   SheetTrigger,
 } from "@/modules/shared/components/ui/sheet";
 
-function buildExpenseSummary(notification: UserNotificationItem): string {
-  const { newExpenses } = notification.payload;
-  if (newExpenses.length === 0) return "Gasto detectado";
+function buildNotificationTitle(notification: UserNotificationItem): string {
+  if (notification.type === "expense_detected") {
+    const { newExpenses } = notification.payload;
+    if (newExpenses.length === 0) return "Gasto detectado";
 
-  const primary = newExpenses[0];
-  if (newExpenses.length === 1) {
-    return `${primary.merchant} · ${formatDOP(primary.amountDop)}`;
+    const primary = newExpenses[0];
+    if (newExpenses.length === 1) {
+      return `${primary.merchant} · ${formatDOP(primary.amountDop)}`;
+    }
+
+    return `${newExpenses.length} gastos nuevos · ${formatDOP(primary.amountDop)} y más`;
   }
 
-  return `${newExpenses.length} gastos nuevos · ${formatDOP(primary.amountDop)} y más`;
+  return notification.payload.title;
+}
+
+function buildNotificationSubtitle(
+  notification: UserNotificationItem
+): string | null {
+  if (notification.type === "expense_detected") {
+    return `${formatRelativeTime(notification.createdAt)} · Gastos mes ${formatDOP(notification.payload.monthlyExpenses)} · Margen ${formatDOP(notification.payload.marginMonthly)}`;
+  }
+
+  return formatRelativeTime(notification.createdAt);
+}
+
+function buildNotificationBody(
+  notification: UserNotificationItem
+): string | null {
+  if (notification.type === "expense_detected") {
+    return notification.payload.aiDiagnosis
+      ? truncateText(notification.payload.aiDiagnosis, 140)
+      : null;
+  }
+
+  return truncateText(notification.payload.body, 140);
 }
 
 function truncateText(text: string, maxLength: number): string {
@@ -125,7 +151,7 @@ export function NotificationBell() {
             <div>
               <SheetTitle>Notificaciones</SheetTitle>
               <SheetDescription>
-                Alertas de gastos detectados y resumen del mes.
+                Alertas de gastos, pagos pendientes y recordatorios.
               </SheetDescription>
             </div>
             {unreadCount > 0 ? (
@@ -172,20 +198,18 @@ export function NotificationBell() {
                   >
                     <div className="flex items-start justify-between gap-3">
                       <p className="text-sm font-semibold text-foreground">
-                        {buildExpenseSummary(notification)}
+                        {buildNotificationTitle(notification)}
                       </p>
                       {!notification.readAt ? (
                         <span className="mt-1 size-2 shrink-0 rounded-full bg-primary" />
                       ) : null}
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      {formatRelativeTime(notification.createdAt)} · Gastos mes{" "}
-                      {formatDOP(notification.payload.monthlyExpenses)} · Margen{" "}
-                      {formatDOP(notification.payload.marginMonthly)}
+                      {buildNotificationSubtitle(notification)}
                     </p>
-                    {notification.payload.aiDiagnosis ? (
+                    {buildNotificationBody(notification) ? (
                       <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-                        {truncateText(notification.payload.aiDiagnosis, 140)}
+                        {buildNotificationBody(notification)}
                       </p>
                     ) : null}
                   </button>

@@ -1,33 +1,26 @@
 "use server";
 
+import { lookupAnnualRateWithAi } from "@/modules/shared/ai/lookup-annual-rate.server";
+import type { LoanType } from "@/modules/onboarding/types/onboarding";
+
 export type AnnualRateProductType = "credit_card" | "loan" | "installment";
 
 export interface LookupAnnualRateInput {
   institution: string;
   productType: AnnualRateProductType;
+  loanType?: LoanType;
 }
 
 export interface LookupAnnualRateResult {
   available: boolean;
   rate?: number;
+  confidence?: "high" | "medium" | "low";
+  note?: string;
   error?: string;
 }
 
-/**
- * Stub for future AI-powered annual rate lookup by financial institution.
- */
 export async function lookupAnnualRate(
   input: LookupAnnualRateInput
 ): Promise<LookupAnnualRateResult> {
-  if (!input.institution?.trim()) {
-    return {
-      available: false,
-      error: "Selecciona primero la entidad financiera",
-    };
-  }
-
-  return {
-    available: false,
-    error: "Consulta con IA disponible próximamente",
-  };
+  return lookupAnnualRateWithAi(input);
 }

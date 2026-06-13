@@ -5,14 +5,17 @@ import { CreditCardCarousel } from "@/modules/dashboard/employee/components/tran
 import { FixedObligationsList } from "@/modules/dashboard/employee/components/transactions/commitments/FixedObligationsList";
 import { LoansList } from "@/modules/dashboard/employee/components/transactions/commitments/LoansList";
 import { formatDOP } from "@/modules/dashboard/employee/lib/formatCurrency";
+import type { GmailStatus } from "@/modules/dashboard/employee/types/dashboard.types";
 import type { TransactionsCommitmentsData } from "@/modules/dashboard/employee/types/transactions.types";
 
 interface TransactionsCommitmentsSectionProps {
   commitments: TransactionsCommitmentsData;
+  gmailStatus: GmailStatus;
 }
 
 export function TransactionsCommitmentsSection({
   commitments,
+  gmailStatus,
 }: TransactionsCommitmentsSectionProps) {
   if (!commitments.hasAny) {
     return (
@@ -71,6 +74,7 @@ export function TransactionsCommitmentsSection({
           <CreditCardCarousel
             cards={commitments.cards}
             total={commitments.totals.cards}
+            gmailStatus={gmailStatus}
           />
         </div>
       </CardContent>

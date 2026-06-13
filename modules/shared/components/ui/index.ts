@@ -23,6 +23,16 @@ export {
 export { Input } from "./input";
 export { Label } from "./label";
 export { default as PixelBlast } from "./PixelBlast";
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./dialog";
 export { SearchableSelect } from "./searchable-select";
 export { Separator } from "./separator";
 export {

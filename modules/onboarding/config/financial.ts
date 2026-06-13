@@ -9,6 +9,10 @@ import {
   ObligationType,
 } from "../types/onboarding";
 import { PAYMENT_FREQUENCY_LABELS } from "../lib/compute-monthly-amount";
+import {
+  defaultNextPaymentDueDate,
+  defaultNextStatementCloseDate,
+} from "@/modules/dashboard/employee/lib/credit-card-dates";
 
 // ARS Insurance Providers - Lista completa de aseguradoras de salud en RD
 export const ARS_PROVIDERS = [
@@ -123,6 +127,7 @@ export const createEmptyInsurance = (): HealthInsurance => ({
 
 export const createEmptyLoan = (): Loan => ({
   id: crypto.randomUUID(),
+  loanAlias: "",
   loanType: "personal",
   lenderName: "",
   originalAmount: 0,
@@ -132,6 +137,7 @@ export const createEmptyLoan = (): Loan => ({
   paymentDueDay: 1,
   startDate: "",
   endDate: "",
+  currentBalance: 0,
 });
 
 export const createEmptyFixedObligation = (): FixedObligation => ({
@@ -158,8 +164,8 @@ export const createEmptyCreditCard = (): CreditCard => ({
   currentBalanceUsd: null,
   minimumPaymentUsd: null,
   statementBalanceUsd: 0,
-  statementCloseDay: 1,
-  paymentDueDay: 1,
+  nextStatementCloseDate: defaultNextStatementCloseDate(),
+  nextPaymentDueDate: defaultNextPaymentDueDate(),
   annualRate: null,
   installments: [],
 });
@@ -173,8 +179,6 @@ export const createEmptyInstallment = (creditCardId?: string): CreditCardInstall
   monthlyPayment: 0,
   termMonths: 0,
   annualRate: 0,
-  statementCloseDay: 1,
-  paymentDueDay: 1,
   startDate: "",
   endDate: "",
 });

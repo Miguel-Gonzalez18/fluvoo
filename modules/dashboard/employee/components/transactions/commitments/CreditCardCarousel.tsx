@@ -1,22 +1,24 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { CreditCardDetailSheet } from "@/modules/dashboard/employee/components/transactions/commitments/CreditCardDetailSheet";
 import { CreditCardPlastic } from "@/modules/dashboard/employee/components/transactions/commitments/CreditCardPlastic";
 import { formatDOP } from "@/modules/dashboard/employee/lib/formatCurrency";
+import type { GmailStatus } from "@/modules/dashboard/employee/types/dashboard.types";
 import type { CreditCardCommitmentItem } from "@/modules/dashboard/employee/types/transactions.types";
 
 interface CreditCardCarouselProps {
   cards: CreditCardCommitmentItem[];
   total: number;
+  gmailStatus: GmailStatus;
   className?: string;
 }
 
 export function CreditCardCarousel({
   cards,
   total,
+  gmailStatus,
   className,
 }: CreditCardCarouselProps) {
   const [selectedCard, setSelectedCard] =
@@ -49,13 +51,9 @@ export function CreditCardCarousel({
 
       {cards.length === 0 ? (
         <div className="rounded-md border border-dashed border-border px-4 py-6 text-center">
-          <p className="text-sm text-muted-foreground">Sin tarjetas registradas</p>
-          <Link
-            href="/employee/settings"
-            className="mt-2 inline-block text-sm font-medium text-primary underline-offset-4 hover:underline"
-          >
-            Agregar en configuración
-          </Link>
+          <p className="text-sm text-muted-foreground">
+            Sin tarjetas registradas
+          </p>
         </div>
       ) : (
         <div className="flex flex-col gap-6">
@@ -71,6 +69,7 @@ export function CreditCardCarousel({
 
       <CreditCardDetailSheet
         card={selectedCard}
+        gmailStatus={gmailStatus}
         open={sheetOpen}
         onOpenChange={handleSheetOpenChange}
       />

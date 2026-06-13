@@ -4,6 +4,7 @@ export type LoanType = 'personal' | 'mortgage' | 'vehicle' | 'business';
 
 export interface Loan {
   id: string;
+  loanAlias: string;
   loanType: LoanType;
   lenderName: string;
   originalAmount: number;
@@ -13,6 +14,7 @@ export interface Loan {
   paymentDueDay: number;
   startDate: string;
   endDate: string;
+  currentBalance: number;
 }
 
 export type ObligationType =
@@ -55,8 +57,6 @@ export interface CreditCardInstallment {
   monthlyPayment: number;
   termMonths: number;
   annualRate: number;
-  statementCloseDay: number;
-  paymentDueDay: number;
   startDate?: string;
   endDate?: string;
 }
@@ -74,8 +74,8 @@ export interface CreditCard {
   currentBalanceUsd?: number | null;
   minimumPaymentUsd?: number | null;
   statementBalanceUsd: number;
-  statementCloseDay: number;
-  paymentDueDay: number;
+  nextStatementCloseDate: string;
+  nextPaymentDueDate: string;
   annualRate?: number | null;
   installments: CreditCardInstallment[];
 }

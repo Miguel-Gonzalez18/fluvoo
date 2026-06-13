@@ -83,6 +83,18 @@ export async function handleGmailOAuthCallback(
       };
     }
 
+    try {
+      const { notifyGmailEnableCardTracking } = await import(
+        "@/modules/notifications/lib/notify-gmail-enable-tracking.server"
+      );
+      await notifyGmailEnableCardTracking(user.id);
+    } catch (notifyError) {
+      console.error(
+        "[handleGmailOAuthCallback] Enable tracking notification failed:",
+        notifyError
+      );
+    }
+
     return { success: true, sync };
   } catch (error) {
     return {

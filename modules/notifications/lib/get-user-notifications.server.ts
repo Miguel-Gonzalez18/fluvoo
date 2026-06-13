@@ -1,5 +1,7 @@
 import type {
   ExpenseNotificationPayload,
+  GenericNotificationPayload,
+  ObligationNotificationType,
   UserNotificationItem,
   UserNotificationsInbox,
 } from "@/modules/notifications/types/notification.types";
@@ -7,7 +9,16 @@ import { createClient } from "@/src/lib/server";
 
 const INBOX_LIMIT = 20;
 
-function parsePayload(raw: unknown): ExpenseNotificationPayload | null {
+const OBLIGATION_TYPES = new Set<string>([
+  "loan_payment_due",
+  "credit_card_payment_due",
+  "credit_card_payment_upcoming",
+  "credit_card_close_reminder",
+  "credit_card_statement_reminder",
+  "gmail_connected_enable_tracking",
+]);
+
+function parseExpensePayload(raw: unknown): ExpenseNotificationPayload | null {
   if (!raw || typeof raw !== "object") return null;
 
   const payload = raw as Partial<ExpenseNotificationPayload>;
@@ -35,6 +46,22 @@ function parsePayload(raw: unknown): ExpenseNotificationPayload | null {
   };
 }
 
+function parseGenericPayload(raw: unknown): GenericNotificationPayload | null {
+  if (!raw || typeof raw !== "object") return null;
+
+  const payload = raw as Partial<GenericNotificationPayload>;
+  if (!payload.title || !payload.body) return null;
+
+  return {
+    title: String(payload.title),
+    body: String(payload.body),
+    deepLink: String(payload.deepLink ?? "/employee/transactions"),
+    referenceKey: payload.referenceKey
+      ? String(payload.referenceKey)
+      : undefined,
+  };
+}
+
 export async function getUserNotificationsInbox(
   userId: string
 ): Promise<UserNotificationsInbox> {
@@ -53,16 +80,32 @@ export async function getUserNotificationsInbox(
   const notifications: UserNotificationItem[] = [];
 
   for (const row of data) {
-    const payload = parsePayload(row.payload);
-    if (!payload) continue;
+    if (row.type === "expense_detected") {
+      const payload = parseExpensePayload(row.payload);
+      if (!payload) continue;
 
-    notifications.push({
-      id: row.id,
-      type: row.type as "expense_detected",
-      payload,
-      readAt: row.read_at,
-      createdAt: row.created_at,
-    });
+      notifications.push({
+        id: row.id,
+        type: "expense_detected",
+        payload,
+        readAt: row.read_at,
+        createdAt: row.created_at,
+      });
+      continue;
+    }
+
+    if (OBLIGATION_TYPES.has(row.type)) {
+      const payload = parseGenericPayload(row.payload);
+      if (!payload) continue;
+
+      notifications.push({
+        id: row.id,
+        type: row.type as ObligationNotificationType,
+        payload,
+        readAt: row.read_at,
+        createdAt: row.created_at,
+      });
+    }
   }
 
   const unreadCount = notifications.filter((item) => !item.readAt).length;

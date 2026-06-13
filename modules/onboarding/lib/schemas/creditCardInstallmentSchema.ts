@@ -1,7 +1,6 @@
 import { z } from "zod";
 import {
   optionalDateField,
-  paymentDueDayField,
   positiveAmountField,
   requiredNonNegativeAmountField,
 } from "./shared-fields";
@@ -20,8 +19,6 @@ export const creditCardInstallmentSchema = z.object({
   annualRate: z
     .number({ invalid_type_error: "La tasa anual es requerida" })
     .min(0, "La tasa anual no puede ser negativa"),
-  statementCloseDay: paymentDueDayField,
-  paymentDueDay: paymentDueDayField,
   startDate: optionalDateField,
   endDate: optionalDateField,
 });

@@ -622,6 +622,20 @@ export async function syncGmailTransactions(
       }
     }
 
+    if (result.importedTransactionIds.length > 0) {
+      try {
+        const { reconcileCardPurchases } = await import(
+          "@/modules/dashboard/employee/lib/obligations/reconcile-card-purchases.server"
+        );
+        await reconcileCardPurchases(userId, result.importedTransactionIds);
+      } catch (reconcileError) {
+        console.error(
+          "[syncGmailTransactions] Card purchase reconcile failed:",
+          reconcileError
+        );
+      }
+    }
+
     return { ...result, success: true };
 
   } catch (error) {

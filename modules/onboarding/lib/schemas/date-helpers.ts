@@ -1,9 +1,29 @@
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
+export function getTodayYmdInSantoDomingo(reference: Date = new Date()): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Santo_Domingo",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(reference);
+
+  const year = parts.find((p) => p.type === "year")?.value ?? "1970";
+  const month = parts.find((p) => p.type === "month")?.value ?? "01";
+  const day = parts.find((p) => p.type === "day")?.value ?? "01";
+  return `${year}-${month}-${day}`;
+}
+
 export function deriveStartDate(endDate: string, termMonths: number): string {
   const end = new Date(`${endDate}T12:00:00`);
   end.setMonth(end.getMonth() - termMonths);
   return end.toISOString().split("T")[0];
+}
+
+export function deriveEndDate(startDate: string, termMonths: number): string {
+  const start = new Date(`${startDate}T12:00:00`);
+  start.setMonth(start.getMonth() + termMonths);
+  return start.toISOString().split("T")[0];
 }
 
 export function monthsBetweenDates(startDate: string, endDate: string): number {

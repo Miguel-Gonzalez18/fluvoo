@@ -95,6 +95,10 @@ export function Step3GmailConnect({ onConnect, onSkip }: Step3GmailConnectProps)
       <p className="text-xs text-muted-foreground text-center max-w-xs mx-auto">
         Puedes conectar tu correo más tarde desde los ajustes de la aplicación. Tus datos están cifrados de extremo a extremo.
       </p>
+
+      <p className="text-xs text-muted-foreground text-center max-w-sm mx-auto leading-relaxed">
+        Conectar Gmail detecta transacciones generales. El seguimiento por tarjeta de crédito es opcional y requiere activarlo en Transacciones con los últimos 4 dígitos de tu plástico.
+      </p>
     </div>
   );
 }

@@ -16,7 +16,10 @@ export function EmployeeTransactionsPage({
     <div className="mx-auto max-w-7xl space-y-8 pb-24">
       <TransactionsSummaryCards summary={data.summary} />
 
-      <TransactionsCommitmentsSection commitments={data.commitments} />
+      <TransactionsCommitmentsSection
+        commitments={data.commitments}
+        gmailStatus={data.gmailStatus}
+      />
 
       <TransactionsChartsSection chartData={data.chartData} />
 

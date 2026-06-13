@@ -7,47 +7,238 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
-      freelancer_deduction_parameters: {
+      credit_card_installments: {
         Row: {
-          created_at: string | null
-          effective_from: string
+          annual_rate: number
+          created_at: string
+          credit_card_id: string
+          description: string | null
+          end_date: string | null
           id: string
-          is_active: boolean | null
-          isr_exemption_threshold: number
-          notes: string | null
-          quarterly_advance_rate: number | null
-          simplified_expense_rate: number
-          source_retention_rate: number
-          year: number
+          monthly_payment: number
+          original_amount: number
+          payment_due_day: number | null
+          remaining_balance: number
+          start_date: string | null
+          statement_close_day: number | null
+          status: Database["public"]["Enums"]["installment_status"]
+          term_months: number
+          updated_at: string
+          user_id: string
         }
         Insert: {
-          created_at?: string | null
-          effective_from: string
+          annual_rate?: number
+          created_at?: string
+          credit_card_id: string
+          description?: string | null
+          end_date?: string | null
           id?: string
-          is_active?: boolean | null
-          isr_exemption_threshold?: number
-          notes?: string | null
-          quarterly_advance_rate?: number | null
-          simplified_expense_rate?: number
-          source_retention_rate?: number
-          year: number
+          monthly_payment: number
+          original_amount: number
+          payment_due_day?: number | null
+          remaining_balance?: number
+          start_date?: string | null
+          statement_close_day?: number | null
+          status?: Database["public"]["Enums"]["installment_status"]
+          term_months: number
+          updated_at?: string
+          user_id: string
         }
         Update: {
-          created_at?: string | null
-          effective_from?: string
+          annual_rate?: number
+          created_at?: string
+          credit_card_id?: string
+          description?: string | null
+          end_date?: string | null
           id?: string
-          is_active?: boolean | null
-          isr_exemption_threshold?: number
-          notes?: string | null
-          quarterly_advance_rate?: number | null
-          simplified_expense_rate?: number
-          source_retention_rate?: number
-          year?: number
+          monthly_payment?: number
+          original_amount?: number
+          payment_due_day?: number | null
+          remaining_balance?: number
+          start_date?: string | null
+          statement_close_day?: number | null
+          status?: Database["public"]["Enums"]["installment_status"]
+          term_months?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_card_installments_credit_card_id_fkey"
+            columns: ["credit_card_id"]
+            isOneToOne: false
+            referencedRelation: "credit_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      credit_card_payment_cycles: {
+        Row: {
+          confirmed_at: string | null
+          created_at: string
+          credit_card_id: string
+          due_date: string
+          expected_amount: number
+          id: string
+          source: Database["public"]["Enums"]["payment_cycle_source"] | null
+          status: Database["public"]["Enums"]["payment_cycle_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          confirmed_at?: string | null
+          created_at?: string
+          credit_card_id: string
+          due_date: string
+          expected_amount: number
+          id?: string
+          source?: Database["public"]["Enums"]["payment_cycle_source"] | null
+          status?: Database["public"]["Enums"]["payment_cycle_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          confirmed_at?: string | null
+          created_at?: string
+          credit_card_id?: string
+          due_date?: string
+          expected_amount?: number
+          id?: string
+          source?: Database["public"]["Enums"]["payment_cycle_source"] | null
+          status?: Database["public"]["Enums"]["payment_cycle_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_card_payment_cycles_credit_card_id_fkey"
+            columns: ["credit_card_id"]
+            isOneToOne: false
+            referencedRelation: "credit_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      credit_card_statement_uploads: {
+        Row: {
+          applied_at: string | null
+          credit_card_id: string
+          id: string
+          parsed_snapshot: Json
+          storage_path: string
+          uploaded_at: string
+          user_id: string
+        }
+        Insert: {
+          applied_at?: string | null
+          credit_card_id: string
+          id?: string
+          parsed_snapshot?: Json
+          storage_path: string
+          uploaded_at?: string
+          user_id: string
+        }
+        Update: {
+          applied_at?: string | null
+          credit_card_id?: string
+          id?: string
+          parsed_snapshot?: Json
+          storage_path?: string
+          uploaded_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_card_statement_uploads_credit_card_id_fkey"
+            columns: ["credit_card_id"]
+            isOneToOne: false
+            referencedRelation: "credit_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      credit_cards: {
+        Row: {
+          annual_rate: number | null
+          card_label: string | null
+          created_at: string
+          credit_limit: number
+          credit_limit_usd: number | null
+          currency_mode: Database["public"]["Enums"]["credit_card_currency_mode"]
+          current_balance: number
+          current_balance_usd: number | null
+          id: string
+          issuer_name: string
+          last_four: string | null
+          last_statement_upload_at: string | null
+          minimum_payment: number
+          minimum_payment_usd: number | null
+          next_payment_due_date: string
+          next_statement_close_date: string
+          statement_balance: number
+          statement_balance_usd: number
+          status: Database["public"]["Enums"]["credit_card_status"]
+          tracking_enabled: boolean
+          tracking_paused_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          annual_rate?: number | null
+          card_label?: string | null
+          created_at?: string
+          credit_limit: number
+          credit_limit_usd?: number | null
+          currency_mode?: Database["public"]["Enums"]["credit_card_currency_mode"]
+          current_balance?: number
+          current_balance_usd?: number | null
+          id?: string
+          issuer_name: string
+          last_four?: string | null
+          last_statement_upload_at?: string | null
+          minimum_payment: number
+          minimum_payment_usd?: number | null
+          next_payment_due_date: string
+          next_statement_close_date: string
+          statement_balance?: number
+          statement_balance_usd?: number
+          status?: Database["public"]["Enums"]["credit_card_status"]
+          tracking_enabled?: boolean
+          tracking_paused_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          annual_rate?: number | null
+          card_label?: string | null
+          created_at?: string
+          credit_limit?: number
+          credit_limit_usd?: number | null
+          currency_mode?: Database["public"]["Enums"]["credit_card_currency_mode"]
+          current_balance?: number
+          current_balance_usd?: number | null
+          id?: string
+          issuer_name?: string
+          last_four?: string | null
+          last_statement_upload_at?: string | null
+          minimum_payment?: number
+          minimum_payment_usd?: number | null
+          next_payment_due_date?: string
+          next_statement_close_date?: string
+          statement_balance?: number
+          statement_balance_usd?: number
+          status?: Database["public"]["Enums"]["credit_card_status"]
+          tracking_enabled?: boolean
+          tracking_paused_at?: string | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -114,6 +305,90 @@ export type Database = {
           slug?: string
           sort_order?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      fixed_obligations: {
+        Row: {
+          created_at: string
+          id: string
+          monthly_amount: number
+          name: string
+          obligation_type: Database["public"]["Enums"]["obligation_type"]
+          payment_amount: number
+          payment_due_day: number
+          payment_frequency: Database["public"]["Enums"]["obligation_payment_frequency"]
+          provider_name: string | null
+          status: Database["public"]["Enums"]["obligation_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          monthly_amount: number
+          name?: string
+          obligation_type: Database["public"]["Enums"]["obligation_type"]
+          payment_amount: number
+          payment_due_day: number
+          payment_frequency?: Database["public"]["Enums"]["obligation_payment_frequency"]
+          provider_name?: string | null
+          status?: Database["public"]["Enums"]["obligation_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          monthly_amount?: number
+          name?: string
+          obligation_type?: Database["public"]["Enums"]["obligation_type"]
+          payment_amount?: number
+          payment_due_day?: number
+          payment_frequency?: Database["public"]["Enums"]["obligation_payment_frequency"]
+          provider_name?: string | null
+          status?: Database["public"]["Enums"]["obligation_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      freelancer_deduction_parameters: {
+        Row: {
+          created_at: string | null
+          effective_from: string
+          id: string
+          is_active: boolean | null
+          isr_exemption_threshold: number
+          notes: string | null
+          quarterly_advance_rate: number | null
+          simplified_expense_rate: number
+          source_retention_rate: number
+          year: number
+        }
+        Insert: {
+          created_at?: string | null
+          effective_from: string
+          id?: string
+          is_active?: boolean | null
+          isr_exemption_threshold?: number
+          notes?: string | null
+          quarterly_advance_rate?: number | null
+          simplified_expense_rate?: number
+          source_retention_rate?: number
+          year: number
+        }
+        Update: {
+          created_at?: string | null
+          effective_from?: string
+          id?: string
+          is_active?: boolean | null
+          isr_exemption_threshold?: number
+          notes?: string | null
+          quarterly_advance_rate?: number | null
+          simplified_expense_rate?: number
+          source_retention_rate?: number
+          year?: number
         }
         Relationships: []
       }
@@ -283,181 +558,52 @@ export type Database = {
         }
         Relationships: []
       }
-      credit_card_installments: {
+      loan_payment_cycles: {
         Row: {
-          annual_rate: number
+          confirmed_at: string | null
           created_at: string
-          credit_card_id: string
-          description: string | null
-          end_date: string | null
+          due_date: string
+          expected_amount: number
           id: string
-          monthly_payment: number
-          original_amount: number
-          payment_due_day: number | null
-          remaining_balance: number
-          start_date: string | null
-          statement_close_day: number | null
-          status: Database["public"]["Enums"]["installment_status"]
-          term_months: number
+          loan_id: string
+          source: Database["public"]["Enums"]["payment_cycle_source"] | null
+          status: Database["public"]["Enums"]["payment_cycle_status"]
           updated_at: string
           user_id: string
         }
         Insert: {
-          annual_rate?: number
+          confirmed_at?: string | null
           created_at?: string
-          credit_card_id: string
-          description?: string | null
-          end_date?: string | null
+          due_date: string
+          expected_amount: number
           id?: string
-          monthly_payment: number
-          original_amount: number
-          payment_due_day?: number | null
-          remaining_balance?: number
-          start_date?: string | null
-          statement_close_day?: number | null
-          status?: Database["public"]["Enums"]["installment_status"]
-          term_months: number
+          loan_id: string
+          source?: Database["public"]["Enums"]["payment_cycle_source"] | null
+          status?: Database["public"]["Enums"]["payment_cycle_status"]
           updated_at?: string
           user_id: string
         }
         Update: {
-          annual_rate?: number
+          confirmed_at?: string | null
           created_at?: string
-          credit_card_id?: string
-          description?: string | null
-          end_date?: string | null
+          due_date?: string
+          expected_amount?: number
           id?: string
-          monthly_payment?: number
-          original_amount?: number
-          payment_due_day?: number | null
-          remaining_balance?: number
-          start_date?: string | null
-          statement_close_day?: number | null
-          status?: Database["public"]["Enums"]["installment_status"]
-          term_months?: number
+          loan_id?: string
+          source?: Database["public"]["Enums"]["payment_cycle_source"] | null
+          status?: Database["public"]["Enums"]["payment_cycle_status"]
           updated_at?: string
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "credit_card_installments_credit_card_id_fkey"
-            columns: ["credit_card_id"]
+            foreignKeyName: "loan_payment_cycles_loan_id_fkey"
+            columns: ["loan_id"]
             isOneToOne: false
-            referencedRelation: "credit_cards"
+            referencedRelation: "loans"
             referencedColumns: ["id"]
           },
         ]
-      }
-      credit_cards: {
-        Row: {
-          annual_rate: number | null
-          card_label: string | null
-          created_at: string
-          credit_limit: number
-          credit_limit_usd: number | null
-          currency_mode: Database["public"]["Enums"]["credit_card_currency_mode"]
-          current_balance: number
-          current_balance_usd: number | null
-          id: string
-          issuer_name: string
-          minimum_payment: number
-          minimum_payment_usd: number | null
-          payment_due_day: number
-          statement_balance: number
-          statement_balance_usd: number
-          statement_close_day: number | null
-          status: Database["public"]["Enums"]["credit_card_status"]
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          annual_rate?: number | null
-          card_label?: string | null
-          created_at?: string
-          credit_limit: number
-          credit_limit_usd?: number | null
-          currency_mode?: Database["public"]["Enums"]["credit_card_currency_mode"]
-          current_balance?: number
-          current_balance_usd?: number | null
-          id?: string
-          issuer_name: string
-          minimum_payment: number
-          minimum_payment_usd?: number | null
-          payment_due_day: number
-          statement_balance?: number
-          statement_balance_usd?: number
-          statement_close_day?: number | null
-          status?: Database["public"]["Enums"]["credit_card_status"]
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          annual_rate?: number | null
-          card_label?: string | null
-          created_at?: string
-          credit_limit?: number
-          credit_limit_usd?: number | null
-          currency_mode?: Database["public"]["Enums"]["credit_card_currency_mode"]
-          current_balance?: number
-          current_balance_usd?: number | null
-          id?: string
-          issuer_name?: string
-          minimum_payment?: number
-          minimum_payment_usd?: number | null
-          payment_due_day?: number
-          statement_balance?: number
-          statement_balance_usd?: number
-          statement_close_day?: number | null
-          status?: Database["public"]["Enums"]["credit_card_status"]
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      fixed_obligations: {
-        Row: {
-          created_at: string
-          id: string
-          monthly_amount: number
-          name: string
-          obligation_type: Database["public"]["Enums"]["obligation_type"]
-          payment_amount: number
-          payment_due_day: number
-          payment_frequency: Database["public"]["Enums"]["obligation_payment_frequency"]
-          provider_name: string | null
-          status: Database["public"]["Enums"]["obligation_status"]
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          monthly_amount: number
-          name?: string
-          obligation_type: Database["public"]["Enums"]["obligation_type"]
-          payment_amount: number
-          payment_due_day: number
-          payment_frequency?: Database["public"]["Enums"]["obligation_payment_frequency"]
-          provider_name?: string | null
-          status?: Database["public"]["Enums"]["obligation_status"]
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          monthly_amount?: number
-          name?: string
-          obligation_type?: Database["public"]["Enums"]["obligation_type"]
-          payment_amount?: number
-          payment_due_day?: number
-          payment_frequency?: Database["public"]["Enums"]["obligation_payment_frequency"]
-          provider_name?: string | null
-          status?: Database["public"]["Enums"]["obligation_status"]
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
       }
       loans: {
         Row: {
@@ -467,6 +613,7 @@ export type Database = {
           end_date: string | null
           id: string
           lender_name: string | null
+          loan_alias: string
           loan_type: Database["public"]["Enums"]["loan_type"]
           monthly_payment: number
           original_amount: number
@@ -484,6 +631,7 @@ export type Database = {
           end_date?: string | null
           id?: string
           lender_name?: string | null
+          loan_alias: string
           loan_type: Database["public"]["Enums"]["loan_type"]
           monthly_payment: number
           original_amount: number
@@ -501,6 +649,7 @@ export type Database = {
           end_date?: string | null
           id?: string
           lender_name?: string | null
+          loan_alias?: string
           loan_type?: Database["public"]["Enums"]["loan_type"]
           monthly_payment?: number
           original_amount?: number
@@ -520,6 +669,81 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      obligation_transaction_links: {
+        Row: {
+          amount: number
+          credit_card_id: string
+          event_type: Database["public"]["Enums"]["obligation_link_event_type"]
+          id: string
+          linked_at: string
+          transaction_id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          credit_card_id: string
+          event_type?: Database["public"]["Enums"]["obligation_link_event_type"]
+          id?: string
+          linked_at?: string
+          transaction_id: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          credit_card_id?: string
+          event_type?: Database["public"]["Enums"]["obligation_link_event_type"]
+          id?: string
+          linked_at?: string
+          transaction_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "obligation_transaction_links_credit_card_id_fkey"
+            columns: ["credit_card_id"]
+            isOneToOne: false
+            referencedRelation: "credit_cards"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "obligation_transaction_links_transaction_id_fkey"
+            columns: ["transaction_id"]
+            isOneToOne: true
+            referencedRelation: "transactions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       tax_parameters: {
         Row: {
@@ -593,7 +817,9 @@ export type Database = {
           currency: string
           description: string | null
           exchange_rate: number | null
-          expense_category: Database["public"]["Enums"]["expense_category"] | null
+          expense_category:
+            | Database["public"]["Enums"]["expense_category"]
+            | null
           gmail_message_id: string
           id: string
           merchant_name: string | null
@@ -616,7 +842,9 @@ export type Database = {
           currency?: string
           description?: string | null
           exchange_rate?: number | null
-          expense_category?: Database["public"]["Enums"]["expense_category"] | null
+          expense_category?:
+            | Database["public"]["Enums"]["expense_category"]
+            | null
           gmail_message_id: string
           id?: string
           merchant_name?: string | null
@@ -639,7 +867,9 @@ export type Database = {
           currency?: string
           description?: string | null
           exchange_rate?: number | null
-          expense_category?: Database["public"]["Enums"]["expense_category"] | null
+          expense_category?:
+            | Database["public"]["Enums"]["expense_category"]
+            | null
           gmail_message_id?: string
           id?: string
           merchant_name?: string | null
@@ -688,6 +918,47 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_category_colors: {
+        Row: {
+          badge_bg_hex: string | null
+          badge_border_hex: string | null
+          badge_text_hex: string | null
+          category_slug: string
+          color_hex: string
+          created_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          badge_bg_hex?: string | null
+          badge_border_hex?: string | null
+          badge_text_hex?: string | null
+          category_slug: string
+          color_hex: string
+          created_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          badge_bg_hex?: string | null
+          badge_border_hex?: string | null
+          badge_text_hex?: string | null
+          category_slug?: string
+          color_hex?: string
+          created_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_category_colors_category_slug_fkey"
+            columns: ["category_slug"]
+            isOneToOne: false
+            referencedRelation: "expense_categories"
+            referencedColumns: ["slug"]
+          },
+        ]
       }
       user_notification_preferences: {
         Row: {
@@ -748,84 +1019,6 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
-      }
-      push_subscriptions: {
-        Row: {
-          auth: string
-          created_at: string
-          endpoint: string
-          id: string
-          p256dh: string
-          user_agent: string | null
-          user_id: string
-        }
-        Insert: {
-          auth: string
-          created_at?: string
-          endpoint: string
-          id?: string
-          p256dh: string
-          user_agent?: string | null
-          user_id: string
-        }
-        Update: {
-          auth?: string
-          created_at?: string
-          endpoint?: string
-          id?: string
-          p256dh?: string
-          user_agent?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_category_colors: {
-        Row: {
-          badge_bg_hex: string | null
-          badge_border_hex: string | null
-          badge_text_hex: string | null
-          category_slug: string
-          color_hex: string
-          created_at: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          badge_bg_hex?: string | null
-          badge_border_hex?: string | null
-          badge_text_hex?: string | null
-          category_slug: string
-          color_hex: string
-          created_at?: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          badge_bg_hex?: string | null
-          badge_border_hex?: string | null
-          badge_text_hex?: string | null
-          category_slug?: string
-          color_hex?: string
-          created_at?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_category_colors_category_slug_fkey"
-            columns: ["category_slug"]
-            isOneToOne: false
-            referencedRelation: "expense_categories"
-            referencedColumns: ["slug"]
-          },
-          {
-            foreignKeyName: "user_category_colors_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       users: {
         Row: {
@@ -958,20 +1151,20 @@ export type Database = {
       credit_card_currency_mode: "dop_only" | "usd_only" | "mixed"
       credit_card_status: "active" | "closed"
       expense_category:
-        | "transferencias"
-        | "entretenimiento"
-        | "restaurantes"
         | "supermercados"
+        | "restaurantes"
         | "transporte"
         | "salud"
         | "educacion"
         | "servicios"
         | "telecom"
+        | "entretenimiento"
         | "ocio"
         | "compras"
         | "viajes"
         | "deudas"
         | "negocios"
+        | "transferencias"
         | "hogar"
         | "mascotas"
         | "ahorros"
@@ -985,7 +1178,16 @@ export type Database = {
       installment_status: "active" | "paid_off"
       loan_status: "active" | "paid_off" | "refinanced"
       loan_type: "personal" | "mortgage" | "vehicle" | "business"
-      notification_type: "expense_detected"
+      notification_type:
+        | "expense_detected"
+        | "gmail_connected_enable_tracking"
+        | "loan_payment_due"
+        | "credit_card_payment_due"
+        | "credit_card_payment_upcoming"
+        | "credit_card_close_reminder"
+        | "credit_card_statement_reminder"
+        | "credit_card_purchase_detected"
+      obligation_link_event_type: "purchase"
       obligation_payment_frequency: "monthly" | "weekly" | "biweekly" | "daily"
       obligation_status: "active" | "inactive"
       obligation_type:
@@ -996,9 +1198,11 @@ export type Database = {
         | "internet"
         | "transport"
         | "insurance"
+        | "other"
         | "gym"
         | "university"
-        | "other"
+      payment_cycle_source: "user"
+      payment_cycle_status: "projected" | "pending" | "confirmed"
       transaction_parse_status: "parsed" | "partial" | "failed"
       transaction_type:
         | "debit"
@@ -1135,21 +1339,23 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      credit_card_currency_mode: ["dop_only", "usd_only", "mixed"],
+      credit_card_status: ["active", "closed"],
       expense_category: [
-        "transferencias",
-        "entretenimiento",
-        "restaurantes",
         "supermercados",
+        "restaurantes",
         "transporte",
         "salud",
         "educacion",
         "servicios",
         "telecom",
+        "entretenimiento",
         "ocio",
         "compras",
         "viajes",
         "deudas",
         "negocios",
+        "transferencias",
         "hogar",
         "mascotas",
         "ahorros",
@@ -1162,12 +1368,20 @@ export const Constants = {
         "project_based",
         "irregular",
       ],
-      credit_card_currency_mode: ["dop_only", "usd_only", "mixed"],
-      credit_card_status: ["active", "closed"],
       installment_status: ["active", "paid_off"],
       loan_status: ["active", "paid_off", "refinanced"],
       loan_type: ["personal", "mortgage", "vehicle", "business"],
-      notification_type: ["expense_detected"],
+      notification_type: [
+        "expense_detected",
+        "gmail_connected_enable_tracking",
+        "loan_payment_due",
+        "credit_card_payment_due",
+        "credit_card_payment_upcoming",
+        "credit_card_close_reminder",
+        "credit_card_statement_reminder",
+        "credit_card_purchase_detected",
+      ],
+      obligation_link_event_type: ["purchase"],
       obligation_payment_frequency: ["monthly", "weekly", "biweekly", "daily"],
       obligation_status: ["active", "inactive"],
       obligation_type: [
@@ -1178,10 +1392,12 @@ export const Constants = {
         "internet",
         "transport",
         "insurance",
+        "other",
         "gym",
         "university",
-        "other",
       ],
+      payment_cycle_source: ["user"],
+      payment_cycle_status: ["projected", "pending", "confirmed"],
       transaction_parse_status: ["parsed", "partial", "failed"],
       transaction_type: [
         "debit",

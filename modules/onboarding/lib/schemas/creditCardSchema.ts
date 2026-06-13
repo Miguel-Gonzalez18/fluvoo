@@ -1,7 +1,11 @@
 import { z } from "zod";
 import { creditCardInstallmentSchema } from "./creditCardInstallmentSchema";
 import {
-  paymentDueDayField,
+  isPaymentDueAfterStatementClose,
+  CREDIT_CARD_PAYMENT_AFTER_CLOSE_MESSAGE,
+} from "@/modules/dashboard/employee/lib/credit-card-dates";
+import {
+  requiredDateField,
   requiredNonNegativeAmountField,
 } from "./shared-fields";
 
@@ -21,8 +25,8 @@ export const creditCardSchema = z
     currentBalanceUsd: z.number().min(0).optional().nullable(),
     minimumPaymentUsd: z.number().min(0).optional().nullable(),
     statementBalanceUsd: requiredNonNegativeAmountField("El saldo al corte en USD"),
-    statementCloseDay: paymentDueDayField,
-    paymentDueDay: paymentDueDayField,
+    nextStatementCloseDate: requiredDateField,
+    nextPaymentDueDate: requiredDateField,
     annualRate: z
       .number()
       .min(0, "La tasa anual no puede ser negativa")
@@ -31,6 +35,19 @@ export const creditCardSchema = z
     installments: z.array(creditCardInstallmentSchema).default([]),
   })
   .superRefine((data, ctx) => {
+    if (
+      !isPaymentDueAfterStatementClose(
+        data.nextPaymentDueDate,
+        data.nextStatementCloseDate
+      )
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: CREDIT_CARD_PAYMENT_AFTER_CLOSE_MESSAGE,
+        path: ["nextPaymentDueDate"],
+      });
+    }
+
     if (data.currencyMode === "dop_only" || data.currencyMode === "mixed") {
       if (data.creditLimit <= 0) {
         ctx.addIssue({

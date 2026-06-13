@@ -51,10 +51,15 @@ export function CreditCardPlastic({
             </p>
           </div>
 
-          <div className="flex flex-1 items-center">
+          <div className="flex flex-1 flex-col items-start justify-center gap-1">
             <p className="truncate text-left font-medium capitalize">
               {card.cardholderName}
             </p>
+            {card.trackingEnabled && card.lastFour && (
+              <p className="font-mono text-xs tracking-widest opacity-80">
+                •••• •••• •••• {card.lastFour}
+              </p>
+            )}
           </div>
 
           <div className="flex items-end justify-between gap-3">

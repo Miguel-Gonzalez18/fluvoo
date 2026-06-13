@@ -24,6 +24,7 @@ export interface FinancialObligationsSnapshot {
   loans: Array<{
     id: string;
     lender_name: string | null;
+    loan_alias: string;
     loan_type: string;
     monthly_payment: number;
     payment_due_day: number | null;
@@ -42,7 +43,8 @@ export interface FinancialObligationsSnapshot {
     currency_mode: string;
     minimum_payment: number;
     minimum_payment_usd: number | null;
-    payment_due_day: number;
+    next_statement_close_date: string;
+    next_payment_due_date: string;
     status: string;
     current_balance: number;
     current_balance_usd: number | null;
@@ -50,8 +52,10 @@ export interface FinancialObligationsSnapshot {
     statement_balance_usd: number;
     credit_limit: number;
     credit_limit_usd: number | null;
-    statement_close_day: number | null;
     annual_rate: number | null;
+    tracking_enabled: boolean;
+    last_four: string | null;
+    last_statement_upload_at: string | null;
   }>;
   creditCardInstallments: Array<{
     id: string;
@@ -60,16 +64,15 @@ export interface FinancialObligationsSnapshot {
     remaining_balance: number;
     original_amount: number;
     term_months: number;
-    payment_due_day: number | null;
-    statement_close_day: number | null;
+    annual_rate: number | null;
+    start_date: string | null;
     end_date: string | null;
     status: string;
     credit_card_id: string;
     credit_cards: {
       issuer_name: string;
       card_label: string | null;
-      payment_due_day: number;
-      statement_close_day: number | null;
+      next_payment_due_date: string;
     } | null;
   }>;
 }

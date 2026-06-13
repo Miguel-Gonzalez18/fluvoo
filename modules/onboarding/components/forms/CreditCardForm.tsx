@@ -22,6 +22,7 @@ import {
 import { FormFieldError } from "./FormFieldError";
 import { CreditCardInstallmentForm } from "./CreditCardInstallmentForm";
 import { AnnualRateAiHint } from "./AnnualRateAiHint";
+import { addDaysYmd } from "@/modules/dashboard/employee/lib/credit-card-dates";
 
 interface CreditCardFormProps {
   initialData: CreditCard | null;
@@ -78,14 +79,13 @@ export function CreditCardForm({
   const issuerName = watch("issuerName");
   const currencyMode = watch("currencyMode");
   const cardId = watch("id");
-  const statementCloseDay = watch("statementCloseDay");
-  const paymentDueDay = watch("paymentDueDay");
+  const nextStatementCloseDate = watch("nextStatementCloseDate");
+  const minPaymentDueDate = nextStatementCloseDate
+    ? addDaysYmd(nextStatementCloseDate, 1)
+    : undefined;
 
-  const createInstallmentDefaults = (): CreditCardInstallment => ({
-    ...createEmptyInstallment(cardId),
-    statementCloseDay: statementCloseDay ?? 1,
-    paymentDueDay: paymentDueDay ?? 1,
-  });
+  const createInstallmentDefaults = (): CreditCardInstallment =>
+    createEmptyInstallment(cardId);
 
   useEffect(() => {
     const nextDefaults = initialData ?? createEmptyCreditCard();
@@ -140,6 +140,10 @@ export function CreditCardForm({
       className="bg-background rounded-lg p-4 space-y-4 border"
     >
       <input type="hidden" {...register("id")} />
+      <p className="rounded-md bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
+        Más adelante, en Transacciones, puedes activar seguimiento de consumos
+        por correo si conectas Gmail en el paso 3 del onboarding.
+      </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="space-y-2">
           <Label className="text-xs">Banco emisor</Label>
@@ -154,12 +158,12 @@ export function CreditCardForm({
             emptyMessage="No se encontraron entidades"
             otherPlaceholder="Nombre del banco"
           />
-          <FormFieldError message={errors.issuerName?.message} />
+          <FormFieldError message={ errors.issuerName?.message} />
         </div>
         <div className="space-y-2">
           <Label className="text-xs">Alias de tarjeta</Label>
           <Input placeholder="Ej: Visa Oro" {...register("cardLabel")} />
-          <FormFieldError message={errors.cardLabel?.message} />
+          <FormFieldError message={ errors.cardLabel?.message} />
         </div>
         <div className="space-y-2 sm:col-span-2">
           <Label className="text-xs">Moneda de la tarjeta</Label>
@@ -173,7 +177,7 @@ export function CreditCardForm({
               </option>
             ))}
           </select>
-          <FormFieldError message={errors.currencyMode?.message} />
+          <FormFieldError message={ errors.currencyMode?.message} />
         </div>
         {showDopFields && (
           <>
@@ -185,7 +189,7 @@ export function CreditCardForm({
                 min={0}
                 {...register("creditLimit", { valueAsNumber: true })}
               />
-              <FormFieldError message={errors.creditLimit?.message} />
+              <FormFieldError message={ errors.creditLimit?.message} />
             </div>
             <div className="space-y-2">
               <Label className="text-xs">Saldo actual (RD$)</Label>
@@ -196,7 +200,7 @@ export function CreditCardForm({
                 placeholder="0"
                 {...register("currentBalance", { setValueAs: parseRequiredAmount })}
               />
-              <FormFieldError message={errors.currentBalance?.message} />
+              <FormFieldError message={ errors.currentBalance?.message} />
             </div>
             <div className="space-y-2">
               <Label className="text-xs">Pago mínimo (RD$)</Label>
@@ -207,7 +211,7 @@ export function CreditCardForm({
                 placeholder="0"
                 {...register("minimumPayment", { setValueAs: parseRequiredAmount })}
               />
-              <FormFieldError message={errors.minimumPayment?.message} />
+              <FormFieldError message={ errors.minimumPayment?.message} />
             </div>
             <div className="space-y-2">
               <Label className="text-xs">Saldo al corte (RD$)</Label>
@@ -218,7 +222,7 @@ export function CreditCardForm({
                 placeholder="0"
                 {...register("statementBalance", { setValueAs: parseRequiredAmount })}
               />
-              <FormFieldError message={errors.statementBalance?.message} />
+              <FormFieldError message={ errors.statementBalance?.message} />
             </div>
           </>
         )}
@@ -232,7 +236,7 @@ export function CreditCardForm({
                 min={0}
                 {...register("creditLimitUsd", { setValueAs: parseOptionalAmount })}
               />
-              <FormFieldError message={errors.creditLimitUsd?.message} />
+              <FormFieldError message={ errors.creditLimitUsd?.message} />
             </div>
             <div className="space-y-2">
               <Label className="text-xs">Saldo actual (USD)</Label>
@@ -243,7 +247,7 @@ export function CreditCardForm({
                 placeholder="0"
                 {...register("currentBalanceUsd", { setValueAs: parseOptionalAmount })}
               />
-              <FormFieldError message={errors.currentBalanceUsd?.message} />
+              <FormFieldError message={ errors.currentBalanceUsd?.message} />
             </div>
             <div className="space-y-2">
               <Label className="text-xs">Pago mínimo (USD)</Label>
@@ -254,7 +258,7 @@ export function CreditCardForm({
                 placeholder="0"
                 {...register("minimumPaymentUsd", { setValueAs: parseOptionalAmount })}
               />
-              <FormFieldError message={errors.minimumPaymentUsd?.message} />
+              <FormFieldError message={ errors.minimumPaymentUsd?.message} />
             </div>
             <div className="space-y-2">
               <Label className="text-xs">Saldo al corte (USD)</Label>
@@ -265,31 +269,23 @@ export function CreditCardForm({
                 placeholder="0"
                 {...register("statementBalanceUsd", { setValueAs: parseRequiredAmount })}
               />
-              <FormFieldError message={errors.statementBalanceUsd?.message} />
+              <FormFieldError message={ errors.statementBalanceUsd?.message} />
             </div>
           </>
         )}
         <div className="space-y-2">
-          <Label className="text-xs">Día de corte (del mes)</Label>
-          <Input
-            type="number"
-            min={1}
-            max={31}
-            placeholder="Ej: 21"
-            {...register("statementCloseDay", { valueAsNumber: true })}
-          />
-          <FormFieldError message={errors.statementCloseDay?.message} />
+          <Label className="text-xs">Próxima fecha de corte</Label>
+          <Input type="date" {...register("nextStatementCloseDate")} />
+          <FormFieldError message={ errors.nextStatementCloseDate?.message} />
         </div>
         <div className="space-y-2">
-          <Label className="text-xs">Fecha límite de pago (del mes)</Label>
+          <Label className="text-xs">Próxima fecha límite de pago</Label>
           <Input
-            type="number"
-            min={1}
-            max={31}
-            placeholder="Ej: 12"
-            {...register("paymentDueDay", { valueAsNumber: true })}
+            type="date"
+            min={minPaymentDueDate}
+            {...register("nextPaymentDueDate")}
           />
-          <FormFieldError message={errors.paymentDueDay?.message} />
+          <FormFieldError message={ errors.nextPaymentDueDate?.message} />
         </div>
         <div className="space-y-2 sm:col-span-2">
           <Label className="text-xs">Tasa anual revolving (%)</Label>

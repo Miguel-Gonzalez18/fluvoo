@@ -138,21 +138,21 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
       supabase
         .from("loans")
         .select(
-          "id, lender_name, loan_type, monthly_payment, payment_due_day, end_date, start_date, status, original_amount, current_balance, term_months, annual_rate"
+          "id, lender_name, loan_alias, loan_type, monthly_payment, payment_due_day, end_date, start_date, status, original_amount, current_balance, term_months, annual_rate"
         )
         .eq("user_id", user.id)
         .eq("status", "active"),
       supabase
         .from("credit_cards")
         .select(
-          "id, issuer_name, card_label, currency_mode, minimum_payment, minimum_payment_usd, payment_due_day, status, current_balance, current_balance_usd, statement_balance, statement_balance_usd, credit_limit, credit_limit_usd, statement_close_day, annual_rate"
+          "id, issuer_name, card_label, currency_mode, minimum_payment, minimum_payment_usd, next_statement_close_date, next_payment_due_date, status, current_balance, current_balance_usd, statement_balance, statement_balance_usd, credit_limit, credit_limit_usd, annual_rate, tracking_enabled, last_four, last_statement_upload_at"
         )
         .eq("user_id", user.id)
         .eq("status", "active"),
       supabase
         .from("credit_card_installments")
         .select(
-          "id, description, monthly_payment, remaining_balance, original_amount, term_months, payment_due_day, statement_close_day, end_date, status, credit_card_id, credit_cards(issuer_name, card_label, payment_due_day, statement_close_day)"
+          "id, description, monthly_payment, remaining_balance, original_amount, term_months, annual_rate, start_date, end_date, status, credit_card_id, credit_cards(issuer_name, card_label, next_payment_due_date)"
         )
         .eq("user_id", user.id)
         .eq("status", "active"),

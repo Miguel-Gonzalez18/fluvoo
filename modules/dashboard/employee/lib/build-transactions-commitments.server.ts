@@ -9,6 +9,9 @@ import type {
 } from "@/modules/onboarding/types/onboarding";
 import { buildCommitmentDueStatus } from "@/modules/dashboard/employee/lib/build-commitment-due-status";
 import {
+  buildDateDueStatus,
+} from "@/modules/dashboard/employee/lib/credit-card-dates";
+import {
   formatUsdSubtext,
   getCreditCardShortLabel,
   getInstitutionShortLabel,
@@ -19,6 +22,11 @@ import {
   resolveCardPaymentTotalInDop,
   sumActiveInstallmentsForCard,
 } from "@/modules/dashboard/employee/lib/resolve-card-payment-total";
+import type { PaymentCycleItem } from "@/modules/dashboard/employee/lib/obligations/payment-cycle.types";
+import {
+  pickConfirmedCycles,
+  pickNextPaymentCycle,
+} from "@/modules/dashboard/employee/lib/obligations/map-payment-cycles";
 import type { FinancialObligationsSnapshot } from "@/modules/dashboard/employee/lib/financial-obligations.types";
 import type {
   CreditCardCommitmentItem,
@@ -66,7 +74,9 @@ export function buildTransactionsCommitments(
   snapshot: FinancialObligationsSnapshot,
   displayName: string,
   usdToDopRate: number = 1,
-  referenceDate: Date = new Date()
+  referenceDate: Date = new Date(),
+  loanCyclesById: Map<string, PaymentCycleItem[]> = new Map(),
+  cardCyclesById: Map<string, PaymentCycleItem[]> = new Map()
 ): TransactionsCommitmentsData {
   const year = referenceDate.getFullYear();
   const month = referenceDate.getMonth();
@@ -102,10 +112,14 @@ export function buildTransactionsCommitments(
     const lenderLabel = loan.lender_name
       ? getInstitutionShortLabel(loan.lender_name)
       : "Préstamo";
+    const rawCycles = loanCyclesById.get(loan.id) ?? [];
+    const paymentCycles = rawCycles.map((c) => c);
+    const nextCycle = pickNextPaymentCycle(paymentCycles);
+    const confirmedCycles = pickConfirmedCycles(paymentCycles);
 
     loans.push({
       id: loan.id,
-      label: getLoanTypeLabel(loanType),
+      label: loan.loan_alias?.trim() || getLoanTypeLabel(loanType),
       lenderLabel,
       lenderName: loan.lender_name,
       loanType,
@@ -117,6 +131,9 @@ export function buildTransactionsCommitments(
       annualRate: loan.annual_rate,
       startDate: loan.start_date,
       endDate: loan.end_date,
+      paymentCycles,
+      nextCycle,
+      confirmedCycles,
     });
   });
 
@@ -162,10 +179,19 @@ export function buildTransactionsCommitments(
       .map((installment) => ({
         id: installment.id,
         description: installment.description?.trim() || "Compra a cuotas",
+        originalAmount: installment.original_amount,
         monthlyPayment: installment.monthly_payment,
         amountOwed: installment.remaining_balance,
         termMonths: installment.term_months,
+        annualRate: installment.annual_rate ?? 0,
+        startDate: installment.start_date,
+        endDate: installment.end_date,
       }));
+
+    const rawCardCycles = cardCyclesById.get(card.id) ?? [];
+    const paymentCycles = rawCardCycles.map((c) => c);
+    const nextCycle = pickNextPaymentCycle(paymentCycles);
+    const confirmedCycles = pickConfirmedCycles(paymentCycles);
 
     cards.push({
       id: card.id,
@@ -175,6 +201,8 @@ export function buildTransactionsCommitments(
       cardholderName: displayName,
       totalBalanceDop,
       totalBalanceUsd,
+      revolvingBalanceDop: card.current_balance,
+      revolvingBalanceUsd: card.current_balance_usd ?? 0,
       statementBalanceDop: card.statement_balance,
       statementBalanceUsd: card.statement_balance_usd,
       totalPaymentDop,
@@ -182,7 +210,7 @@ export function buildTransactionsCommitments(
       installmentsDop,
       currencyMode: (card.currency_mode ?? "dop_only") as CreditCardCurrencyMode,
       usdSubtext: formatUsdSubtext(card, usdToDopRate),
-      dueStatus: buildCommitmentDueStatus(card.payment_due_day, referenceDate),
+      dueStatus: buildDateDueStatus(card.next_payment_due_date, referenceDate),
       themeKey: card.issuer_name,
       patternIndex: cardIndex % 3,
       gradientClass: theme.gradientClass,
@@ -190,8 +218,17 @@ export function buildTransactionsCommitments(
       installments: cardInstallments,
       creditLimitDop: card.credit_limit,
       creditLimitUsd: card.credit_limit_usd,
-      statementCloseDay: card.statement_close_day,
+      minimumPaymentDop: card.minimum_payment,
+      minimumPaymentUsd: card.minimum_payment_usd,
+      nextStatementCloseDate: card.next_statement_close_date,
+      nextPaymentDueDate: card.next_payment_due_date,
       annualRate: card.annual_rate,
+      trackingEnabled: card.tracking_enabled ?? false,
+      lastFour: card.last_four ?? null,
+      lastStatementUploadAt: card.last_statement_upload_at ?? null,
+      paymentCycles,
+      nextCycle,
+      confirmedCycles,
     });
 
     cardIndex += 1;

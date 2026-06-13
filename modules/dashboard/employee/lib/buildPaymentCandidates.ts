@@ -9,6 +9,10 @@ import {
   isObligationActiveForMonth,
 } from "./computeNextDueDate";
 import {
+  isDateInCalendarMonth,
+  ymdToLocalDate,
+} from "@/modules/dashboard/employee/lib/credit-card-dates";
+import {
   buildCardAmountSubtext,
   getCreditCardShortLabel,
   getInstitutionShortLabel,
@@ -98,7 +102,7 @@ export function buildPaymentCandidates(
       label: `TC · ${shortLabel}`,
       shortLabel,
       amount: totalInDop,
-      dueDate: computeNextDueDate(card.payment_due_day, referenceDate),
+      dueDate: ymdToLocalDate(card.next_payment_due_date),
       source: "credit_card",
       amountSubtext: amountSubtext || undefined,
     });
@@ -109,10 +113,10 @@ export function buildPaymentCandidates(
     if (consolidatedCardIds.has(installment.credit_card_id)) continue;
     if (!isObligationActiveForMonth(installment.end_date, year, month)) continue;
 
-    const dueDay =
-      installment.payment_due_day ??
-      installment.credit_cards?.payment_due_day ??
-      1;
+    const dueDateYmd =
+      installment.credit_cards?.next_payment_due_date ?? null;
+    if (!dueDateYmd) continue;
+
     const shortLabel = installment.description?.trim()
       ? installment.description.trim()
       : installment.credit_cards
@@ -126,7 +130,7 @@ export function buildPaymentCandidates(
       label: `Cuota · ${shortLabel}`,
       shortLabel,
       amount: installment.monthly_payment,
-      dueDate: computeNextDueDate(dueDay, referenceDate),
+      dueDate: ymdToLocalDate(dueDateYmd),
       source: "credit_card_installment",
     });
   }
@@ -162,7 +166,7 @@ export function sumObligationsDueThisMonth(
   for (const card of snapshot.creditCards) {
     if (card.status !== "active") continue;
     consolidatedCardIds.add(card.id);
-    if (isDueDayInMonth(card.payment_due_day, year, month)) {
+    if (isDateInCalendarMonth(card.next_payment_due_date, referenceDate)) {
       total += resolveCardPaymentTotalInDop(
         card,
         snapshot.creditCardInstallments,
@@ -178,12 +182,10 @@ export function sumObligationsDueThisMonth(
     if (consolidatedCardIds.has(installment.credit_card_id)) continue;
     if (!isObligationActiveForMonth(installment.end_date, year, month)) continue;
 
-    const dueDay =
-      installment.payment_due_day ??
-      installment.credit_cards?.payment_due_day ??
-      1;
+    const dueDateYmd = installment.credit_cards?.next_payment_due_date;
+    if (!dueDateYmd) continue;
 
-    if (isDueDayInMonth(dueDay, year, month)) {
+    if (isDateInCalendarMonth(dueDateYmd, referenceDate)) {
       total += installment.monthly_payment;
     }
   }

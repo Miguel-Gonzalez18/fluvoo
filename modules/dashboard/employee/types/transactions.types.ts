@@ -12,12 +12,15 @@ import type {
   ObligationType,
 } from "@/modules/onboarding/types/onboarding";
 
+import type { PaymentCycleItem } from "@/modules/dashboard/employee/lib/obligations/payment-cycle.types";
+
 export type CommitmentUrgency = "ok" | "soon" | "urgent";
 
 export interface CommitmentDueStatus {
   urgency: CommitmentUrgency;
   dueDay: number;
   dueLabel: string;
+  dueDate?: string;
 }
 
 export interface FixedCommitmentItem {
@@ -43,14 +46,21 @@ export interface LoanCommitmentItem {
   annualRate: number;
   startDate: string | null;
   endDate: string | null;
+  paymentCycles: PaymentCycleItem[];
+  nextCycle: PaymentCycleItem | null;
+  confirmedCycles: PaymentCycleItem[];
 }
 
 export interface CreditCardCommitmentInstallment {
   id: string;
   description: string;
+  originalAmount: number;
   monthlyPayment: number;
   amountOwed: number;
   termMonths: number;
+  annualRate: number;
+  startDate: string | null;
+  endDate: string | null;
 }
 
 export interface CreditCardCommitmentItem {
@@ -61,6 +71,8 @@ export interface CreditCardCommitmentItem {
   cardholderName: string;
   totalBalanceDop: number;
   totalBalanceUsd: number;
+  revolvingBalanceDop: number;
+  revolvingBalanceUsd: number;
   statementBalanceDop: number;
   statementBalanceUsd: number;
   totalPaymentDop: number;
@@ -76,8 +88,17 @@ export interface CreditCardCommitmentItem {
   installments: CreditCardCommitmentInstallment[];
   creditLimitDop: number;
   creditLimitUsd: number | null;
-  statementCloseDay: number | null;
+  minimumPaymentDop: number;
+  minimumPaymentUsd: number | null;
+  nextStatementCloseDate: string;
+  nextPaymentDueDate: string;
   annualRate: number | null;
+  trackingEnabled: boolean;
+  lastFour: string | null;
+  lastStatementUploadAt: string | null;
+  paymentCycles: PaymentCycleItem[];
+  nextCycle: PaymentCycleItem | null;
+  confirmedCycles: PaymentCycleItem[];
 }
 
 export interface TransactionsCommitmentsData {

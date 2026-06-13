@@ -151,27 +151,10 @@ export function CreditCardInstallmentForm({
             }
           />
         </div>
-        <div className="space-y-2">
-          <Label className="text-xs">Día de corte (del mes)</Label>
-          <Input
-            type="number"
-            min={1}
-            max={31}
-            placeholder="Ej: 21"
-            {...register("statementCloseDay", { valueAsNumber: true })}
-          />
-          <FormFieldError message={errors.statementCloseDay?.message} />
-        </div>
-        <div className="space-y-2">
-          <Label className="text-xs">Fecha límite de pago (del mes)</Label>
-          <Input
-            type="number"
-            min={1}
-            max={31}
-            placeholder="Ej: 12"
-            {...register("paymentDueDay", { valueAsNumber: true })}
-          />
-          <FormFieldError message={errors.paymentDueDay?.message} />
+        <div className="space-y-2 sm:col-span-2">
+          <p className="text-[11px] text-muted-foreground">
+            Las cuotas usan las mismas fechas de corte y pago de la tarjeta.
+          </p>
         </div>
         <div className="space-y-2">
           <Label className="text-xs">Fecha inicio (opcional)</Label>

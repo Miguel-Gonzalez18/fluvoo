@@ -28,7 +28,10 @@ export function LoansSection({
           </div>
           <div>
             <h4 className="font-medium text-sm">¿Tienes préstamos?</h4>
-            <p className="text-xs text-muted-foreground">Personales, hipotecarios o vehiculares</p>
+            <p className="text-xs text-muted-foreground">
+              Solo lo esencial. La tabla de amortización y el PDF los puedes usar
+              después en Transacciones.
+            </p>
           </div>
         </div>
         <Switch checked={data.loans.length > 0} onCheckedChange={onToggle} />

@@ -130,8 +130,8 @@ export async function saveOnboardingData(data: OnboardingData) {
           current_balance_usd: card.currentBalanceUsd ?? null,
           minimum_payment_usd: card.minimumPaymentUsd ?? null,
           statement_balance_usd: card.statementBalanceUsd,
-          statement_close_day: card.statementCloseDay,
-          payment_due_day: card.paymentDueDay,
+          next_statement_close_date: card.nextStatementCloseDate,
+          next_payment_due_date: card.nextPaymentDueDate,
           annual_rate: card.annualRate ?? null,
           status: "active",
         })
@@ -157,8 +157,6 @@ export async function saveOnboardingData(data: OnboardingData) {
               annual_rate: installment.annualRate,
               end_date: installment.endDate || null,
               start_date: installment.startDate || null,
-              statement_close_day: installment.statementCloseDay,
-              payment_due_day: installment.paymentDueDay,
               status: "active" as const,
             }))
           );
@@ -181,6 +179,7 @@ export async function saveOnboardingData(data: OnboardingData) {
     const { error: loanError } = await supabase.from("loans").insert(
       data.loans.map((loan) => ({
         user_id: user.id,
+        loan_alias: loan.loanAlias,
         loan_type: loan.loanType,
         lender_name: loan.lenderName,
         original_amount: loan.originalAmount,
@@ -190,6 +189,7 @@ export async function saveOnboardingData(data: OnboardingData) {
         payment_due_day: loan.paymentDueDay,
         start_date: loan.startDate,
         end_date: loan.endDate,
+        current_balance: loan.currentBalance,
         status: "active" as const,
       }))
     );

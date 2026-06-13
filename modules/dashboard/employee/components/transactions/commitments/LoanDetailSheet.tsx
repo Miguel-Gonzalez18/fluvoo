@@ -1,9 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import {
+  confirmLoanPayment,
+  dismissLoanPaymentReminder,
+} from "@/modules/dashboard/employee/actions/loan-obligations-actions";
 import { CommitmentDueBadge } from "@/modules/dashboard/employee/components/transactions/commitments/CommitmentDueBadge";
+import { LoanAmortizationDialog } from "@/modules/dashboard/employee/components/transactions/commitments/LoanAmortizationDialog";
+import { LoanEditDialog } from "@/modules/dashboard/employee/components/transactions/commitments/LoanEditDialog";
+import { PaymentCycleConfirmSection } from "@/modules/dashboard/employee/components/transactions/commitments/PaymentCycleConfirmSection";
+import { PaymentCycleBadge } from "@/modules/dashboard/employee/components/transactions/commitments/PaymentCycleBadge";
 import { formatDOP } from "@/modules/dashboard/employee/lib/formatCurrency";
 import { getInstitutionFullLabel } from "@/modules/dashboard/employee/lib/format-card-payment-subtext";
+import { Button } from "@/modules/shared/components/ui/button";
+import type { LoanCommitmentItem } from "@/modules/dashboard/employee/types/transactions.types";
 import {
   Sheet,
   SheetContent,
@@ -11,7 +21,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/modules/shared/components/ui";
-import type { LoanCommitmentItem } from "@/modules/dashboard/employee/types/transactions.types";
 
 interface LoanDetailSheetProps {
   loan: LoanCommitmentItem | null;
@@ -46,6 +55,8 @@ export function LoanDetailSheet({
   onOpenChange,
 }: LoanDetailSheetProps) {
   const [side, setSide] = useState<"bottom" | "right">("bottom");
+  const [amortizationOpen, setAmortizationOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   useEffect(() => {
     const media = window.matchMedia("(min-width: 640px)");
@@ -62,75 +73,111 @@ export function LoanDetailSheet({
     : "Prestamista no especificado";
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side={side} className="overflow-y-auto sm:max-w-md">
-        <SheetHeader className="border-b border-border pb-4">
-          <SheetTitle>{loan.label}</SheetTitle>
-          <SheetDescription>{lenderFullLabel}</SheetDescription>
-        </SheetHeader>
+    <>
+      <Sheet open={open} onOpenChange={onOpenChange}>
+        <SheetContent side={side} className="overflow-y-auto sm:max-w-md">
+          <SheetHeader className="border-b border-border pb-4">
+            <SheetTitle>{loan.label}</SheetTitle>
+            <SheetDescription>{lenderFullLabel}</SheetDescription>
+          </SheetHeader>
 
-        <div className="space-y-6 px-4 pb-6">
-          <section className="space-y-2">
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className="text-lg font-semibold text-foreground">
-                  {formatDOP(loan.amount)}{" "}
-                  <span className="text-base font-normal text-muted-foreground">
-                    a pagar
-                  </span>
-                </p>
-                <p className="text-xs text-muted-foreground">Cuota mensual</p>
+          <div className="space-y-6 px-4 pb-6">
+            <section className="space-y-2">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="text-lg font-semibold text-foreground">
+                    {formatDOP(loan.amount)}{" "}
+                    <span className="text-base font-normal text-muted-foreground">
+                      a pagar
+                    </span>
+                  </p>
+                  <p className="text-xs text-muted-foreground">Cuota mensual</p>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                  <CommitmentDueBadge dueStatus={loan.dueStatus} />
+                  {loan.nextCycle && (
+                    <PaymentCycleBadge status={loan.nextCycle.status} />
+                  )}
+                </div>
               </div>
-              <CommitmentDueBadge dueStatus={loan.dueStatus} />
-            </div>
-          </section>
+            </section>
 
-          <section className="divide-y divide-border rounded-md border border-border px-3">
-            <DetailRow
-              label="Monto original"
-              value={formatDOP(loan.originalAmount)}
+            <PaymentCycleConfirmSection
+              nextCycle={loan.nextCycle}
+              confirmedCycles={loan.confirmedCycles}
+              onConfirm={confirmLoanPayment}
+              onDismiss={dismissLoanPaymentReminder}
             />
-            <DetailRow
-              label="Saldo actual"
-              value={
-                loan.currentBalance != null
-                  ? formatDOP(loan.currentBalance)
-                  : "—"
-              }
-            />
-            <DetailRow
-              label="Cuota mensual"
-              value={formatDOP(loan.amount)}
-            />
-            <DetailRow
-              label="Plazo"
-              value={`${loan.termMonths} meses`}
-            />
-            <DetailRow
-              label="Tasa anual"
-              value={`${loan.annualRate.toFixed(2)}%`}
-            />
-          </section>
 
-          <section className="divide-y divide-border rounded-md border border-border px-3">
-            <p className="py-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Fechas
-            </p>
-            <DetailRow
-              label="Fecha límite de pago"
-              value={`Día ${loan.dueStatus.dueDay}`}
-            />
-            <DetailRow
-              label="Fecha de inicio"
-              value={formatCommitmentDate(loan.startDate)}
-            />
-            <DetailRow
-              label="Fecha final"
-              value={formatCommitmentDate(loan.endDate)}
-            />
-          </section>
-        </div>
-      </SheetContent>
-    </Sheet>
+            <section className="flex flex-col gap-2 sm:flex-row">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="flex-1"
+                onClick={() => setAmortizationOpen(true)}
+              >
+                Ver tabla de amortización
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="flex-1"
+                onClick={() => setEditOpen(true)}
+              >
+                Editar préstamo
+              </Button>
+            </section>
+
+            <section className="divide-y divide-border rounded-md border border-border px-3">
+              <DetailRow
+                label="Monto original"
+                value={formatDOP(loan.originalAmount)}
+              />
+              <DetailRow
+                label="Saldo actual"
+                value={
+                  loan.currentBalance != null
+                    ? formatDOP(loan.currentBalance)
+                    : "—"
+                }
+              />
+              <DetailRow label="Cuota mensual" value={formatDOP(loan.amount)} />
+              <DetailRow label="Plazo" value={`${loan.termMonths} meses`} />
+              <DetailRow
+                label="Tasa anual"
+                value={`${loan.annualRate.toFixed(2)}%`}
+              />
+            </section>
+
+            <section className="divide-y divide-border rounded-md border border-border px-3">
+              <p className="py-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Fechas
+              </p>
+              <DetailRow
+                label="Fecha límite de pago"
+                value={`Día ${loan.dueStatus.dueDay}`}
+              />
+              <DetailRow
+                label="Fecha de inicio"
+                value={formatCommitmentDate(loan.startDate)}
+              />
+              <DetailRow
+                label="Fecha final"
+                value={formatCommitmentDate(loan.endDate)}
+              />
+            </section>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      <LoanAmortizationDialog
+        loan={loan}
+        open={amortizationOpen}
+        onOpenChange={setAmortizationOpen}
+      />
+      <LoanEditDialog loan={loan} open={editOpen} onOpenChange={setEditOpen} />
+    </>
   );
 }
