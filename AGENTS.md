@@ -23,9 +23,9 @@ app/                    ← Next.js App Router (thin routes + layouts only)
   employee/*            ← layout delegates to modules/dashboard/employee
   freelancer/*          ← layout delegates to modules/dashboard/freelancer
   privacidad|cookies|terminos ← delegates to modules/legal
-  page.tsx              ← landing → modules/homePage
+  page.tsx              ← coming soon → modules/comingSoon
 modules/
-  homePage/             ← landing feature (Hero, FAQ, CTA, landing-only UI)
+  comingSoon/           ← public coming-soon notice page
   onboarding/           ← 3-step onboarding + tax summary
   auth/                 ← login + register
   dashboard/            ← employee/freelancer layouts + sidebars + pages
@@ -60,8 +60,8 @@ When importing from `app/` into modules, always use `@/modules/...` — never `.
 ### 2. UI component placement
 
 - **Shared UI** (Button, Input, Switch, Accordion, Sidebar, etc.) → `modules/shared/components/ui/`
-- **Landing-only UI** (GetStartedButton, BankCarousel, liquid-text, TextPressure) → `modules/homePage/components/ui/`
-- **Never** import from `homePage` inside `auth`, `onboarding`, or `dashboard` — those modules depend on `shared`, not landing.
+- **Public notice page** → `modules/comingSoon/`
+- **Never** import from feature modules into unrelated features — prefer `shared`.
 
 ### 3. Route files stay thin
 
@@ -120,8 +120,6 @@ className={cn("base-class", condition && "active-class", props.className)}
 
 - **shadcn style**: `radix-nova` (newer shadcn convention)
 - **Shared components dir**: `modules/shared/components/ui/` (barrel: `@/modules/shared/components/ui`)
-- **Landing-only components dir**: `modules/homePage/components/ui/`
-- **Three.js / postprocessing**: `PixelBlast.tsx` depends on both — known to cause Turbopack resolution issues with relative imports
 - **Fonts**: Manrope (body), Syne (headings), Space Grotesk (labels) — loaded via `next/font/google`
 - **Dark mode**: supported via `.dark` class on parent
 - **Target locale**: Spanish (Dominican Republic) — `es_DO`

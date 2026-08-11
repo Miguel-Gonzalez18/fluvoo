@@ -32,7 +32,7 @@ export default function PageLogin() {
                     <span className="font-heading text-3xl font-bold text-white">Fluvoo</span>
                 </Link>
                 <p className="text-xs font-medium text-white/90 leading-relaxed">
-                    Claridad financiera para cada dominicano.
+                    Estamos construyendo algo nuevo.
                 </p>
             </div>
 

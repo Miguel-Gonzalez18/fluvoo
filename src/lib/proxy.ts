@@ -1,10 +1,43 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
+/**
+ * While Fluvoo is in "coming soon" mode, every UI route redirects to `/`.
+ * APIs, robots and sitemap stay reachable.
+ */
+const COMING_SOON_MODE = true
+
+const COMING_SOON_ALLOWED_PREFIXES = ['/api/']
+const COMING_SOON_ALLOWED_PATHS = new Set([
+  '/',
+  '/robots.txt',
+  '/sitemap.xml',
+  '/icon.svg',
+  '/site.webmanifest',
+])
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   })
+
+  const pathname = request.nextUrl.pathname
+
+  if (COMING_SOON_MODE) {
+    const isAllowed =
+      COMING_SOON_ALLOWED_PATHS.has(pathname) ||
+      COMING_SOON_ALLOWED_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+
+    if (!isAllowed) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/'
+      url.search = ''
+      return NextResponse.redirect(url)
+    }
+
+    // Stay on `/` without session-based redirects to dashboard/login.
+    return supabaseResponse
+  }
 
   // With Fluid compute, don't put this client in a global environment
   // variable. Always create a new one on each request.

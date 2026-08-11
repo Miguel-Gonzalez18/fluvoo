@@ -27,21 +27,12 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: {
-    default: "Fluvoo | Claridad financiera para cada Dominicano",
+    default: "Fluvoo | Estamos construyendo algo nuevo",
     template: "%s | Fluvoo",
   },
   description:
-    "Fluvoo te ayuda a entender y gestionar tu dinero con claridad y control. La mejor herramienta financiera para dominicanos.",
-  keywords: [
-    "finanzas personales",
-    "gestión de dinero",
-    "finanzas República Dominicana",
-    "control de gastos",
-    "ahorro",
-    "inversión",
-    "presupuesto",
-    "app financiera",
-  ],
+    "Fluvoo está en construcción. Pronto lanzamos algo distinto, hecho con calma desde República Dominicana.",
+  keywords: ["Fluvoo", "República Dominicana", "próximamente", "coming soon"],
   authors: [{ name: "Fluvoo Team" }],
   creator: "Fluvoo",
   publisher: "Fluvoo",
@@ -58,24 +49,24 @@ export const metadata: Metadata = {
     type: "website",
     locale: "es_DO",
     url: "https://fluvoo.com",
-    title: "Fluvoo | Claridad financiera para cada Dominicano",
+    title: "Fluvoo | Estamos construyendo algo nuevo",
     description:
-      "Fluvoo te ayuda a entender y gestionar tu dinero con claridad y control. La mejor herramienta financiera para dominicanos.",
+      "Fluvoo está en construcción. Pronto lanzamos algo distinto, hecho con calma desde República Dominicana.",
     siteName: "Fluvoo",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Fluvoo - Claridad financiera para cada Dominicano",
+        alt: "Fluvoo — Estamos construyendo algo nuevo",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Fluvoo | Claridad financiera para cada Dominicano",
+    title: "Fluvoo | Estamos construyendo algo nuevo",
     description:
-      "Fluvoo te ayuda a entender y gestionar tu dinero con claridad y control. La mejor herramienta financiera para dominicanos.",
+      "Fluvoo está en construcción. Pronto lanzamos algo distinto, hecho con calma desde República Dominicana.",
     images: ["/og-image.png"],
   },
   robots: {
